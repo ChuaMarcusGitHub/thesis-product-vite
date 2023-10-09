@@ -1,0 +1,39 @@
+{
+    "batchcomplete": "",
+    "warnings": {
+        "extracts": {
+            "*": "HTML may be malformed and/or unbalanced and may omit inline images. Use at your own risk. Known problems are listed at https://www.mediawiki.org/wiki/Special:MyLanguage/Extension:TextExtracts#Caveats."
+        }
+    },
+    "query": {
+        "pages": {
+            "3354": {
+                "pageid": 3354,
+                "ns": 0,
+                "title": "Berlin",
+                "extract": "<p class=\"mw-empty-elt\">\n\n</p>\n<p><b>Berlin</b> (<span></span> <i title=\"English pronunciation respelling\">bur-<span>LIN</span></i>, <span>German:</span> <span lang=\"de-Latn-fonipa\">[bɛʁˈliːn]</span> ) is the capital and largest city of Germany by both area and population. Its more than 3.85 million inhabitants make it the European Union's most populous city, according to population within city limits. One of Germany's sixteen constituent states, Berlin is surrounded by the State of Brandenburg and contiguous with Potsdam, Brandenburg's capital. Berlin's urban area, which has a population of around 4.5 million, is the most populous urban area in Germany. The Berlin-Brandenburg capital region has around 6.2 million inhabitants and is Germany's second-largest metropolitan region after the Rhine-Ruhr region.</p><p>Berlin straddles the banks of the Spree, which flows into the Havel (a tributary of the Elbe) in the western borough of Spandau. Among the city's main topographical features are the many lakes in the western and southeastern boroughs formed by the Spree, Havel and Dahme, the largest of which is Lake Müggelsee. Due to its location in the European Plain, Berlin is influenced by a temperate seasonal climate. About one-third of the city's area is composed of forests, parks, gardens, rivers, canals, and lakes. The city lies in the Central German dialect area, the Berlin dialect being spoken.\n</p><p>First documented in the 13th century and at the crossing of two important historic trade routes, Berlin became the capital of the Margraviate of Brandenburg (1417–1701), Kingdom of Prussia (1701–1918), German Empire (1871–1918), Weimar Republic (1919–1933), and Nazi Germany (1933–1945). Berlin has served as a scientific, artistic and philosophical hub of the Enlightenment, Neoclassicism, and liberal revolution. The <span title=\"German-language text\"><i lang=\"de\">Gründerzeit</i></span> era's \nindustrialization-induced economic boom multiplied Berlin's population rapidly. Berlin in the roaring 1920s was the third-largest city in the world by population.</p><p>After World War II and its subsequent occupation by the victorious countries, the devastated city was divided; West Berlin became a de facto exclave of West Germany, surrounded by the Berlin Wall (from August 1961 to November 1989) and East German territory. East Berlin was declared capital of East Germany, while Bonn became the West German capital. Following German reunification in 1990, Berlin once again became the capital of all of Germany.\n</p><p>Berlin is a world city of culture, politics, media and science. Its economy is based on high-tech firms and the service sector, encompassing a diverse range of creative industries, startup companies, research facilities, media corporations, and convention venues. Berlin serves as a continental hub for air and rail traffic and has a highly complex public transportation network. The metropolis is a popular tourist destination. Significant industries also include information technology, healthcare, biomedical engineering, biotechnology, automotive, construction, electronics, social economy and clean tech.\n</p><p>Berlin is home to world-renowned universities such as the Humboldt University, Technical University, Free University, University of the Arts, ESMT Berlin, Hertie School, and Bard College Berlin. Its Zoological Garden is the most visited zoo in Europe and one of the most popular worldwide. With Babelsberg being the world's first large-scale movie studio complex, Berlin is an increasingly popular location for international film productions. The city is well known for its festivals, diverse architecture, nightlife, contemporary arts, and high quality of life.</p><p>Berlin is also home to three World Heritage Sites: Museum Island; the Palaces and Parks of Potsdam and Berlin; and the Modernism Housing Estates. Other landmarks include the Brandenburg Gate, Reichstag building, Potsdamer Platz, Memorial to the Murdered Jews of Europe, Berlin Wall Memorial, East Side Gallery, Berlin Victory Column, Berlin Cathedral, and Berlin Television Tower, the tallest structure in Germany. Berlin has numerous museums, galleries, libraries, orchestras, and sporting events including Museum Island, the German Historical Museum, Jewish Museum, Natural History Museum, State Library, State Opera, Philharmonic, and the Berlin Marathon.\n</p>"
+            }
+        }
+    }
+}
+
+
+/* bad query */
+{
+    "batchcomplete": "",
+    "query": {
+        "normalized": [
+            {
+                "from": "asdqwe1q",
+                "to": "Asdqwe1q"
+            }
+        ],
+        "pages": {
+            "-1": {
+                "ns": 0,
+                "title": "Asdqwe1q",
+                "missing": ""
+            }
+        }
+    }
+}
