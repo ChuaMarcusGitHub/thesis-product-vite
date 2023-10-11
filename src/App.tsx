@@ -1,6 +1,10 @@
 import { useDisclosure } from "@chakra-ui/react";
 import SignInModal from "@modules/features/Login/components/SignInComponents/SignInModal";
-import { initializeOnThisDay, loadBriefArticle, loadDetailedArticle } from "@modules/features/OnThisDay/actions/OnThisDaySummaryActions";
+import {
+    initializeOnThisDay,
+    loadBriefArticle,
+    loadDetailedArticle,
+} from "@modules/features/OnThisDay/actions/OnThisDaySummaryActions";
 import ContentDetailModal from "@modules/features/OnThisDay/component/ContentComponent/ContentDetailModalProps";
 import {
     initSession,
@@ -13,19 +17,18 @@ import {
 import { Session } from "@supabase/supabase-js";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import testNetlify from "@netlFuncs/node-fetch/node-fetch";
 import "./App.css";
 
 function App() {
     const iframeUrl3 =
-        "en.wikipedia.org/w/api.php?action=parse&format=json&page=Berlin&prop=text|headhtml";
-    const iframeUrl4 = 
-        "en.wikipedia.org/w/api.php?action=query&origin=*&prop=extracts&format=json&exintro=&titles=Berlin"
+        "/api/wikidetail/api.php?action=parse&format=json&page=Berlin&prop=text|headhtml";
+    const iframeUrl4 =
+        "/api/wikidetail/api.php?action=query&origin=*&prop=extracts&format=json&exintro=&titles=Berlin";
 
     const dispatch = useDispatch();
     const sessionData: Session | null | undefined = useSelector(getSessionData);
     const isLoggedIn: boolean = useSelector(getIsLoggedIn);
-
-    
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const {
@@ -57,9 +60,11 @@ function App() {
 
     const logout = () => dispatch(logoutSession());
 
+    const testFetch = async () => await testNetlify();
+
     const handleBriefOpenContent = (url: string) => {
         // dispatch(loadDetailedArticle(url));
-        dispatch(loadBriefArticle(url))
+        dispatch(loadBriefArticle(url));
         // contentOpen();
         // dispatch(initializeOnThisDay())
     };
@@ -73,7 +78,7 @@ function App() {
         // dispatch(loadDetailedArticle(url));
         // dispatch(loadBriefArticle(url))
         // contentOpen();
-        dispatch(initializeOnThisDay())
+        dispatch(initializeOnThisDay());
     };
 
     const renderApplication = () => {
@@ -98,7 +103,9 @@ function App() {
                 </div>
 
                 <div>
-                    <button onClick={() => handleDetailedOpenContent(iframeUrl3)}>
+                    <button
+                        onClick={() => handleDetailedOpenContent(iframeUrl3)}
+                    >
                         Open Detailed Content
                     </button>
                 </div>
@@ -107,6 +114,10 @@ function App() {
                     <button onClick={() => handleFeedOpenContent()}>
                         Open Feed Content
                     </button>
+                </div>
+
+                <div>
+                    <button onClick={() => testFetch()}>Test Node Fetch</button>
                 </div>
                 <ContentDetailModal
                     onClose={contentClose}

@@ -6,6 +6,18 @@
 
   # Uncomment to use this redirect for Single Page Applications like create-react-app.
   # Not needed for static site generators.
+
+  [[redirects]]
+    from = "/api/wikidetail/*"
+    to = "https://en.wikipedia.org/w/:splat" #en is current limitation without backend!
+    status = 200
+
+  [[redirects]]
+    from = "/api/wikiday/*"
+    to = "https://api.wikimedia.org/feed/v1/wikipedia/:splat" #en is current limitation without backend!
+    status = 200
+    
+
   [[redirects]]
     from = "/*"
     to = "/index.html"

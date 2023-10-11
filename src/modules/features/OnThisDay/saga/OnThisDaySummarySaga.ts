@@ -27,12 +27,15 @@ import {
     transformOtdFeedResponse,
 } from "./OnThisDaySummarySagaUtils";
 
+const WIKI_ACCESS_TOKEN = import.meta.env.VITE_WIKI_ACCESS_TOKEN;
+const WIKI_APP_AGENT = import.meta.env.APP_AGENT;
+
 function* initializeOnThisDay() {
     try {
         /* Create prequery url string for delegation to sub-tasks */
         const today = new Date(Date.now());
-        const month = today.getMonth();
-        const day = today.getDay();
+        const month = String(today.getMonth() + 1).padStart(2, "0");
+        const day = String(today.getDay()).padStart(2, "0");
         const preQueryParams = {
             type: ON_THIS_DAY_TOPICS.ALL,
             month: month,
@@ -50,16 +53,12 @@ function* initializeOnThisDay() {
             console.log(response);
             // Parse the information
             for (const key in response) {
-                const transformedData: ISetFeedArticlePayload = transformOtdFeedResponse(
-                    key,
-                    response[key]
-                );
+                const transformedData: ISetFeedArticlePayload =
+                    transformOtdFeedResponse(key, response[key]);
                 // extract data, yield put to storage
                 console.log(`Finished Parsing data: ${transformedData.type}`);
                 console.log(transformedData);
-                yield put(
-                    setFeedArticles(transformedData)
-                );
+                yield put(setFeedArticles(transformedData));
             }
         }
     } catch (e: unknown) {
@@ -70,8 +69,8 @@ function* initializeOnThisDay() {
 
 function* fetchOnThisDayData(params: {
     type: string;
-    month: number;
-    day: number;
+    month: string;
+    day: string;
 }) {
     try {
         const completedQuery = buildOnThisDayQuery(
@@ -82,7 +81,17 @@ function* fetchOnThisDayData(params: {
         console.log(`completed query:${completedQuery}`);
         const response: IOnThisDayResponse = yield call(
             fetchURL,
-            completedQuery
+            completedQuery,
+            undefined,
+            undefined,
+            {
+                headers: {
+                    Authorization: WIKI_ACCESS_TOKEN,
+                    "Api-User-Agent": WIKI_APP_AGENT,
+                },
+            },
+            undefined,
+            ""
         );
         return response;
     } catch (e) {
@@ -92,7 +101,14 @@ function* fetchOnThisDayData(params: {
 
 function* loadDetailedArticle(action: PayloadAction<string>) {
     try {
-        const response: string = yield call(fetchWebpage, action.payload);
+        const response: string = yield call(
+            fetchWebpage,
+            action.payload,
+            undefined,
+            undefined,
+            undefined,
+            ""
+        );
         console.info("response from loadSelect Article");
         console.info(response);
 
@@ -108,7 +124,12 @@ function* loadBriefArticle(action: PayloadAction<string>) {
     try {
         const response: IArticleBriefResponse = yield call(
             fetchURL,
-            action.payload
+            action.payload,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            ""
         );
 
         if (response && response.query) {

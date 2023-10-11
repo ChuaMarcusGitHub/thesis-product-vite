@@ -87,7 +87,6 @@ async function fetchURL(
         const url = `${newBase}${urlString}${query}`;
 
         // Set up the options (with request, method type and other options if passed in)
-        // const jsonRequest = request ?  JSON.stringify(request) : undefined;
         const jsonRequest = request ? JSON.stringify(request) : null;
         const urlOptions = {
             ...defaultOptions,
@@ -95,6 +94,12 @@ async function fetchURL(
             body: jsonRequest,
             ..._options,
         };
+
+        console.log("-------------Performing Webservice call [START]---------------")
+        console.log(`url:${url}`)
+        console.log("options:")
+        console.log(urlOptions)
+        console.log("-------------Performing Webservice call [END]---------------")
 
         //Perform fetch
         const response = await fetch(url, urlOptions)

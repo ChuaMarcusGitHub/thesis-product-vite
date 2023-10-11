@@ -141,22 +141,16 @@ export const transformEventPages = (
 
 export const buildOnThisDayQuery = (
     type = ON_THIS_DAY_TOPICS.ALL,
-    day = 1,
-    month = 1
+    day = "01",
+    month = "01"
 ): string => {
     let builtURL = "";
-    let queryDay = "";
-    if (day < 10) queryDay = `0${day}`;
-    else queryDay = day.toString();
-
-    let queryMonth = "";
-    if (month < 10) queryMonth = `0${month}`;
-    else queryMonth = month.toString();
+    
 
     // build string;
-    builtURL = WebServiceURLs.ON_THIS_DAY.replace("{event_type}", type)
-        .replace("{month}", queryMonth)
-        .replace("{day}", queryDay);
+    builtURL = WebServiceURLs.WIKI_ON_THIS_DAY.replace("{event_type}", type)
+        .replace("{month}", month)
+        .replace("{day}", day);
     console.log(`Built query url: ${builtURL}`);
     return builtURL;
 };

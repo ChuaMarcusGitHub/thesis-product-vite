@@ -13,7 +13,8 @@ export default defineConfig({
             "@features": `${path.resolve(__dirname, "./src/modules/features/")}`,
             "@rsc": `${path.resolve(__dirname, "./src/resource/")}`,
             "@moduleRoot": `${path.resolve(__dirname, "./src/modules/root/")}`,
-            "@supaFuncs": `${path.resolve(__dirname, "./supabase/functions")}`,
+            "@supaFuncs": `${path.resolve(__dirname, "./supabase/functions/")}`,
+            "@netlFuncs":`${path.resolve(__dirname, "./netlify/functions/")}`,
         },
     },
 });

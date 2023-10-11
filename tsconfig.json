@@ -31,7 +31,8 @@
             "@features/*": ["./src/modules/features/*"],
             "@rsc/*": ["./src/resource/*"],
             "@moduleRoot/*": ["./src/modules/root/*"],
-            "@supaFuncs/*": ["./supabase/functions/*"]
+            "@supaFuncs/*": ["./supabase/functions/*"],
+            "@netlFuncs/*": ["./netlify/functions/*"]
         }
     },
     "types": ["vite"] ,
