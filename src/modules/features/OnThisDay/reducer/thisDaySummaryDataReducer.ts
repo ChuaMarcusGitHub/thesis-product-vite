@@ -3,26 +3,24 @@ import { ActionType } from "typesafe-actions";
 import {
     initializeOnThisDay,
     OnThisDaySummaryAction,
-    setBirthArticles,
     setBriefArticle,
-    setDeathArticles,
     setDetailedArticle,
-    setEventArticles,
+    setFeedArticles,
 } from "../actions/OnThisDaySummaryActions";
 import { IOnThisDaySummaryDataState } from "../type/OnThisDayCommonTypes";
 
 const initialState: IOnThisDaySummaryDataState = {
-    eventsArticles: undefined,
-    deathArticles: undefined,
-    birthArticles: undefined,
+    events: undefined,
+    deaths: undefined,
+    births: undefined,
+    holidays: undefined,
+    selected: undefined,
     selectedArticle: undefined,
 };
 
 type ThisDayActionType =
     | typeof initializeOnThisDay
-    | typeof setEventArticles
-    | typeof setDeathArticles
-    | typeof setBirthArticles
+    | typeof setFeedArticles
     | typeof setDetailedArticle
     | typeof setBriefArticle;
 
@@ -31,21 +29,11 @@ const thisDaySummaryDataReducer: Reducer<
     ActionType<ThisDayActionType>
 > = (state = initialState, action: ActionType<ThisDayActionType>) => {
     switch (action.type) {
-        case OnThisDaySummaryAction.SET_EVENT_ARTICLES:
+        case OnThisDaySummaryAction.SET_FEED_ARTICLES:
             return {
                 ...state,
-                eventsArticles: action.payload,
-            };
-        case OnThisDaySummaryAction.SET_DEATH_ARTICLES:
-            return {
-                ...state,
-                deathArticles: action.payload,
-            };
-        case OnThisDaySummaryAction.SET_BIRTH_ARTICLES:
-            return {
-                ...state,
-                birthArticles: action.payload,
-            };
+                [action.payload.type]: action.payload.events,// [deaths]: {}
+            }
         case OnThisDaySummaryAction.SET_DETAILED_ARTICLE:
             return {
                 ...state,

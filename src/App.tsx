@@ -4,7 +4,6 @@ import { initializeOnThisDay, loadBriefArticle, loadDetailedArticle } from "@mod
 import ContentDetailModal from "@modules/features/OnThisDay/component/ContentComponent/ContentDetailModalProps";
 import {
     initSession,
-    loginSession,
     logoutSession,
 } from "@modules/root/authprovider/actions/AuthActions";
 import {
@@ -17,20 +16,16 @@ import { useDispatch, useSelector } from "react-redux";
 import "./App.css";
 
 function App() {
-    const iframeUrl = "blog.logrocket.com/best-practices-react-iframes/";
-    const iframeUrl2 = "en.wikipedia.org/api/rest_v1/page/html/Berlin";
     const iframeUrl3 =
         "en.wikipedia.org/w/api.php?action=parse&format=json&page=Berlin&prop=text|headhtml";
-        
     const iframeUrl4 = 
-    "en.wikipedia.org/w/api.php?action=query&origin=*&prop=extracts&format=json&exintro=&titles=Berlin"
+        "en.wikipedia.org/w/api.php?action=query&origin=*&prop=extracts&format=json&exintro=&titles=Berlin"
 
     const dispatch = useDispatch();
     const sessionData: Session | null | undefined = useSelector(getSessionData);
     const isLoggedIn: boolean = useSelector(getIsLoggedIn);
 
-    const [email, setEmail] = useState("test1@gmail.com");
-    const [password, setPassword] = useState("password");
+    
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const {
@@ -59,12 +54,21 @@ function App() {
         } else console.log("--------No Session Data--------");
     }, [sessionData]);
 
-    const login = () =>
-        dispatch(loginSession({ email: email, password: password }));
-
     const logout = () => dispatch(logoutSession());
 
-    const handleOpenContent = (url: string) => {
+    const handleBriefOpenContent = (url: string) => {
+        // dispatch(loadDetailedArticle(url));
+        dispatch(loadBriefArticle(url))
+        // contentOpen();
+        dispatch(initializeOnThisDay())
+    };
+    const handleDetailedOpenContent = (url: string) => {
+        dispatch(loadDetailedArticle(url));
+        // dispatch(loadBriefArticle(url))
+        // contentOpen();
+        // dispatch(initializeOnThisDay())
+    };
+    const handleFeedOpenContent = () => {
         // dispatch(loadDetailedArticle(url));
         // dispatch(loadBriefArticle(url))
         // contentOpen();
@@ -87,8 +91,20 @@ function App() {
                     </div>
                 )}
                 <div>
-                    <button onClick={() => handleOpenContent(iframeUrl4)}>
-                        Open Content
+                    <button onClick={() => handleBriefOpenContent(iframeUrl4)}>
+                        Open Feed Content
+                    </button>
+                </div>
+
+                <div>
+                    <button onClick={() => handleDetailedOpenContent(iframeUrl4)}>
+                        Open Feed Content
+                    </button>
+                </div>
+
+                <div>
+                    <button onClick={() => handleFeedOpenContent()}>
+                        Open Feed Content
                     </button>
                 </div>
                 <ContentDetailModal
