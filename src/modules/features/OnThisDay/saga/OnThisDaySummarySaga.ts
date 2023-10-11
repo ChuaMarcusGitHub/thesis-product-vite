@@ -1,29 +1,21 @@
-import { WEBSERVICE_METHOD } from "@modules/root/webservice/WebserviceTypes";
-import { WebServiceURLs } from "@modules/root/webservice/WebserviceURLs";
+// import { WEBSERVICE_METHOD } from "@modules/root/webservice/WebserviceTypes";
+// import { WebServiceURLs } from "@modules/root/webservice/WebserviceURLs";
 import {
     fetchURL,
     fetchWebpage,
 } from "@modules/root/webservice/WebserviceUtils";
 import { PayloadAction } from "@reduxjs/toolkit";
-import { env } from "process";
-import {
-    all,
-    call,
-    fork,
-    put,
-    putResolve,
-    takeLeading,
-} from "redux-saga/effects";
+import { call, fork, put, putResolve, takeLeading } from "redux-saga/effects";
 import {
     OnThisDaySummaryAction,
-    setBirthArticles,
     setBriefArticle,
-    setDeathArticles,
     setDetailedArticle,
-    setEventArticles,
+    setFeedArticles,
 } from "../actions/OnThisDaySummaryActions";
 import {
     IArticleBriefObject,
+    IOtdCardData,
+    ISetFeedArticlePayload,
     ON_THIS_DAY_TOPICS,
 } from "../type/OnThisDayCommonTypes";
 import {
@@ -33,6 +25,7 @@ import {
 import {
     buildOnThisDayQuery,
     transformBriefArticleObject,
+    transformOtdFeedResponse,
 } from "./OnThisDaySummarySagaUtils";
 
 function* initializeOnThisDay() {
@@ -52,6 +45,24 @@ function* initializeOnThisDay() {
             fetchOnThisDayData,
             preQueryParams
         );
+        if (!response) {
+            // negative response - find case test
+        } else {
+            console.log(response);
+            // Parse the information
+            for (const key in response) {
+                const transformedData: ISetFeedArticlePayload = transformOtdFeedResponse(
+                    key,
+                    response[key]
+                );
+                // extract data, yield put to storage
+                console.log(`Finished Parsing data: ${transformedData.type}`);
+                console.log(transformedData);
+                yield put(
+                    setFeedArticles(transformedData)
+                );
+            }
+        }
     } catch (e: unknown) {
         //Throw error here
         console.error(`Unable to initialize 'OnThisDay'! error:${e}`);
@@ -59,7 +70,7 @@ function* initializeOnThisDay() {
 }
 
 function* fetchOnThisDayData(params: {
-    type: ON_THIS_DAY_TOPICS;
+    type: string;
     month: number;
     day: number;
 }) {
@@ -69,15 +80,10 @@ function* fetchOnThisDayData(params: {
             params.day,
             params.month
         );
+        console.log(`completed query:${completedQuery}`);
         const response: IOnThisDayResponse = yield call(
             fetchURL,
-            completedQuery,
-            null,
-            WEBSERVICE_METHOD.GET,
-            {
-                Authorization: import.meta.env.VITE_WIKI_ACCESS_TOKEN,
-                "Api-User-Agent": import.meta.env.VITE_WIKI_APP_AGENT,
-            }
+            completedQuery
         );
         return response;
     } catch (e) {

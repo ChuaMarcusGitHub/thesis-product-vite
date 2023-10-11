@@ -9,22 +9,18 @@ export enum API_SUPPORTED_LANGUAGES {
     ARABIC = "ar",
     BOSNIAN = "bs",
 }
-export enum ON_THIS_DAY_TOPICS {
-    EVENTS = "events",
-    DEATHS = "deaths",
-    BIRTHS = "births",
-    HOLIDAYS = "holidays",
-    SELECTED = "selected",
-    ALL = "all",
+export const ON_THIS_DAY_TOPICS = {
+    EVENTS: "events",
+    DEATHS: "deaths",
+    BIRTHS: "births",
+    HOLIDAYS: "holidays",
+    SELECTED: "selected",
+    ALL: "all",
 }
-export interface IDateRequestObj {
-    month: number;
-    day: number;
-    year?: number;
-}
+
 export interface IOtdWikiData {
     text: string;
-    pages: IOtdPageData;
+    pages: IOtdPageData[];
     year: number;
 }
 export interface IThumbnailData {
@@ -74,22 +70,35 @@ export interface IOtdPageData {
 
 // Converted into local data for state storage
 // Also used for keeping in DB (for history/favourites)
-export interface IOtdCardData {
-    year: number;
-    tid: string;
+export interface IOtdCardPageData{
     pageId: number;
     title: string;
-    text: string;
     description: string;
     extract: string;
     thumbnail: IThumbnailData;
-    tag: ON_THIS_DAY_TOPICS;
+    tid: string;
+}
+export interface IOtdCardData {
+    year: number;
+    event: string;
+    pages: IOtdCardPageData[] | null;
+    tag: string;
 }
 
+export interface ISetFeedArticlePayload{
+    events: IOtdFeedObject;
+    type: string
+}
+
+export interface IOtdFeedObject {
+    [key: number]: IOtdCardData[];
+}
 export interface IOnThisDaySummaryDataState {
-    eventsArticles?: IOtdCardData[];
-    deathArticles?: IOtdCardData[];
-    birthArticles?: IOtdCardData[];
+    events?: IOtdFeedObject;
+    deaths?: IOtdFeedObject;
+    births?: IOtdFeedObject;
+    holidays?: IOtdFeedObject;
+    selected?: IOtdFeedObject;
     selectedArticle?: {
         detailed?: string | TrustedHTML | null;
         brief?: IArticleBriefObject;
