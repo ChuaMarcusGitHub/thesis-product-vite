@@ -17,7 +17,6 @@ import {
 import { Session } from "@supabase/supabase-js";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import testNetlify from "@netlFuncs/node-fetch/node-fetch";
 import "./App.css";
 
 function App() {
@@ -59,8 +58,6 @@ function App() {
     }, [sessionData]);
 
     const logout = () => dispatch(logoutSession());
-
-    const testFetch = async () => await testNetlify();
 
     const handleBriefOpenContent = (url: string) => {
         // dispatch(loadDetailedArticle(url));
@@ -114,10 +111,6 @@ function App() {
                     <button onClick={() => handleFeedOpenContent()}>
                         Open Feed Content
                     </button>
-                </div>
-
-                <div>
-                    <button onClick={() => testFetch()}>Test Node Fetch</button>
                 </div>
                 <ContentDetailModal
                     onClose={contentClose}
