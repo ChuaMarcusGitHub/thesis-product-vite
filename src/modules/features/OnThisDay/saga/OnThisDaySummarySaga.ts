@@ -28,7 +28,7 @@ import {
 } from "./OnThisDaySummarySagaUtils";
 
 const WIKI_ACCESS_TOKEN = import.meta.env.VITE_WIKI_ACCESS_TOKEN;
-const WIKI_APP_AGENT = import.meta.env.APP_AGENT;
+const WIKI_APP_AGENT = import.meta.env.VITE_WIKI_APP_AGENT;
 
 function* initializeOnThisDay() {
     try {
