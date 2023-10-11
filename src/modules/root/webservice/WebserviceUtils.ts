@@ -7,8 +7,8 @@ import {
 import { WebServiceURLs } from "./WebserviceURLs";
 
 const BASE_URL = "https://";
-const TIME_OUT = 60000; // timeout in miliseconds
-const proxy = true;
+// const TIME_OUT = 60000; // timeout in miliseconds
+// const proxy = true;
 
 const defaultOptions: IWebserviceOptions = {
     method: WEBSERVICE_METHOD.GET,

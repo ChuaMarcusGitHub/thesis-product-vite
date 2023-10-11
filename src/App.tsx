@@ -11,7 +11,7 @@ import {
     getSessionData,
 } from "@modules/root/authprovider/selector/AuthSelector";
 import { Session } from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./App.css";
 
@@ -39,6 +39,7 @@ function App() {
         dispatch(initSession());
 
         console.log(`isContent Open: ${isContentOpen}`);
+        console.log(contentOpen);
     }, []);
 
     useEffect(() => {
@@ -60,7 +61,7 @@ function App() {
         // dispatch(loadDetailedArticle(url));
         dispatch(loadBriefArticle(url))
         // contentOpen();
-        dispatch(initializeOnThisDay())
+        // dispatch(initializeOnThisDay())
     };
     const handleDetailedOpenContent = (url: string) => {
         dispatch(loadDetailedArticle(url));
@@ -92,13 +93,13 @@ function App() {
                 )}
                 <div>
                     <button onClick={() => handleBriefOpenContent(iframeUrl4)}>
-                        Open Feed Content
+                        Open Brief Content
                     </button>
                 </div>
 
                 <div>
-                    <button onClick={() => handleDetailedOpenContent(iframeUrl4)}>
-                        Open Feed Content
+                    <button onClick={() => handleDetailedOpenContent(iframeUrl3)}>
+                        Open Detailed Content
                     </button>
                 </div>
 

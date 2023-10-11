@@ -3,24 +3,21 @@ import {
     ModalBody,
     ModalCloseButton,
     ModalContent,
-    ModalHeader,
     ModalOverlay,
     Progress,
-    Spinner,
     Tab,
     TabList,
     TabPanel,
     TabPanels,
     Tabs,
 } from "@chakra-ui/react";
-import React, { useState, useEffect, useRef, Suspense } from "react";
+import React, { useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import {
     getSelectedBriefArticle,
     getSelectedDetailedArticle,
 } from "@modules/features/OnThisDay/selector/OnThisDaySummarySelector";
 import ModalTabFullContent from "./ModalTabFullContent";
-import { spinnerProps } from "./ModalTabFullContentStyles";
 import HTMLReactParser from "html-react-parser";
 import { IArticleBriefObject } from "../../type/OnThisDayCommonTypes";
 import "html-react-parser";
@@ -32,7 +29,6 @@ export interface IContentDetailModalProps {
     onClose: () => void;
 }
 const ContentDetailModal: React.FC<IContentDetailModalProps> = ({
-    title = "",
     isOpen = false,
     onClose = () =>
         console.error("ContentDetailModal onClose Method undefined!"),

@@ -14,7 +14,6 @@ import {
 } from "../actions/OnThisDaySummaryActions";
 import {
     IArticleBriefObject,
-    IOtdCardData,
     ISetFeedArticlePayload,
     ON_THIS_DAY_TOPICS,
 } from "../type/OnThisDayCommonTypes";

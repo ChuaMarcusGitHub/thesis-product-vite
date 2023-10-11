@@ -1,4 +1,4 @@
-import { AuthError, Session, User } from "@supabase/supabase-js";
+import { AuthError, Session } from "@supabase/supabase-js";
 
 // Self typed because supabase has no typing for this
 export interface ISessionObject {

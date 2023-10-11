@@ -1,5 +1,4 @@
 import {
-    BrowserRouter as Router,
     Routes,
     Route,
     Navigate,
@@ -8,7 +7,6 @@ import {
 
 import { useSelector, useDispatch } from "react-redux";
 import Dashboard from "@modules/features/Dashboard/components/Dashboard";
-import Sandbox from "@modules/features/Sandbox/component/Sandbox";
 import OnThisDayDashboard from "@modules/features/OnThisDay/component/Pages/OnThisDayDashboard";
 import { routesListSelector } from "../history/routeReducer";
 import { setRoute } from "../history/routeActions";
@@ -29,7 +27,6 @@ export enum RoutesList {
 const RouterMap = [
     { path: RoutesList.ROOT, component: <App /> },
     { path: RoutesList.DASHBOARD, component: <Dashboard /> },
-    { path: RoutesList.SANDBOX, component: <Sandbox /> },
     { path: RoutesList.ON_THIS_DAY, component: <OnThisDayDashboard /> },
     {
         path: RoutesList.DEFAULT_DASHBOARD,

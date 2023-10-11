@@ -1,4 +1,4 @@
-import { IArticleDetailObject, IOtdPageData } from "./OnThisDayCommonTypes";
+import { IArticleDetailObject, IOtdWikiData } from "./OnThisDayCommonTypes";
 
 export interface IArticleDetailResponse {
     parse: IArticleDetailObject;
@@ -25,9 +25,6 @@ export interface IArticleBriefResponse {
 }
 
 export interface IOnThisDayResponse {
-    selected?: IOtdPageData[];
-    births?: IOtdPageData[];
-    deaths?: IOtdPageData[];
-    events?: IOtdPageData[];
-    holidays?: IOtdPageData[];
+    [type: string]: IOtdWikiData[];
+    
 }
