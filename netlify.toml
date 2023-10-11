@@ -11,6 +11,7 @@
     from = "/api/wikidetail/*"
     to = "https://en.wikipedia.org/w/:splat" #en is current limitation without backend!
     status = 200
+    
 
   [[redirects]]
     from = "/api/wikiday/*"
@@ -18,10 +19,10 @@
     status = 200
     
 
-  [[redirects]]
-    from = "/*"
-    to = "/index.html"
-    status = 200
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
 
   ## (optional) Settings for Netlify Dev
   ## https://github.com/netlify/cli/blob/main/docs/netlify-dev.md#project-detection

@@ -1,4 +1,4 @@
-import { IArticleDetailObject, IOtdWikiData } from "./OnThisDayCommonTypes";
+import { IArticleDetailObject, IBriefArticleQueryObj, IOtdWikiData } from "./OnThisDayCommonTypes";
 
 export interface IArticleDetailResponse {
     parse: IArticleDetailObject;
@@ -11,7 +11,7 @@ export interface IArticleBriefResponse {
             "*": string;
         };
     };
-    query: any; // Any is used because response returns a pageID; dependent on the article being selected
+    query: IBriefArticleQueryObj
     /*
         sample object - query:{
             "3354":{

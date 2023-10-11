@@ -1,4 +1,7 @@
-import { WebServiceURLs } from "@modules/root/webservice/WebserviceURLs";
+import {
+    WebServiceURLs,
+    WebServiceURLsDev,
+} from "@modules/root/webservice/WebserviceURLs";
 import {
     IArticleBriefObject,
     IArticleDetail,
@@ -13,6 +16,7 @@ import {
 
 // Constants for validation
 export const INVALID_SEARCH_PAGE = "-1";
+export const isDev = import.meta.env.DEV;
 /**
  *
  * @param response Type is any because the original response has way too many params that aren't used.
@@ -67,14 +71,17 @@ export const transformOtdFeedResponse = (
     type: string,
     wikiData: IOtdWikiData[]
 ): ISetFeedArticlePayload => {
-    const specialTopics: string[] = [ON_THIS_DAY_TOPICS.BIRTHS, ON_THIS_DAY_TOPICS.DEATHS]
+    const specialTopics: string[] = [
+        ON_THIS_DAY_TOPICS.BIRTHS,
+        ON_THIS_DAY_TOPICS.DEATHS,
+    ];
     const cardMap = new Map<number, IOtdCardData[]>(); // <year, cardData>
     let transformMethod = transformEventPages;
     if (specialTopics.includes(type))
         transformMethod = transformBirthDeathPages;
 
     wikiData.forEach((article) => {
-        const { text: event, pages, year= new Date().getFullYear() } = article;
+        const { text: event, pages, year = new Date().getFullYear() } = article;
         const cardData: IOtdCardData = {
             year: year,
             event: event,
@@ -91,7 +98,7 @@ export const transformOtdFeedResponse = (
     // Convert back to object since all dupes are gone
     return {
         type,
-        events: Object.fromEntries(cardMap.entries())
+        events: Object.fromEntries(cardMap.entries()),
     };
 };
 
@@ -145,12 +152,38 @@ export const buildOnThisDayQuery = (
     month = "01"
 ): string => {
     let builtURL = "";
-    
+    builtURL = isDev
+        ? WebServiceURLsDev.WIKI_ON_THIS_DAY
+        : WebServiceURLs.WIKI_ON_THIS_DAY;
 
     // build string;
-    builtURL = WebServiceURLs.WIKI_ON_THIS_DAY.replace("{event_type}", type)
+    builtURL = builtURL
+        .replace("{event_type}", type)
         .replace("{month}", month)
         .replace("{day}", day);
     console.log(`Built query url: ${builtURL}`);
     return builtURL;
+};
+
+export const buildBriefArticleQuery = (article = "Null" , format: "json"): string => {
+    let builtUrl = "";
+    builtUrl = isDev
+        ? WebServiceURLsDev.WIKIPEDIA_EXTRACT
+        : WebServiceURLs.WIKIPEDIA_EXTRACT;
+
+    builtUrl = builtUrl.replace("{article}", article)
+        .replace("{format}", format)
+    console.log(`Built url - Brief Article: ${builtUrl}`);
+    return builtUrl;    
+};
+
+export const buildFullArticleQuery = (article = "Null" ): string => {
+    let builtUrl = "";
+    builtUrl = isDev
+        ? WebServiceURLsDev.WIKIPEDIA_FULL
+        : WebServiceURLs.WIKIPEDIA_FULL;
+
+    builtUrl = builtUrl.replace("{article}", article)
+    console.log(`Built url - Brief Article: ${builtUrl}`);
+    return builtUrl;    
 };

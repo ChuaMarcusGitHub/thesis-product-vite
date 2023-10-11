@@ -22,6 +22,7 @@ import {
     IOnThisDayResponse,
 } from "../type/OnThisDayWebserviceTypes";
 import {
+    buildBriefArticleQuery,
     buildOnThisDayQuery,
     transformBriefArticleObject,
     transformOtdFeedResponse,
@@ -29,6 +30,7 @@ import {
 
 const WIKI_ACCESS_TOKEN = import.meta.env.VITE_WIKI_ACCESS_TOKEN;
 const WIKI_APP_AGENT = import.meta.env.VITE_WIKI_APP_AGENT;
+const isDev = import.meta.env.DEV;
 
 function* initializeOnThisDay() {
     try {
@@ -79,20 +81,25 @@ function* fetchOnThisDayData(params: {
             params.month
         );
         console.log(`completed query:${completedQuery}`);
-        const response: IOnThisDayResponse = yield call(
-            fetchURL,
-            completedQuery,
-            undefined,
-            undefined,
-            {
-                headers: {
-                    Authorization: WIKI_ACCESS_TOKEN,
-                    "Api-User-Agent": WIKI_APP_AGENT,
+        let response: IOnThisDayResponse;
+        if (isDev) {
+            response = yield call(fetchURL, completedQuery);
+        } else {
+            response = yield call(
+                fetchURL,
+                completedQuery,
+                undefined,
+                undefined,
+                {
+                    headers: {
+                        Authorization: WIKI_ACCESS_TOKEN,
+                        "Api-User-Agent": WIKI_APP_AGENT,
+                    },
                 },
-            },
-            undefined,
-            ""
-        );
+                undefined,
+                ""
+            );
+        }
         return response;
     } catch (e) {
         console.error("Error encountered at 'fetchOnThisDayData Saga method'");
@@ -101,14 +108,22 @@ function* fetchOnThisDayData(params: {
 
 function* loadDetailedArticle(action: PayloadAction<string>) {
     try {
-        const response: string = yield call(
-            fetchWebpage,
-            action.payload,
-            undefined,
-            undefined,
-            undefined,
-            ""
-        );
+        const apiUrl: string = buildBriefArticleQuery(action.payload, "json");
+        let response: string;
+
+        if (isDev) {
+            response = yield call(fetchWebpage, apiUrl);
+        } else {
+            response = yield call(
+                fetchWebpage,
+                apiUrl,
+                undefined,
+                undefined,
+                undefined,
+                ""
+            );
+        }
+
         console.info("response from loadSelect Article");
         console.info(response);
 
@@ -122,15 +137,21 @@ function* loadDetailedArticle(action: PayloadAction<string>) {
 
 function* loadBriefArticle(action: PayloadAction<string>) {
     try {
-        const response: IArticleBriefResponse = yield call(
-            fetchURL,
-            action.payload,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            ""
-        );
+        const apiUrl: string = buildBriefArticleQuery(action.payload, "json");
+        let response: IArticleBriefResponse;
+        if (isDev) {
+            response = yield call(fetchURL, apiUrl);
+        } else {
+            response = yield call(
+                fetchURL,
+                apiUrl,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                ""
+            );
+        }
 
         if (response && response.query) {
             const briefArticle: IArticleBriefObject | null =

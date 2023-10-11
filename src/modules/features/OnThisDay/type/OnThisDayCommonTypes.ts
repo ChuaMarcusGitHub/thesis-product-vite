@@ -68,6 +68,17 @@ export interface IOtdPageData {
     normalizedtitle: string;
 }
 
+export interface IBriefArticleObject {
+    pageId: number;
+    ns: number;
+    title: string;
+    extract: string;
+}
+
+export interface IBriefArticleQueryObj {
+    [pageId: number]: IBriefArticleObject
+}
+
 // Converted into local data for state storage
 // Also used for keeping in DB (for history/favourites)
 export interface IOtdCardPageData{

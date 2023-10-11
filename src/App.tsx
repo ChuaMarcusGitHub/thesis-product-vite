@@ -22,8 +22,9 @@ import "./App.css";
 function App() {
     const iframeUrl3 =
         "/api/wikidetail/api.php?action=parse&format=json&page=Berlin&prop=text|headhtml";
-    const iframeUrl4 =
-        "/api/wikidetail/api.php?action=query&origin=*&prop=extracts&format=json&exintro=&titles=Berlin";
+    // const iframeUrl4 = "/api/wikidetail/api.php?action=query&origin=*&prop=extracts&format=json&exintro=&titles=Berlin";
+
+    const query = "Berlin";
 
     const dispatch = useDispatch();
     const sessionData: Session | null | undefined = useSelector(getSessionData);
@@ -59,22 +60,16 @@ function App() {
 
     const logout = () => dispatch(logoutSession());
 
-    const handleBriefOpenContent = (url: string) => {
-        // dispatch(loadDetailedArticle(url));
-        dispatch(loadBriefArticle(url));
+    const handleBriefOpenContent = (query: string) => {
+        dispatch(loadBriefArticle(query));
         // contentOpen();
-        // dispatch(initializeOnThisDay())
+        
     };
-    const handleDetailedOpenContent = (url: string) => {
-        dispatch(loadDetailedArticle(url));
-        // dispatch(loadBriefArticle(url))
+    const handleDetailedOpenContent = (query: string) => {
+        dispatch(loadDetailedArticle(query));
         // contentOpen();
-        // dispatch(initializeOnThisDay())
     };
     const handleFeedOpenContent = () => {
-        // dispatch(loadDetailedArticle(url));
-        // dispatch(loadBriefArticle(url))
-        // contentOpen();
         dispatch(initializeOnThisDay());
     };
 
@@ -94,14 +89,14 @@ function App() {
                     </div>
                 )}
                 <div>
-                    <button onClick={() => handleBriefOpenContent(iframeUrl4)}>
+                    <button onClick={() => handleBriefOpenContent(query)}>
                         Open Brief Content
                     </button>
                 </div>
 
                 <div>
                     <button
-                        onClick={() => handleDetailedOpenContent(iframeUrl3)}
+                        onClick={() => handleDetailedOpenContent(query)}
                     >
                         Open Detailed Content
                     </button>
