@@ -7,6 +7,7 @@ import {
 import { WebServiceURLs } from "./WebserviceURLs";
 
 const BASE_URL = "https://";
+const NUM_TRY = 3;
 // const TIME_OUT = 60000; // timeout in miliseconds
 // const proxy = true;
 
@@ -29,7 +30,7 @@ async function fetchWebpage(
 ) {
     try {
         if (!urlString) throw Error(`Unable to find url - ${urlString}`);
-        
+
         // String build url
         const url = `${newBase}${urlString}${query}`;
         const urlOptions = {
@@ -37,34 +38,38 @@ async function fetchWebpage(
             method: _method,
             ..._options,
         };
+        let response;
+        let isOk = false;
 
-        const response = await fetch(url, urlOptions)
-            .then((promiseObj) => {
-                if (promiseObj.ok) {
-                    console.log("---Fetch Webpage success----");
-                    console.log(promiseObj);
-                                
-                    return promiseObj.text();
-
-                } else if (promiseObj.statusText === STATUS_TEXT.NOT_FOUND)
-                    throw Error(`Unable to find url - ${url}`);
-                
+        for (let attempt = 1; attempt <= NUM_TRY; ++attempt) {
+            console.log(`Attempt Fetch on ${url} - Attempt: ${attempt}`)
+            response = await fetch(url, urlOptions)
+                .then((promiseObj) => {
+                    isOk = promiseObj.ok;
+                    if (isOk) {
+                        console.log("---Fetch Webpage success----");
+                        console.log(promiseObj);
+                        return promiseObj.text();
+                    } else if (promiseObj.statusText === STATUS_TEXT.NOT_FOUND)
+                        throw Error(`Unable to find url - ${url}`);
                     else {
-                    console.info(promiseObj);
-                    throw Error(
-                        `Error in Promise Object - ${promiseObj?.statusText}`
-                    );
-                }
-            })
-            .then((data) => {
-                console.log(`Webpage retrieved from : ${url}`);
-                console.log(data)
-                return data;
-            })
-            .catch((error) => {
-                console.error(`Error in Response Object`);
-                console.error(error);
-            });
+                        console.info(promiseObj);
+                        throw Error(
+                            `Error in Promise Object - ${promiseObj?.statusText}`
+                        );
+                    }
+                })
+                .then((data) => {
+                    console.log(`Webpage retrieved from : ${url}`);
+                    console.log(data);
+                    return data;
+                })
+                .catch((error) => {
+                    console.error(`Error in Response Object`);
+                    console.error(error);
+                });
+            if (isOk) break;
+        }
 
         return response;
     } catch (e) {
@@ -75,6 +80,7 @@ async function fetchWebpage(
 
 async function fetchURL(
     urlString: string | WebServiceURLs,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     request?: any,
     _method = WEBSERVICE_METHOD.GET,
     _options?: Partial<IWebserviceOptions>,
@@ -95,11 +101,15 @@ async function fetchURL(
             ..._options,
         };
 
-        console.log("-------------Performing Webservice call [START]---------------")
-        console.log(`url:${url}`)
-        console.log("options:")
-        console.log(urlOptions)
-        console.log("-------------Performing Webservice call [END]---------------")
+        console.log(
+            "-------------Performing Webservice call [START]---------------"
+        );
+        console.log(`url:${url}`);
+        console.log("options:");
+        console.log(urlOptions);
+        console.log(
+            "-------------Performing Webservice call [END]---------------"
+        );
 
         //Perform fetch
         const response = await fetch(url, urlOptions)

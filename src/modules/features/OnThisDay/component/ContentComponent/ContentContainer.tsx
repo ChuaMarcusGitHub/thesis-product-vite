@@ -1,0 +1,121 @@
+import {
+    Box,
+    Tabs,
+    TabList,
+    TabPanels,
+    Tab,
+    TabPanel,
+    Skeleton,
+    Text,
+    Fade,
+    Spinner,
+} from "@chakra-ui/react";
+import React, { useEffect, useMemo, useState } from "react";
+import {
+    boxContainer,
+    skeletonTab,
+    headerTab,
+    loadingSpinner,
+    skeletonBoxContainer,
+} from "./ContentContainerProps";
+import YearAccordian from "./YearAccordian";
+import { useSelector } from "react-redux";
+import {
+    getArticleSummaries,
+    getIsLoading,
+} from "@features/OnThisDay/selector/OnThisDaySummarySelector";
+
+import data from "@rsc/sampleResponse/referenceFeedState.json";
+import { getPopulatedArticles } from "./UtilFiles/ContentComponentUtil";
+import { IOtdFeedObject } from "@features/OnThisDay/type/OnThisDayCommonTypes";
+const sampleData = JSON.parse(JSON.stringify(data));
+
+const ContentContainer: React.FC = () => {
+    // Constants
+    // States
+    const isLoading = useSelector(getIsLoading);
+    // const [isLoading, setIsLoading] = useState(true);
+
+    const eventArticles = useSelector(getArticleSummaries);
+
+    // Use Effects / Memos
+    const containerTabs = useMemo(
+        () => getPopulatedArticles(eventArticles),
+        [eventArticles]
+    );
+
+    const isLoaded = useMemo(() => {
+        return isLoading && containerTabs.length;
+    }, [isLoading, containerTabs]);
+    
+    // Render Methods
+    const renderTabs = () =>
+        containerTabs?.map((tabName, index) => (
+            <Fade in={!isLoading} key={`${tabName}-${index}`}>
+                <Tab {...headerTab} key={`${tabName}-${index}`}>
+                    <Text>{tabName}</Text>
+                </Tab>
+            </Fade>
+        ));
+
+    const renderContentSkeleton = () => {
+        return (
+            <TabPanel>
+                <Box {...skeletonBoxContainer}>
+                    <div
+                        style={{
+                            alignItems: "center",
+                            textAlign: "center",
+                        }}
+                    >
+                        <Spinner
+                            {...loadingSpinner}
+                            alignSelf={"center"}
+                            label={"Fetching Data...."}
+                        />
+                        <Text>Fetching Data...</Text>
+                    </div>
+                </Box>
+            </TabPanel>
+        );
+    };
+    const renderTabContainers = () => {
+        for (const [eventType] of Object.entries(eventArticles)) {
+            return (
+                <TabPanel key={`${eventType}-tab-panel`}>
+                    <Box>
+                        <YearAccordian typeEvents={eventArticles[eventType]} />
+                    </Box>
+                </TabPanel>
+            );
+        }
+    };
+
+    const renderComponent = () => {
+        return (
+            <Box {...boxContainer}>
+                <Tabs>
+                    <TabList>
+                        {isLoaded ? (
+                            renderTabs()
+                        ) : (
+                            <Tab>
+                                <Skeleton {...skeletonTab} />
+                            </Tab>
+                        )}
+                    </TabList>
+
+                    <TabPanels>
+                        {isLoaded
+                            ? renderTabContainers()
+                            : renderContentSkeleton()}
+                    </TabPanels>
+                </Tabs>
+            </Box>
+        );
+    };
+
+    return renderComponent();
+};
+
+export default ContentContainer;

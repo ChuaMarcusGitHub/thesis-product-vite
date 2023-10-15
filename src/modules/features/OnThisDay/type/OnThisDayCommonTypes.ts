@@ -1,3 +1,5 @@
+import { IReducerLoadingState } from "@src/modules/root/webservice/WebserviceTypes";
+
 export enum API_SUPPORTED_LANGUAGES {
     ENGLISH = "en",
     GERMAN = "de",
@@ -114,6 +116,11 @@ export interface IOnThisDaySummaryDataState {
         detailed?: string | TrustedHTML | null;
         brief?: IArticleBriefObject;
     };
+    loadState: IReducerLoadingState
+}
+
+export interface IArticleCategory {
+    [type: string]: IOtdFeedObject | null;
 }
 export interface IArticleHtml {
     article: string;

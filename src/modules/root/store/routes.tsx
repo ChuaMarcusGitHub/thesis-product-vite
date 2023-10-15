@@ -25,12 +25,13 @@ export enum RoutesList {
 }
 
 const RouterMap = [
+    // { path: RoutesList.ROOT, component: <OnThisDayDashboard /> },
     { path: RoutesList.ROOT, component: <App /> },
     { path: RoutesList.DASHBOARD, component: <Dashboard /> },
     { path: RoutesList.ON_THIS_DAY, component: <OnThisDayDashboard /> },
     {
         path: RoutesList.DEFAULT_DASHBOARD,
-        component: <Navigate to={RoutesList.ROOT} />,
+        component: <Navigate to={RoutesList.ON_THIS_DAY} />,
     },
 ];
 

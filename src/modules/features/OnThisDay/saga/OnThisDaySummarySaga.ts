@@ -11,6 +11,7 @@ import {
     setBriefArticle,
     setDetailedArticle,
     setFeedArticles,
+    setLoadState,
 } from "../actions/OnThisDaySummaryActions";
 import {
     IArticleBriefObject,
@@ -34,6 +35,7 @@ const isDev = import.meta.env.DEV;
 
 function* initializeOnThisDay() {
     try {
+        yield put(setLoadState(true));
         /* Create prequery url string for delegation to sub-tasks */
         const today = new Date(Date.now());
         const month = String(today.getMonth() + 1).padStart(2, "0");
@@ -66,6 +68,8 @@ function* initializeOnThisDay() {
     } catch (e: unknown) {
         //Throw error here
         console.error(`Unable to initialize 'OnThisDay'! error:${e}`);
+    } finally{
+        yield put(setLoadState(false));
     }
 }
 

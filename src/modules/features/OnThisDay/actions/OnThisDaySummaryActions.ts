@@ -3,6 +3,7 @@ import { IArticleBriefObject, ISetFeedArticlePayload } from "../type/OnThisDayCo
 
 export enum OnThisDaySummaryAction {
     INIT = "OnThisDaySummaryAction/INIT",
+    SET_LOAD_STATE = "OnThisDaySummaryAction/SET_LOAD_STATE",
     SET_FEED_ARTICLES = "OnThisDaySummaryAction/SET_FEED_ARTICLES",
     LOAD_BRIEF_ARTICLE = "OnThisDaySummaryAction/LOAD_BRIEF_ARTICLE",
     SET_BRIEF_ARTICLE = "OnThisDaySummaryAction/SET_BRIEF_ARTICLE",
@@ -14,6 +15,8 @@ export enum OnThisDaySummaryAction {
 export const initializeOnThisDay = () => action(OnThisDaySummaryAction.INIT);
 
 // Setter actions
+export const setLoadState = (newState: boolean) =>
+    action(OnThisDaySummaryAction.SET_LOAD_STATE, newState);
 export const setFeedArticles = (eventPayload: ISetFeedArticlePayload) =>
     action(OnThisDaySummaryAction.SET_FEED_ARTICLES, eventPayload);
 // Detail Actions

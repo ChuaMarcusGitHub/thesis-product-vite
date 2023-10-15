@@ -46,4 +46,7 @@ export interface IWebserviceOptions {
     [key: string]: any | undefined;
 }
 
+export interface IReducerLoadingState {
+    isLoading: boolean;
+}
 

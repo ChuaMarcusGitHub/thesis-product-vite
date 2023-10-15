@@ -1,11 +1,11 @@
-import { useDisclosure } from "@chakra-ui/react";
+import { Button, useColorMode, useDisclosure } from "@chakra-ui/react";
 import SignInModal from "@modules/features/Login/components/SignInComponents/SignInModal";
 import {
     initializeOnThisDay,
     loadBriefArticle,
     loadDetailedArticle,
 } from "@modules/features/OnThisDay/actions/OnThisDaySummaryActions";
-import ContentDetailModal from "@modules/features/OnThisDay/component/ContentComponent/ContentDetailModalProps";
+import ContentDetailModal from "@src/modules/features/OnThisDay/component/ContentComponent/ContentDetailModalProps";
 import {
     initSession,
     logoutSession,
@@ -15,11 +15,18 @@ import {
     getSessionData,
 } from "@modules/root/authprovider/selector/AuthSelector";
 import { Session } from "@supabase/supabase-js";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./App.css";
+import SummaryCard from "./modules/features/OnThisDay/component/ContentComponent/SummaryCard";
+
+import sampleFeed from "@rsc/sampleResponse/sampleFeedResponse.json";
+const testSample = JSON.parse(JSON.stringify(sampleFeed));
 
 function App() {
+    // Colour Mode
+    const { colorMode, toggleColorMode } = useColorMode();
+
     const iframeUrl3 =
         "/api/wikidetail/api.php?action=parse&format=json&page=Berlin&prop=text|headhtml";
     // const iframeUrl4 = "/api/wikidetail/api.php?action=query&origin=*&prop=extracts&format=json&exintro=&titles=Berlin";
@@ -37,12 +44,25 @@ function App() {
         onClose: contentClose,
     } = useDisclosure();
 
+    let timerId: NodeJS.Timeout;
+    const [propsData, setPropsData] = useState();
+    const [propsDesc, setPropsDesc] = useState();
+
     useEffect(() => {
         console.log(" ----Fetching Session ------");
         dispatch(initSession());
 
+        timerId = setTimeout(() => {
+            
+            console.log(testSample[0]);
+            setPropsData(testSample[0].pages[0]);
+            setPropsDesc(testSample[0].event);
+        }, 3000);
+
         console.log(`isContent Open: ${isContentOpen}`);
         console.log(contentOpen);
+
+        return () => clearTimeout(timerId);
     }, []);
 
     useEffect(() => {
@@ -63,7 +83,6 @@ function App() {
     const handleBriefOpenContent = (query: string) => {
         dispatch(loadBriefArticle(query));
         // contentOpen();
-        
     };
     const handleDetailedOpenContent = (query: string) => {
         dispatch(loadDetailedArticle(query));
@@ -95,9 +114,7 @@ function App() {
                 </div>
 
                 <div>
-                    <button
-                        onClick={() => handleDetailedOpenContent(query)}
-                    >
+                    <button onClick={() => handleDetailedOpenContent(query)}>
                         Open Detailed Content
                     </button>
                 </div>
@@ -113,7 +130,17 @@ function App() {
                     title={"Test iFrame"}
                     contentUrl={iframeUrl3}
                 />
+                <Button onClick={toggleColorMode}>
+                    Toggle {colorMode === "light" ? "Dark" : "Light"}
+                </Button>
 
+                <SummaryCard
+                    pageData={propsData}
+                    eventDescript={propsDesc}
+                    handleClick={() => {
+                        console.log("Card was clicked");
+                    }}
+                />
                 {/* <a rel="noopener noreferrer" href={"https://en.wikipedia.org/api/rest_v1/page/html/Berlin"} target="_blank">Open a new wikiLink</a> */}
             </div>
         );

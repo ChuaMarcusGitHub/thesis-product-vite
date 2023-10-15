@@ -6,6 +6,7 @@ import {
     setBriefArticle,
     setDetailedArticle,
     setFeedArticles,
+    setLoadState,
 } from "../actions/OnThisDaySummaryActions";
 import { IOnThisDaySummaryDataState } from "../type/OnThisDayCommonTypes";
 
@@ -16,13 +17,17 @@ const initialState: IOnThisDaySummaryDataState = {
     holidays: undefined,
     selected: undefined,
     selectedArticle: undefined,
+    loadState: {
+        isLoading: false,
+    }
 };
 
 type ThisDayActionType =
     | typeof initializeOnThisDay
     | typeof setFeedArticles
     | typeof setDetailedArticle
-    | typeof setBriefArticle;
+    | typeof setBriefArticle
+    | typeof setLoadState;
 
 const thisDaySummaryDataReducer: Reducer<
     IOnThisDaySummaryDataState,
@@ -33,6 +38,13 @@ const thisDaySummaryDataReducer: Reducer<
             return {
                 ...state,
                 [action.payload.type]: action.payload.events,// [deaths]: {}
+            }
+        case OnThisDaySummaryAction.SET_LOAD_STATE:
+            return {
+                ...state,
+                loadState:{
+                    isLoading: action.payload,
+                }
             }
         case OnThisDaySummaryAction.SET_DETAILED_ARTICLE:
             return {
