@@ -9,9 +9,13 @@ import {
     ModalHeader,
     ModalOverlay,
     Progress,
+    Box,
+    Text,
     Icon,
+    Fade,
+    SkeletonText,
 } from "@chakra-ui/react";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
     getSelectedBriefArticle,
@@ -19,9 +23,13 @@ import {
 } from "@modules/features/OnThisDay/selector/OnThisDaySummarySelector";
 import ModalTabFullContent from "./ModalTabFullContent";
 import HTMLReactParser from "html-react-parser";
-import { IArticleBriefObject } from "@features/onThisDay/type/OnThisDayCommonTypes";
+import {
+    IArticleBriefObject,
+    IArticleDetailedPayload,
+} from "@features/onThisDay/type/OnThisDayCommonTypes";
 import "html-react-parser";
 import {
+    clearDetailedArticle,
     loadBriefArticle,
     loadDetailedArticle,
 } from "@features/onThisDay/actions/OnThisDaySummaryActions";
@@ -31,8 +39,11 @@ import {
     progressBar,
 } from "./ContentDetailModalStyleProps";
 
+import styles from "./ContentDetailModal.module.scss";
+import classNames from "classnames/bind";
 import { MdArticle } from "react-icons/md";
 
+const cx = classNames.bind({ ...styles });
 export interface IContentDetailModalProps {
     title?: string;
     isOpen: boolean;
@@ -53,12 +64,18 @@ const ContentDetailModal: React.FC<IContentDetailModalProps> = ({
     // States
     const [isDetailedArticle, setIsDetailedArticle] = useState(false);
     const [progressPercent, setProgressPercent] = useState(0.0);
-    const detailedArticle: string | TrustedHTML | null = useSelector(
+    const detailedArticle: IArticleDetailedPayload | null = useSelector(
         getSelectedDetailedArticle
     );
+
     const briefArticle: IArticleBriefObject | null = useSelector(
         getSelectedBriefArticle
     );
+    const isLoaded = useMemo(() => {
+        return isDetailedArticle ? !!detailedArticle : !!briefArticle;
+    }, [isDetailedArticle, detailedArticle, briefArticle]);
+
+    // Component Methods
 
     const trackScroll = () => {
         if (bodyRef.current) {
@@ -76,39 +93,57 @@ const ContentDetailModal: React.FC<IContentDetailModalProps> = ({
 
     const handleReadingModeSwitch = () => {
         if (!isDetailedArticle) {
-            if (!detailedArticle) dispatch(loadDetailedArticle(title));
+            if (!detailedArticle)
+                dispatch(
+                    loadDetailedArticle({ title: title, shouldClear: false })
+                );
+            else if (
+                detailedArticle &&
+                detailedArticle.pageId !== briefArticle?.pageId
+            ) {
+                // If previous article already exist but not the same we clear
+                dispatch(
+                    loadDetailedArticle({ title: title, shouldClear: true })
+                );
+            }
         } else {
             if (!briefArticle) dispatch(loadBriefArticle(title));
         }
+        setProgressPercent(0);
         setIsDetailedArticle(!isDetailedArticle);
     };
 
     const handleClose = () => {
+        setIsDetailedArticle(false);
         setProgressPercent(0);
         onClose();
     };
 
     const renderBriefContent = () => (
-        <ModalBody overflowY={"scroll"} ref={bodyRef}>
+        <div className={cx("parse-content-container")}>
             {HTMLReactParser(briefArticle?.extract || "")}
-        </ModalBody>
+        </div>
     );
 
     const renderDetailedContent = () => (
-        <ModalBody overflowY={"scroll"} ref={bodyRef} onScroll={trackScroll}>
-            <ModalTabFullContent
-                updateProgress={trackScroll}
-                htmldoc={detailedArticle as TrustedHTML}
-            />
-        </ModalBody>
+        <ModalTabFullContent
+            htmldoc={detailedArticle?.detailedArticle as TrustedHTML}
+            pageId={detailedArticle?.pageId}
+        />
     );
 
     const renderModalFooter = () => (
         <ModalFooter>
             <HStack {...buttonStack}>
                 <Button onClick={handleReadingModeSwitch}>
-                    {isDetailedArticle ? "Detailed" : "Summarized"}
-                    <Icon as={MdArticle} />
+                    <HStack gap={3}>
+                        <Text>
+                            {`Change to: ${
+                                isDetailedArticle ? "Summarized" : "Detailed"
+                            }`}
+                        </Text>
+                        <Icon as={MdArticle} />
+                    </HStack>
                 </Button>
                 <Button onClick={onClose}>Close Article! (Esc)</Button>
             </HStack>
@@ -127,10 +162,28 @@ const ContentDetailModal: React.FC<IContentDetailModalProps> = ({
                 <ModalContent {...modalContent} ref={containerRef}>
                     <ModalCloseButton onClick={handleClose} />
                     <ModalHeader> {title} </ModalHeader>
-                    <Progress {...progressBar} value={progressPercent} />
-                    {isDetailedArticle
-                        ? renderDetailedContent()
-                        : renderBriefContent()}
+                    <Box margin={"10px"}>
+                        <Progress {...progressBar} value={progressPercent} />
+                    </Box>
+                    <ModalBody
+                        overflowY={"scroll"}
+                        ref={bodyRef}
+                        onScroll={trackScroll}
+                    >
+                        <SkeletonText
+                            isLoaded={isLoaded}
+                            mt="4"
+                            noOfLines={4}
+                            spacing="4"
+                            skeletonHeight="2"
+                        >
+                            <Fade in={isLoaded}>
+                                {isDetailedArticle
+                                    ? renderDetailedContent()
+                                    : renderBriefContent()}
+                            </Fade>
+                        </SkeletonText>
+                    </ModalBody>
                     {renderModalFooter()}
                 </ModalContent>
             </Modal>

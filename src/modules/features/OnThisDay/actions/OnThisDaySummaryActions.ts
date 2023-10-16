@@ -1,5 +1,10 @@
 import { action } from "typesafe-actions";
-import { IArticleBriefObject, ISetFeedArticlePayload } from "../type/OnThisDayCommonTypes";
+import {
+    IArticleBriefObject,
+    IArticleDetailedPayload,
+    ILoadArticleDetailPayload,
+    ISetFeedArticlePayload,
+} from "../type/OnThisDayCommonTypes";
 
 export enum OnThisDaySummaryAction {
     INIT = "OnThisDaySummaryAction/INIT",
@@ -27,10 +32,10 @@ export const loadBriefArticle = (payload: string) =>
 export const setBriefArticle = (payload: IArticleBriefObject) =>
     action(OnThisDaySummaryAction.SET_BRIEF_ARTICLE, payload);
 export const clearBriefArticle = () =>
-    action(OnThisDaySummaryAction.CLEAR_BRIEF_ARTICLE)
-export const loadDetailedArticle = (payload: string) =>
+    action(OnThisDaySummaryAction.CLEAR_BRIEF_ARTICLE);
+export const loadDetailedArticle = (payload: ILoadArticleDetailPayload) =>
     action(OnThisDaySummaryAction.LOAD_DETAILED_ARTICLE, payload);
-export const setDetailedArticle = (payload: string) =>
+export const setDetailedArticle = (payload: IArticleDetailedPayload) =>
     action(OnThisDaySummaryAction.SET_DETAILED_ARTICLE, payload);
 export const clearDetailedArticle = () =>
-    action(OnThisDaySummaryAction.CLEAR_DETAILED_ARTICLE)
+    action(OnThisDaySummaryAction.CLEAR_DETAILED_ARTICLE);

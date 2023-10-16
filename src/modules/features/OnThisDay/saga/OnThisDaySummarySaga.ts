@@ -7,6 +7,7 @@ import {
 import { PayloadAction } from "@reduxjs/toolkit";
 import { call, fork, put, putResolve, takeLeading } from "redux-saga/effects";
 import {
+    clearDetailedArticle,
     OnThisDaySummaryAction,
     setBriefArticle,
     setDetailedArticle,
@@ -15,6 +16,7 @@ import {
 } from "../actions/OnThisDaySummaryActions";
 import {
     IArticleBriefObject,
+    ILoadArticleDetailPayload,
     ISetFeedArticlePayload,
     ON_THIS_DAY_TOPICS,
 } from "../type/OnThisDayCommonTypes";
@@ -24,7 +26,9 @@ import {
 } from "../type/OnThisDayWebserviceTypes";
 import {
     buildBriefArticleQuery,
+    buildFullArticleQuery,
     buildOnThisDayQuery,
+    retrievePageId,
     transformBriefArticleObject,
     transformOtdFeedResponse,
 } from "./OnThisDaySummarySagaUtils";
@@ -110,13 +114,19 @@ function* fetchOnThisDayData(params: {
     }
 }
 
-function* loadDetailedArticle(action: PayloadAction<string>) {
+function* loadDetailedArticle(
+    action: PayloadAction<ILoadArticleDetailPayload>
+) {
     try {
-        const apiUrl: string = buildBriefArticleQuery(action.payload, "json");
+        const { title = "", shouldClear = false } = action.payload;
+        if(shouldClear) yield putResolve(clearDetailedArticle());
+        
+        const apiUrl: string = buildFullArticleQuery(title);
         let response: string;
 
         if (isDev) {
             response = yield call(fetchWebpage, apiUrl);
+            // response = yield call(fetchWebpage, apiUrl);
         } else {
             response = yield call(
                 fetchWebpage,
@@ -127,12 +137,15 @@ function* loadDetailedArticle(action: PayloadAction<string>) {
                 ""
             );
         }
-
-        console.info("response from loadSelect Article");
-        console.info(response);
-
-        if (response) yield putResolve(setDetailedArticle(response.toString()));
-        else throw Error(`unable to load article ${action.payload}`);
+        if (response) {
+            const pageId = retrievePageId(response);
+            yield putResolve(
+                setDetailedArticle({
+                    pageId: pageId,
+                    detailedArticle: response,
+                })
+            );
+        } else throw Error(`unable to load article ${action.payload}`);
     } catch (e) {
         console.error("Error in loadSelectedArticle");
         console.error(e);
@@ -180,7 +193,7 @@ function* watchOnThisDaySummarySaga() {
     yield takeLeading(
         OnThisDaySummaryAction.LOAD_DETAILED_ARTICLE,
         loadDetailedArticle
-    );
+    )
     yield takeLeading(
         OnThisDaySummaryAction.LOAD_BRIEF_ARTICLE,
         loadBriefArticle

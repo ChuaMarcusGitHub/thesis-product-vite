@@ -21,6 +21,7 @@ import "./App.css";
 import SummaryCard from "./modules/features/OnThisDay/component/ContentComponent/SummaryCard";
 
 import sampleFeed from "@rsc/sampleResponse/sampleFeedResponse.json";
+import { getSelectedDetailedArticle } from "./modules/features/OnThisDay/selector/OnThisDaySummarySelector";
 const testSample = JSON.parse(JSON.stringify(sampleFeed));
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
     const dispatch = useDispatch();
     const sessionData: Session | null | undefined = useSelector(getSessionData);
     const isLoggedIn: boolean = useSelector(getIsLoggedIn);
+    const testArticle = useSelector(getSelectedDetailedArticle)
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const {
@@ -53,7 +55,6 @@ function App() {
         dispatch(initSession());
 
         timerId = setTimeout(() => {
-            
             console.log(testSample[0]);
             setPropsData(testSample[0].pages[0]);
             setPropsDesc(testSample[0].event);
@@ -92,6 +93,32 @@ function App() {
         dispatch(initializeOnThisDay());
     };
 
+    // ----- Sandbox ---------
+
+    const testSummaryCard = () => (
+        <SummaryCard
+            pageData={propsData}
+            eventDescript={propsDesc}
+            handleClick={() => {
+                console.log("Card was clicked");
+            }}
+        />
+    );
+
+    const lightModeTest = () => (
+        <Button onClick={toggleColorMode}>
+            Toggle {colorMode === "light" ? "Dark" : "Light"}
+        </Button>
+    );
+
+    const modalTest = () => (
+        <ContentDetailModal
+            onClose={contentClose}
+            isOpen={isContentOpen}
+            title={"Test iFrame"}
+        />
+    );
+
     const renderApplication = () => {
         return (
             <div>
@@ -124,23 +151,7 @@ function App() {
                         Open Feed Content
                     </button>
                 </div>
-                <ContentDetailModal
-                    onClose={contentClose}
-                    isOpen={isContentOpen}
-                    title={"Test iFrame"}
-                    contentUrl={iframeUrl3}
-                />
-                <Button onClick={toggleColorMode}>
-                    Toggle {colorMode === "light" ? "Dark" : "Light"}
-                </Button>
 
-                <SummaryCard
-                    pageData={propsData}
-                    eventDescript={propsDesc}
-                    handleClick={() => {
-                        console.log("Card was clicked");
-                    }}
-                />
                 {/* <a rel="noopener noreferrer" href={"https://en.wikipedia.org/api/rest_v1/page/html/Berlin"} target="_blank">Open a new wikiLink</a> */}
             </div>
         );

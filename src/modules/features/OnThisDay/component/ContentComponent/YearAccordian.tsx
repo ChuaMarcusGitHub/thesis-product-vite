@@ -114,7 +114,7 @@ const YearAccordian: React.FC<IYearAccordianProps> = ({ typeEvents }) => {
     );
     const renderComponent = () => {
         return (
-            <Accordion allowMultiple={true} defaultIndex={0}>
+            <Accordion allowMultiple={true} defaultIndex={[0]}>
                 {accordianYears.map((year, index) =>
                     renderYearAccordian(year, typeEvents?.[year], index)
                 )}

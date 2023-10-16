@@ -6,6 +6,7 @@ import {
     IArticleBriefObject,
     IArticleDetail,
     IArticleDetailObject,
+    IBriefArticleQueryObj,
     IOtdCardData,
     IOtdCardPageData,
     IOtdPageData,
@@ -41,7 +42,7 @@ export const transformDetailedArticleObject = (
 };
 
 export const transformBriefArticleObject = (
-    queryObject: any
+    queryObject: IBriefArticleQueryObj
 ): IArticleBriefObject | null => {
     // Guard Clause, not a valid response Object
     if (!queryObject.pages) return null;
@@ -57,7 +58,7 @@ export const transformBriefArticleObject = (
 
     const briefArticleObj: IArticleBriefObject = {
         title: queryObject?.pages?.[pageKey].title,
-        pageId: queryObject?.pages?.[pageKey].title,
+        pageId: queryObject?.pages?.[pageKey].pageid || pageKey,
         extract: queryObject?.pages?.[pageKey].extract,
     };
 
@@ -100,6 +101,17 @@ export const transformOtdFeedResponse = (
         type,
         events: Object.fromEntries(cardMap.entries()),
     };
+};
+
+export const retrievePageId = (stringPage: string): number => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(stringPage, "text/html");
+    const pageMeta = doc.querySelector(`meta[property="mw:pageId"]`);
+    
+    let pageId = -1;
+    if(pageMeta) pageId = Number(pageMeta?.getAttribute("content"))
+
+    return pageId;
 };
 
 // Avoiding articles with this, since they are redundant
@@ -165,25 +177,29 @@ export const buildOnThisDayQuery = (
     return builtURL;
 };
 
-export const buildBriefArticleQuery = (article = "Null" , format: "json"): string => {
+export const buildBriefArticleQuery = (
+    article = "Null",
+    format: "json"
+): string => {
     let builtUrl = "";
     builtUrl = isDev
         ? WebServiceURLsDev.WIKIPEDIA_EXTRACT
         : WebServiceURLs.WIKIPEDIA_EXTRACT;
 
-    builtUrl = builtUrl.replace("{article}", article)
-        .replace("{format}", format)
+    builtUrl = builtUrl
+        .replace("{article}", article)
+        .replace("{format}", format);
     console.log(`Built url - Brief Article: ${builtUrl}`);
-    return builtUrl;    
+    return builtUrl;
 };
 
-export const buildFullArticleQuery = (article = "Null" ): string => {
+export const buildFullArticleQuery = (article = "Null"): string => {
     let builtUrl = "";
     builtUrl = isDev
-        ? WebServiceURLsDev.WIKIPEDIA_FULL
-        : WebServiceURLs.WIKIPEDIA_FULL;
+        ? WebServiceURLsDev.WIKIPEDIA_WEB
+        : WebServiceURLs.WIKIPEDIA_WEB;
 
-    builtUrl = builtUrl.replace("{article}", article)
+    builtUrl = builtUrl.replace("{article}", article);
     console.log(`Built url - Brief Article: ${builtUrl}`);
-    return builtUrl;    
+    return builtUrl;
 };

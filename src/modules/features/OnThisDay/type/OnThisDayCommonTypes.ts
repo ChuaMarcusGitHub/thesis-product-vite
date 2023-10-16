@@ -18,7 +18,7 @@ export const ON_THIS_DAY_TOPICS = {
     HOLIDAYS: "holidays",
     SELECTED: "selected",
     ALL: "all",
-}
+};
 
 export interface IOtdWikiData {
     text: string;
@@ -78,12 +78,14 @@ export interface IBriefArticleObject {
 }
 
 export interface IBriefArticleQueryObj {
-    [pageId: number]: IBriefArticleObject
+    pages: {
+        [pageId: number]: IBriefArticleObject;
+    };
 }
 
 // Converted into local data for state storage
 // Also used for keeping in DB (for history/favourites)
-export interface IOtdCardPageData{
+export interface IOtdCardPageData {
     pageId: number;
     title: string;
     description: string;
@@ -98,13 +100,22 @@ export interface IOtdCardData {
     tag: string;
 }
 
-export interface ISetFeedArticlePayload{
+export interface ISetFeedArticlePayload {
     events: IOtdFeedObject;
-    type: string
+    type: string;
 }
 
 export interface IOtdFeedObject {
     [key: number]: IOtdCardData[];
+}
+
+export interface IArticleDetailedPayload {
+    detailedArticle: string | TrustedHTML | null;
+    pageId: number;
+}
+export interface ILoadArticleDetailPayload {
+    title: string;
+    shouldClear?: boolean;
 }
 export interface IOnThisDaySummaryDataState {
     events?: IOtdFeedObject;
@@ -113,10 +124,10 @@ export interface IOnThisDaySummaryDataState {
     holidays?: IOtdFeedObject;
     selected?: IOtdFeedObject;
     selectedArticle?: {
-        detailed?: string | TrustedHTML | null;
+        detailed?: IArticleDetailedPayload;
         brief?: IArticleBriefObject;
     };
-    loadState: IReducerLoadingState
+    loadState: IReducerLoadingState;
 }
 
 export interface IArticleCategory {

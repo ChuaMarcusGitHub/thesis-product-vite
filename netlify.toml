@@ -9,9 +9,8 @@
 
  # [[redirects]]
  #   from = "/api/wikidetail/*"
- #   to = "https://en.wikipedia.org/w/:splat" #en is current limitation without backend!
- #   status = 200
-    
+ #   to = "https://en.wikipedia.org/:splat" #en is current limitation without backend!
+ #   status = 200    
 
  # [[redirects]]
  #   from = "/api/wikiday/*"

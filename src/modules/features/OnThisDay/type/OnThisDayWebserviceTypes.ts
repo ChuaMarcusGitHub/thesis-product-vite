@@ -23,7 +23,6 @@ export interface IArticleBriefResponse {
         }
      */
 }
-
 export interface IOnThisDayResponse {
     [type: string]: IOtdWikiData[];
     

@@ -1,6 +1,6 @@
 
 export const bannerContainer ={
-    width: "100vw",
+    width: "100%",
     height: "20vh",
 }
 export const bannerGrid = {
