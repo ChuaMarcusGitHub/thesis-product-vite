@@ -10,8 +10,8 @@ import Dashboard from "@modules/features/Dashboard/components/Dashboard";
 import OnThisDayDashboard from "@modules/features/OnThisDay/component/Pages/OnThisDayDashboard";
 import { routesListSelector } from "../history/routeReducer";
 import { setRoute } from "../history/routeActions";
-import App from "@src/App";
 import { useEffect } from "react";
+import App from "@src/App";
 
 // Component Imports
 
@@ -25,8 +25,8 @@ export enum RoutesList {
 }
 
 const RouterMap = [
-    // { path: RoutesList.ROOT, component: <OnThisDayDashboard /> },
-    { path: RoutesList.ROOT, component: <App /> },
+    { path: RoutesList.ROOT, component: <OnThisDayDashboard /> },
+    { path: RoutesList.SANDBOX, component: <App /> },
     { path: RoutesList.DASHBOARD, component: <Dashboard /> },
     { path: RoutesList.ON_THIS_DAY, component: <OnThisDayDashboard /> },
     {

@@ -39,7 +39,7 @@ function* initializeOnThisDay() {
         /* Create prequery url string for delegation to sub-tasks */
         const today = new Date(Date.now());
         const month = String(today.getMonth() + 1).padStart(2, "0");
-        const day = String(today.getDay()).padStart(2, "0");
+        const day = String(today.getDate()).padStart(2, "0");
         const preQueryParams = {
             type: ON_THIS_DAY_TOPICS.ALL,
             month: month,
@@ -68,7 +68,7 @@ function* initializeOnThisDay() {
     } catch (e: unknown) {
         //Throw error here
         console.error(`Unable to initialize 'OnThisDay'! error:${e}`);
-    } finally{
+    } finally {
         yield put(setLoadState(false));
     }
 }

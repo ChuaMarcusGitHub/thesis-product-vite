@@ -1,42 +1,57 @@
 import {
+    Button,
+    HStack,
     Modal,
     ModalBody,
     ModalCloseButton,
     ModalContent,
+    ModalFooter,
+    ModalHeader,
     ModalOverlay,
     Progress,
-    Tab,
-    TabList,
-    TabPanel,
-    TabPanels,
-    Tabs,
+    Icon,
 } from "@chakra-ui/react";
 import React, { useState, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
     getSelectedBriefArticle,
     getSelectedDetailedArticle,
 } from "@modules/features/OnThisDay/selector/OnThisDaySummarySelector";
 import ModalTabFullContent from "./ModalTabFullContent";
 import HTMLReactParser from "html-react-parser";
-import { IArticleBriefObject } from "../../type/OnThisDayCommonTypes";
+import { IArticleBriefObject } from "@features/onThisDay/type/OnThisDayCommonTypes";
 import "html-react-parser";
+import {
+    loadBriefArticle,
+    loadDetailedArticle,
+} from "@features/onThisDay/actions/OnThisDaySummaryActions";
+import {
+    buttonStack,
+    modalContent,
+    progressBar,
+} from "./ContentDetailModalStyleProps";
+
+import { MdArticle } from "react-icons/md";
 
 export interface IContentDetailModalProps {
     title?: string;
-    contentUrl: string;
     isOpen: boolean;
     onClose: () => void;
 }
+
 const ContentDetailModal: React.FC<IContentDetailModalProps> = ({
+    title = "None",
     isOpen = false,
     onClose = () =>
         console.error("ContentDetailModal onClose Method undefined!"),
 }) => {
     // Constants
+    const dispatch = useDispatch();
     const bodyRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
+    // States
+    const [isDetailedArticle, setIsDetailedArticle] = useState(false);
     const [progressPercent, setProgressPercent] = useState(0.0);
     const detailedArticle: string | TrustedHTML | null = useSelector(
         getSelectedDetailedArticle
@@ -59,10 +74,46 @@ const ContentDetailModal: React.FC<IContentDetailModalProps> = ({
         }
     };
 
+    const handleReadingModeSwitch = () => {
+        if (!isDetailedArticle) {
+            if (!detailedArticle) dispatch(loadDetailedArticle(title));
+        } else {
+            if (!briefArticle) dispatch(loadBriefArticle(title));
+        }
+        setIsDetailedArticle(!isDetailedArticle);
+    };
+
     const handleClose = () => {
         setProgressPercent(0);
         onClose();
     };
+
+    const renderBriefContent = () => (
+        <ModalBody overflowY={"scroll"} ref={bodyRef}>
+            {HTMLReactParser(briefArticle?.extract || "")}
+        </ModalBody>
+    );
+
+    const renderDetailedContent = () => (
+        <ModalBody overflowY={"scroll"} ref={bodyRef} onScroll={trackScroll}>
+            <ModalTabFullContent
+                updateProgress={trackScroll}
+                htmldoc={detailedArticle as TrustedHTML}
+            />
+        </ModalBody>
+    );
+
+    const renderModalFooter = () => (
+        <ModalFooter>
+            <HStack {...buttonStack}>
+                <Button onClick={handleReadingModeSwitch}>
+                    {isDetailedArticle ? "Detailed" : "Summarized"}
+                    <Icon as={MdArticle} />
+                </Button>
+                <Button onClick={onClose}>Close Article! (Esc)</Button>
+            </HStack>
+        </ModalFooter>
+    );
 
     const renderComponent = () => {
         return (
@@ -73,45 +124,14 @@ const ContentDetailModal: React.FC<IContentDetailModalProps> = ({
                 closeOnOverlayClick={false}
             >
                 <ModalOverlay />
-                <ModalContent
-                    maxW={"85%"}
-                    maxH={"75vh"}
-                    padding={"1%"}
-                    ref={containerRef}
-                    id={"content-modal"}
-                >
+                <ModalContent {...modalContent} ref={containerRef}>
                     <ModalCloseButton onClick={handleClose} />
-
-                    <Tabs>
-                        <TabList>
-                            <Tab>Summarized</Tab>
-                            <Tab>Detailed</Tab>
-                        </TabList>
-                        <Progress
-                            hasStripe
-                            value={progressPercent}
-                            isAnimated={true}
-                        />
-                        <TabPanels>
-                            <TabPanel>
-                                <ModalBody overflowY={"scroll"} ref={bodyRef}>
-                                    {HTMLReactParser(briefArticle?.extract || "")}
-                                </ModalBody>
-                            </TabPanel>
-                            <TabPanel
-                                overflow={"scroll"}
-                                onScroll={trackScroll}
-                                style={{ border: "1px solid red" }}
-                            >
-                                <ModalBody overflowY={"scroll"} ref={bodyRef}>
-                                    <ModalTabFullContent
-                                        updateProgress={trackScroll}
-                                        htmldoc={detailedArticle as TrustedHTML}
-                                    />
-                                </ModalBody>
-                            </TabPanel>
-                        </TabPanels>
-                    </Tabs>
+                    <ModalHeader> {title} </ModalHeader>
+                    <Progress {...progressBar} value={progressPercent} />
+                    {isDetailedArticle
+                        ? renderDetailedContent()
+                        : renderBriefContent()}
+                    {renderModalFooter()}
                 </ModalContent>
             </Modal>
         );

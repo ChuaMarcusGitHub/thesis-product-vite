@@ -7,7 +7,7 @@ import {
 import { WebServiceURLs } from "./WebserviceURLs";
 
 const BASE_URL = "https://";
-const NUM_TRY = 3;
+const NUM_TRY = 5;
 // const TIME_OUT = 60000; // timeout in miliseconds
 // const proxy = true;
 
@@ -42,7 +42,7 @@ async function fetchWebpage(
         let isOk = false;
 
         for (let attempt = 1; attempt <= NUM_TRY; ++attempt) {
-            console.log(`Attempt Fetch on ${url} - Attempt: ${attempt}`)
+            console.log(`Attempt Fetch on ${url} - Attempt: ${attempt}`);
             response = await fetch(url, urlOptions)
                 .then((promiseObj) => {
                     isOk = promiseObj.ok;
@@ -112,28 +112,38 @@ async function fetchURL(
         );
 
         //Perform fetch
-        const response = await fetch(url, urlOptions)
-            .then((promiseObject) => {
-                if (promiseObject.ok) {
-                    return promiseObject.json();
-                } else if (promiseObject.statusText === STATUS_TEXT.NOT_FOUND)
-                    throw Error(`Unable to find url - ${url}`);
-                else {
-                    console.info(promiseObject);
-                    throw Error(
-                        `Error in Promise Object - ${promiseObject?.statusText}`
-                    );
-                }
-            })
-            .then((responseObject) => {
-                console.log(`Response success from ${url}
+        let response;
+        let isOk = false;
+
+        for (let attempt = 1; attempt <= NUM_TRY; ++attempt) {
+            console.log(`Attempt Fetch on ${url} - Attempt: ${attempt}`);
+            response = await fetch(url, urlOptions)
+                .then((promiseObject) => {
+                    isOk = promiseObject.ok;
+                    if (isOk) {
+                        return promiseObject.json();
+                    } else if (
+                        promiseObject.statusText === STATUS_TEXT.NOT_FOUND
+                    )
+                        throw Error(`Unable to find url - ${url}`);
+                    else {
+                        console.info(promiseObject);
+                        throw Error(
+                            `Error in Promise Object - ${promiseObject?.statusText}`
+                        );
+                    }
+                })
+                .then((responseObject) => {
+                    console.log(`Response success from ${url}
             --------------------------------------------------`);
-                console.log(responseObject);
-                return responseObject;
-            })
-            .catch((responseError) => {
-                console.error(responseError);
-            });
+                    console.log(responseObject);
+                    return responseObject;
+                })
+                .catch((responseError) => {
+                    console.error(responseError);
+                });
+            if (isOk) break;
+        }
 
         return response;
     } catch (error) {

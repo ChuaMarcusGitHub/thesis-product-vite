@@ -41,9 +41,9 @@ const OnThisDayDashboard: React.FC = () => {
         );
     };
 
-    const renderSearchComponent = () => {
-        return <div> Search Component</div>;
-    };
+    // const renderSearchComponent = () => {
+    //     return <div> Search Component</div>;
+    // };
 
     const renderContent = () => {
         return (

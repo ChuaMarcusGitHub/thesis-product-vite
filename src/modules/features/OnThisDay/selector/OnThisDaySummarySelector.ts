@@ -12,7 +12,7 @@ export const getArticleSummaries = createSelector(summaryRoot, (data) => ({
     deaths: data.deaths || null,
     events: data.events || null,
     holidays: data.holidays || null,
-    selected: data.holidays || null,
+    selected: data.selected || null,
 }));
 export const getSelectedBriefArticle = createSelector(
     selectedArticle,

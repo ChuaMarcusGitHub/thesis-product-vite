@@ -10,7 +10,7 @@ import {
     Fade,
     Spinner,
 } from "@chakra-ui/react";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import {
     boxContainer,
     skeletonTab,
@@ -25,17 +25,15 @@ import {
     getIsLoading,
 } from "@features/OnThisDay/selector/OnThisDaySummarySelector";
 
-import data from "@rsc/sampleResponse/referenceFeedState.json";
+// import data from "@rsc/sampleResponse/referenceFeedState.json";
 import { getPopulatedArticles } from "./UtilFiles/ContentComponentUtil";
-import { IOtdFeedObject } from "@features/OnThisDay/type/OnThisDayCommonTypes";
-const sampleData = JSON.parse(JSON.stringify(data));
+// import { IOtdFeedObject } from "@features/OnThisDay/type/OnThisDayCommonTypes";
+// const sampleData = JSON.parse(JSON.stringify(data));
 
 const ContentContainer: React.FC = () => {
     // Constants
     // States
     const isLoading = useSelector(getIsLoading);
-    // const [isLoading, setIsLoading] = useState(true);
-
     const eventArticles = useSelector(getArticleSummaries);
 
     // Use Effects / Memos
@@ -44,10 +42,11 @@ const ContentContainer: React.FC = () => {
         [eventArticles]
     );
 
-    const isLoaded = useMemo(() => {
-        return isLoading && containerTabs.length;
-    }, [isLoading, containerTabs]);
-    
+    const isLoaded = useMemo(
+        () => !isLoading && containerTabs.length,
+        [isLoading, containerTabs]
+    );
+
     // Render Methods
     const renderTabs = () =>
         containerTabs?.map((tabName, index) => (
@@ -79,8 +78,8 @@ const ContentContainer: React.FC = () => {
             </TabPanel>
         );
     };
-    const renderTabContainers = () => {
-        for (const [eventType] of Object.entries(eventArticles)) {
+    const renderTabContainers = () =>
+        containerTabs.map((eventType) => {
             return (
                 <TabPanel key={`${eventType}-tab-panel`}>
                     <Box>
@@ -88,8 +87,7 @@ const ContentContainer: React.FC = () => {
                     </Box>
                 </TabPanel>
             );
-        }
-    };
+        });
 
     const renderComponent = () => {
         return (

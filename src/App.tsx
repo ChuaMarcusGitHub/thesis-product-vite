@@ -5,7 +5,7 @@ import {
     loadBriefArticle,
     loadDetailedArticle,
 } from "@modules/features/OnThisDay/actions/OnThisDaySummaryActions";
-import ContentDetailModal from "@src/modules/features/OnThisDay/component/ContentComponent/ContentDetailModalProps";
+import ContentDetailModal from "@src/modules/features/OnThisDay/component/ContentComponent/ContentDetailModal";
 import {
     initSession,
     logoutSession,

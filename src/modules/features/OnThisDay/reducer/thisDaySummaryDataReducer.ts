@@ -1,6 +1,8 @@
 import { Reducer } from "redux";
 import { ActionType } from "typesafe-actions";
 import {
+    clearBriefArticle,
+    clearDetailedArticle,
     initializeOnThisDay,
     OnThisDaySummaryAction,
     setBriefArticle,
@@ -27,7 +29,9 @@ type ThisDayActionType =
     | typeof setFeedArticles
     | typeof setDetailedArticle
     | typeof setBriefArticle
-    | typeof setLoadState;
+    | typeof setLoadState
+    | typeof clearBriefArticle
+    | typeof clearDetailedArticle;
 
 const thisDaySummaryDataReducer: Reducer<
     IOnThisDaySummaryDataState,
@@ -62,6 +66,22 @@ const thisDaySummaryDataReducer: Reducer<
                     brief: action.payload,
                 },
             };
+        case OnThisDaySummaryAction.CLEAR_BRIEF_ARTICLE:
+            return {
+                ...state,
+                selectedArticle: {
+                    ...state.selectedArticle,
+                    brief: undefined,
+                }
+            }
+        case OnThisDaySummaryAction.CLEAR_DETAILED_ARTICLE:
+            return {
+                ...state,
+                selectedArticle:{
+                    ...state.selectedArticle,
+                    detailed: undefined,
+                }
+            }
         default:
             return state;
     }

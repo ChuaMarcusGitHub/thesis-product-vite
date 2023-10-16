@@ -6,30 +6,41 @@ import {
     AccordionIcon,
     Box,
     Text,
-    
     SimpleGrid,
+    Fade,
+    useDisclosure,
 } from "@chakra-ui/react";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
     IOtdCardData,
     IOtdCardPageData,
     IOtdFeedObject,
-} from "../../type/OnThisDayCommonTypes";
+} from "@features/onThisDay/type/OnThisDayCommonTypes";
 import { getAccordianYearsFromProps } from "./UtilFiles/ContentComponentUtil";
 import SummaryCard from "./SummaryCard";
 import { emptyPage } from "./UtilFiles/DefaultObjects";
+import { accordianPanelGrid } from "../YearAccordianPropStyles";
+import { useDispatch } from "react-redux";
 import {
-    accordianPanelGrid,
-} from "../YearAccordianPropStyles";
+    clearBriefArticle,
+    loadBriefArticle,
+} from "@features/OnThisDay/actions/OnThisDaySummaryActions";
+import ContentDetailModal from "./ContentDetailModal";
 
 export interface IYearAccordianProps {
     typeEvents: IOtdFeedObject;
 }
 
 const YearAccordian: React.FC<IYearAccordianProps> = ({ typeEvents }) => {
+    // Constants
+    const dispatch = useDispatch();
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    //----- use States
     const [accordianYears, setAccordianYears] = useState<string[]>([]);
+    const [selectedTitle, setSelectedTitle] = useState("");
 
+    //----- Use Effects
     useEffect(() => {
         setAccordianYears(getAccordianYearsFromProps(typeEvents));
         console.log(getAccordianYearsFromProps(typeEvents));
@@ -39,22 +50,33 @@ const YearAccordian: React.FC<IYearAccordianProps> = ({ typeEvents }) => {
             setAccordianYears([]);
         };
     }, [typeEvents]);
+    //----- Component Logic
+    const handleCardClick = (title: string) => {
+        dispatch(loadBriefArticle(title || ""));
+        setSelectedTitle(title);
+        onOpen();
+    };
+    const handleCardClose = () => {
+        dispatch(clearBriefArticle());
+        setSelectedTitle("");
+        onClose();
+    };
 
-    const isLoaded = useMemo(() => {
-        return typeEvents && !!accordianYears.length;
-    }, [typeEvents, accordianYears]);
+    //----- Render Methods
 
     const renderYearEvents = (
         page: IOtdCardPageData,
         eventDescript: string,
         key: number
     ) => (
-        <SummaryCard
-            handleClick={() => console.log("define later")}
-            eventDescript={eventDescript}
-            pageData={page}
-            key={key}
-        />
+        <Fade in={eventDescript !== ""} key={`fade-${key}`}>
+            <SummaryCard
+                handleClick={() => handleCardClick(page.title)}
+                eventDescript={eventDescript}
+                pageData={page}
+                key={key}
+            />
+        </Fade>
     );
 
     const renderYearAccordian = (
@@ -92,10 +114,15 @@ const YearAccordian: React.FC<IYearAccordianProps> = ({ typeEvents }) => {
     );
     const renderComponent = () => {
         return (
-            <Accordion allowMultiple={true}>
+            <Accordion allowMultiple={true} defaultIndex={0}>
                 {accordianYears.map((year, index) =>
                     renderYearAccordian(year, typeEvents?.[year], index)
                 )}
+                <ContentDetailModal
+                    isOpen={isOpen}
+                    onClose={handleCardClose}
+                    title={selectedTitle}
+                />
             </Accordion>
         );
     };
