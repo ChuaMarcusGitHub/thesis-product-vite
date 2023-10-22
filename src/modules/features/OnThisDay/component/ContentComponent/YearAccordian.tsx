@@ -9,6 +9,7 @@ import {
     SimpleGrid,
     Fade,
     useDisclosure,
+    ExpandedIndex,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
@@ -17,7 +18,10 @@ import {
     IOtdCardPageData,
     IOtdFeedObject,
 } from "@features/onThisDay/type/OnThisDayCommonTypes";
-import { getAccordianYearsFromProps } from "./UtilFiles/ContentComponentUtil";
+import {
+    getAccordianYearsFromProps,
+    returnArrayOfIndexes,
+} from "./UtilFiles/ContentComponentUtil";
 import SummaryCard from "./SummaryCard";
 import { emptyPage } from "./UtilFiles/DefaultObjects";
 import { accordianPanelGrid } from "../YearAccordianPropStyles";
@@ -39,11 +43,16 @@ const YearAccordian: React.FC<IYearAccordianProps> = ({ typeEvents }) => {
     //----- use States
     const [accordianYears, setAccordianYears] = useState<string[]>([]);
     const [selectedTitle, setSelectedTitle] = useState("");
+    const [indexArray, setIndexArray] = useState<number[]>([]);
 
     //----- Use Effects
     useEffect(() => {
         setAccordianYears(getAccordianYearsFromProps(typeEvents));
+        setIndexArray(
+            returnArrayOfIndexes(Object.keys(typeEvents).length || 0)
+        );
         console.log(getAccordianYearsFromProps(typeEvents));
+        console.log(returnArrayOfIndexes(Object.keys(typeEvents).length || 0));
 
         // unmount code
         return () => {
@@ -63,7 +72,6 @@ const YearAccordian: React.FC<IYearAccordianProps> = ({ typeEvents }) => {
     };
 
     //----- Render Methods
-
     const renderYearEvents = (
         page: IOtdCardPageData,
         eventDescript: string,
@@ -114,7 +122,7 @@ const YearAccordian: React.FC<IYearAccordianProps> = ({ typeEvents }) => {
     );
     const renderComponent = () => {
         return (
-            <Accordion allowMultiple={true} defaultIndex={[0]}>
+            <Accordion allowMultiple={true} defaultIndex={returnArrayOfIndexes(19)}>
                 {accordianYears.map((year, index) =>
                     renderYearAccordian(year, typeEvents?.[year], index)
                 )}

@@ -5,9 +5,16 @@ import {
     fetchWebpage,
 } from "@modules/root/webservice/WebserviceUtils";
 import { PayloadAction } from "@reduxjs/toolkit";
-import { call, fork, put, putResolve, takeLeading } from "redux-saga/effects";
+import {
+    call,
+    fork,
+    put,
+    putResolve,
+    takeLeading,
+} from "redux-saga/effects";
 import {
     clearDetailedArticle,
+    clearFeedArticles,
     OnThisDaySummaryAction,
     setBriefArticle,
     setDetailedArticle,
@@ -16,6 +23,8 @@ import {
 } from "../actions/OnThisDaySummaryActions";
 import {
     IArticleBriefObject,
+    IFetchEventsDataPayload,
+    IFetchEventsPayload,
     ILoadArticleDetailPayload,
     ISetFeedArticlePayload,
     ON_THIS_DAY_TOPICS,
@@ -28,6 +37,7 @@ import {
     buildBriefArticleQuery,
     buildFullArticleQuery,
     buildOnThisDayQuery,
+    compileAllArticles,
     retrievePageId,
     transformBriefArticleObject,
     transformOtdFeedResponse,
@@ -60,14 +70,21 @@ function* initializeOnThisDay() {
         } else {
             console.log(response);
             // Parse the information
+            const allArticles: ISetFeedArticlePayload[] = [];
             for (const key in response) {
                 const transformedData: ISetFeedArticlePayload =
                     transformOtdFeedResponse(key, response[key]);
                 // extract data, yield put to storage
-                console.log(`Finished Parsing data: ${transformedData.type}`);
-                console.log(transformedData);
+                if (transformedData.type !== ON_THIS_DAY_TOPICS.SELECTED) {
+                    allArticles.push(transformedData);
+                }
                 yield put(setFeedArticles(transformedData));
             }
+            // compile all the articles into a single tab
+            const allArticleObj: ISetFeedArticlePayload =
+                compileAllArticles(allArticles);
+
+            yield put(setFeedArticles(allArticleObj));
         }
     } catch (e: unknown) {
         //Throw error here
@@ -77,11 +94,7 @@ function* initializeOnThisDay() {
     }
 }
 
-function* fetchOnThisDayData(params: {
-    type: string;
-    month: string;
-    day: string;
-}) {
+function* fetchOnThisDayData(params: IFetchEventsDataPayload) {
     try {
         const completedQuery = buildOnThisDayQuery(
             params.type,
@@ -114,13 +127,68 @@ function* fetchOnThisDayData(params: {
     }
 }
 
+function* fetchDayArticles(action: PayloadAction<IFetchEventsPayload>) {
+    try {
+        // trigger loadState
+        yield put(setLoadState(true));
+        //clear the current store
+        yield put(clearFeedArticles());
+
+        const {
+            date: { month = 1, date = 1 },
+        } = action.payload;
+
+        const stringifiedMonth = (month + 1).toString().padStart(2, "0");
+        const stringifiedDate = date.toString().padStart(2, "0");
+        // let response: IOnThisDayResponse;
+
+        // if (eventTypes.includes(ON_THIS_DAY_TOPICS.ALL)) {
+        const response: IOnThisDayResponse = yield call(fetchOnThisDayData, {
+            type: "all",
+            month: stringifiedMonth,
+            day: stringifiedDate,
+        });
+        // }
+        // else {
+        //     yield all(
+        //         eventTypes.map((event) =>
+        //             call(fetchOnThisDayData, {
+        //                 type: event,
+        //                 month: stringifiedMonth,
+        //                 day: stringifiedDate,
+        //             })
+        //         )
+        //     );
+        // }
+        // Parse the data
+        if (!response) {
+            // negative response - find case test
+        } else {
+            console.log(response);
+            // Parse the information
+            for (const key in response) {
+                const transformedData: ISetFeedArticlePayload =
+                    transformOtdFeedResponse(key, response[key]);
+                // extract data, yield put to storage
+                console.log(`Finished Parsing data: ${transformedData.type}`);
+                console.log(transformedData);
+                yield put(setFeedArticles(transformedData));
+            }
+        }
+    } catch (e) {
+        console.error("Error encountered in fetchDayArticles!");
+        console.error(e);
+    } finally {
+        yield put(setLoadState(false));
+    }
+}
 function* loadDetailedArticle(
     action: PayloadAction<ILoadArticleDetailPayload>
 ) {
     try {
         const { title = "", shouldClear = false } = action.payload;
-        if(shouldClear) yield putResolve(clearDetailedArticle());
-        
+        if (shouldClear) yield putResolve(clearDetailedArticle());
+
         const apiUrl: string = buildFullArticleQuery(title);
         let response: string;
 
@@ -193,10 +261,14 @@ function* watchOnThisDaySummarySaga() {
     yield takeLeading(
         OnThisDaySummaryAction.LOAD_DETAILED_ARTICLE,
         loadDetailedArticle
-    )
+    );
     yield takeLeading(
         OnThisDaySummaryAction.LOAD_BRIEF_ARTICLE,
         loadBriefArticle
+    );
+    yield takeLeading(
+        OnThisDaySummaryAction.FETCH_DATE_EVENTS,
+        fetchDayArticles
     );
 }
 

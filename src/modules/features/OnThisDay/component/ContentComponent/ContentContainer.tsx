@@ -17,6 +17,7 @@ import {
     headerTab,
     loadingSpinner,
     skeletonBoxContainer,
+    contentBoxContainer,
 } from "./ContentContainerProps";
 import YearAccordian from "./YearAccordian";
 import { useSelector } from "react-redux";
@@ -82,7 +83,7 @@ const ContentContainer: React.FC = () => {
         containerTabs.map((eventType) => {
             return (
                 <TabPanel key={`${eventType}-tab-panel`}>
-                    <Box>
+                    <Box {...contentBoxContainer}>
                         <YearAccordian typeEvents={eventArticles[eventType]} />
                     </Box>
                 </TabPanel>

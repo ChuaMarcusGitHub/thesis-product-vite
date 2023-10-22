@@ -3,6 +3,7 @@ import { ActionType } from "typesafe-actions";
 import {
     clearBriefArticle,
     clearDetailedArticle,
+    clearFeedArticles,
     initializeOnThisDay,
     OnThisDaySummaryAction,
     setBriefArticle,
@@ -13,6 +14,7 @@ import {
 import { IOnThisDaySummaryDataState } from "../type/OnThisDayCommonTypes";
 
 const initialState: IOnThisDaySummaryDataState = {
+    all: undefined,
     events: undefined,
     deaths: undefined,
     births: undefined,
@@ -21,12 +23,13 @@ const initialState: IOnThisDaySummaryDataState = {
     selectedArticle: undefined,
     loadState: {
         isLoading: false,
-    }
+    },
 };
 
 type ThisDayActionType =
     | typeof initializeOnThisDay
     | typeof setFeedArticles
+    | typeof clearFeedArticles
     | typeof setDetailedArticle
     | typeof setBriefArticle
     | typeof setLoadState
@@ -41,15 +44,25 @@ const thisDaySummaryDataReducer: Reducer<
         case OnThisDaySummaryAction.SET_FEED_ARTICLES:
             return {
                 ...state,
-                [action.payload.type]: action.payload.events,// [deaths]: {}
-            }
+                [action.payload.type]: action.payload.events, // [deaths]: {}
+            };
+        case OnThisDaySummaryAction.CLEAR_FEED_ARTICLES:
+            return {
+                ...state,
+                events: undefined,
+                deaths: undefined,
+                births: undefined,
+                holidays: undefined,
+                selected: undefined,
+                selectedArticle: undefined,
+            };
         case OnThisDaySummaryAction.SET_LOAD_STATE:
             return {
                 ...state,
-                loadState:{
+                loadState: {
                     isLoading: action.payload,
-                }
-            }
+                },
+            };
         case OnThisDaySummaryAction.SET_DETAILED_ARTICLE:
             return {
                 ...state,
@@ -72,16 +85,16 @@ const thisDaySummaryDataReducer: Reducer<
                 selectedArticle: {
                     ...state.selectedArticle,
                     brief: undefined,
-                }
-            }
+                },
+            };
         case OnThisDaySummaryAction.CLEAR_DETAILED_ARTICLE:
             return {
                 ...state,
-                selectedArticle:{
+                selectedArticle: {
                     ...state.selectedArticle,
                     detailed: undefined,
-                }
-            }
+                },
+            };
         default:
             return state;
     }

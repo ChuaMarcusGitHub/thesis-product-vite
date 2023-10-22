@@ -1,4 +1,5 @@
 import { IReducerLoadingState } from "@src/modules/root/webservice/WebserviceTypes";
+import { IDateObject } from "./OnThisDayComponentTypes";
 
 export enum API_SUPPORTED_LANGUAGES {
     ENGLISH = "en",
@@ -11,6 +12,21 @@ export enum API_SUPPORTED_LANGUAGES {
     ARABIC = "ar",
     BOSNIAN = "bs",
 }
+
+export const Months = {
+    January: 0,
+    February: 1,
+    March: 2,
+    April: 3,
+    May: 4,
+    June: 5,
+    July: 6,
+    August: 7,
+    September: 8,
+    October: 9,
+    November: 10,
+    December: 11,
+};
 export const ON_THIS_DAY_TOPICS = {
     EVENTS: "events",
     DEATHS: "deaths",
@@ -100,15 +116,14 @@ export interface IOtdCardData {
     tag: string;
 }
 
-export interface ISetFeedArticlePayload {
-    events: IOtdFeedObject;
-    type: string;
-}
-
 export interface IOtdFeedObject {
     [key: number]: IOtdCardData[];
 }
 
+export interface ISetFeedArticlePayload {
+    events: IOtdFeedObject;
+    type: string;
+}
 export interface IArticleDetailedPayload {
     detailedArticle: string | TrustedHTML | null;
     pageId: number;
@@ -118,6 +133,7 @@ export interface ILoadArticleDetailPayload {
     shouldClear?: boolean;
 }
 export interface IOnThisDaySummaryDataState {
+    all?: IOtdFeedObject;
     events?: IOtdFeedObject;
     deaths?: IOtdFeedObject;
     births?: IOtdFeedObject;
@@ -128,6 +144,16 @@ export interface IOnThisDaySummaryDataState {
         brief?: IArticleBriefObject;
     };
     loadState: IReducerLoadingState;
+}
+export interface IFetchEventsPayload {
+    date: IDateObject;
+    eventTypes: string[];
+}
+
+export interface IFetchEventsDataPayload {
+    type: string;
+    month: string;
+    day: string;
 }
 
 export interface IArticleCategory {

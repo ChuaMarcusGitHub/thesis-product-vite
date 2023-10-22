@@ -11,6 +11,7 @@ import styles from "./OnThisDayDashboard.module.scss";
 import ContentContainer from "../ContentComponent/ContentContainer";
 import { useDispatch } from "react-redux";
 import { initializeOnThisDay } from "@features/OnThisDay/actions/OnThisDaySummaryActions";
+import SearchComponent from "../ContentComponent/SerachComponent";
 
 const cx = classNames.bind({ ...styles });
 
@@ -31,7 +32,7 @@ const OnThisDayDashboard: React.FC = () => {
             <Box {...bannerContainer}>
                 <Grid {...bannerGrid}>
                     <GridItem {...searchGridItem}>
-                        Search Bar goes here
+                        {renderSearchComponent()}
                     </GridItem>
                     <GridItem {...sessionGridItem}>
                         Login/ Logout Item Goes here
@@ -41,9 +42,9 @@ const OnThisDayDashboard: React.FC = () => {
         );
     };
 
-    // const renderSearchComponent = () => {
-    //     return <div> Search Component</div>;
-    // };
+    const renderSearchComponent = () => {
+        return <SearchComponent/>;
+    };
 
     const renderContent = () => {
         return (

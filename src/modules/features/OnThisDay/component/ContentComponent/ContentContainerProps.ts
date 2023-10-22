@@ -17,6 +17,10 @@ export const skeletonBoxContainer = {
     justifyContent: "center",
     display: "flex",
 };
+export const contentBoxContainer = {
+    maxH: "80vh",
+    overflowY: "scroll",
+};
 
 export const loadingSpinner = {
     thickness: "4px",

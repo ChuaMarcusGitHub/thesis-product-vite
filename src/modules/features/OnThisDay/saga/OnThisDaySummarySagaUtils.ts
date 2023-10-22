@@ -103,13 +103,26 @@ export const transformOtdFeedResponse = (
     };
 };
 
+export const compileAllArticles = (allArticles: ISetFeedArticlePayload[]): ISetFeedArticlePayload => {
+    const allArticleReturnObj: ISetFeedArticlePayload = {
+        events: {},
+        type: "all",
+    };
+    allArticles.forEach((articleSet) => {
+        for (const [year, entries] of Object.entries(articleSet.events)) {
+            allArticleReturnObj.events[year] = [...entries];
+        }
+    });
+    return allArticleReturnObj;
+};
+
 export const retrievePageId = (stringPage: string): number => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(stringPage, "text/html");
     const pageMeta = doc.querySelector(`meta[property="mw:pageId"]`);
-    
+
     let pageId = -1;
-    if(pageMeta) pageId = Number(pageMeta?.getAttribute("content"))
+    if (pageMeta) pageId = Number(pageMeta?.getAttribute("content"));
 
     return pageId;
 };

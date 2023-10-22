@@ -8,11 +8,12 @@ const selectedArticle = (state: AppState) =>
 
 export const getSummaryRoot = createSelector(summaryRoot, (data) => data);
 export const getArticleSummaries = createSelector(summaryRoot, (data) => ({
+    selected: data.selected || null, // Order matters
+    all: data.all || null,
     births: data.births || null,
     deaths: data.deaths || null,
     events: data.events || null,
     holidays: data.holidays || null,
-    selected: data.selected || null,
 }));
 export const getSelectedBriefArticle = createSelector(
     selectedArticle,
