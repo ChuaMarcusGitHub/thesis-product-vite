@@ -11,7 +11,7 @@ import styles from "./OnThisDayDashboard.module.scss";
 import ContentContainer from "../ContentComponent/ContentContainer";
 import { useDispatch } from "react-redux";
 import { initializeOnThisDay } from "@features/OnThisDay/actions/OnThisDaySummaryActions";
-import SearchComponent from "../ContentComponent/SerachComponent";
+import SearchComponent from "../ContentComponent/SearchComponent";
 
 const cx = classNames.bind({ ...styles });
 

@@ -23,3 +23,13 @@ export interface IAuthSessionObject {
     } | null;
     error: AuthError | null;
 }
+export interface ISessionResponse {
+    session?: Session | null;
+    error?: AuthError | null;
+    status: boolean; // true for successful get, false for any failure
+}
+export interface ICRUDResponse {
+    success: boolean;
+    errorMessage?: string;
+}
+

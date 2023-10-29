@@ -27,6 +27,7 @@
         "paths": {
             // Starts the path at [src/<subfolder>/*]
             "@src/*": ["./src/*"],
+            "@hooks/*": ["./src/hooks/*"],
             "@client/*": ["./src/clientfolder/*"],
             "@modules/*": ["./src/modules/*"],
             "@features/*": ["./src/modules/features/*"],

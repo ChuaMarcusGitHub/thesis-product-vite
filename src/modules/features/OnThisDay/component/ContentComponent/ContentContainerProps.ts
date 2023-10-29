@@ -19,7 +19,7 @@ export const skeletonBoxContainer = {
 };
 export const contentBoxContainer = {
     maxH: "80vh",
-    overflowY: "scroll",
+    overflow: "scroll"
 };
 
 export const loadingSpinner = {

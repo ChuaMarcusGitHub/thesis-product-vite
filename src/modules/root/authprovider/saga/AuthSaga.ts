@@ -16,14 +16,14 @@ import {
 } from "../actions/AuthActions";
 import { IAuthLoginEmail } from "../types/AuthSessionTypes";
 import {
-    fetchSessionData,
+    getUserSession,
     loginEmail,
     logout,
 } from "../utils/AuthUtilFunctions";
 
 function* initializeSession() {
     try {
-        const sessionData: { session: Session } = yield call(fetchSessionData);
+        const sessionData: { session: Session } = yield call(getUserSession);
 
         console.log("----Session Response success - Response Object----");
         console.log(sessionData);

@@ -22,6 +22,8 @@ import SummaryCard from "./modules/features/OnThisDay/component/ContentComponent
 
 import sampleFeed from "@rsc/sampleResponse/sampleFeedResponse.json";
 import { getSelectedDetailedArticle } from "./modules/features/OnThisDay/selector/OnThisDaySummarySelector";
+import { testApi } from "../supabase/functions/testAPI";
+import { getUserStats, updateUserStats } from "./modules/features/Login/actions/LoginActions";
 const testSample = JSON.parse(JSON.stringify(sampleFeed));
 
 function App() {
@@ -31,13 +33,14 @@ function App() {
     const iframeUrl3 =
         "/api/wikidetail/api.php?action=parse&format=json&page=Berlin&prop=text|headhtml";
     // const iframeUrl4 = "/api/wikidetail/api.php?action=query&origin=*&prop=extracts&format=json&exintro=&titles=Berlin";
+    const testUrl = "jwyyocimufwwpegtzgpt.supabase.co/functions/v1/hello-world";
 
     const query = "Berlin";
 
     const dispatch = useDispatch();
     const sessionData: Session | null | undefined = useSelector(getSessionData);
     const isLoggedIn: boolean = useSelector(getIsLoggedIn);
-    const testArticle = useSelector(getSelectedDetailedArticle)
+    const testArticle = useSelector(getSelectedDetailedArticle);
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const {
@@ -92,6 +95,15 @@ function App() {
     const handleFeedOpenContent = () => {
         dispatch(initializeOnThisDay());
     };
+
+    const handleURLCall = () => {
+        const uuid = "db650c1a-653c-406c-82ef-3c06e85b8d2b";
+        dispatch(getUserStats(uuid));
+    };
+    const handleUpdateDB = () => {
+        const uuid = "db650c1a-653c-406c-82ef-3c06e85b8d2b";
+        dispatch(updateUserStats({userId: uuid, articlesRead: 10, timeSpent: "99.92"}))
+    }
 
     // ----- Sandbox ---------
 
@@ -151,6 +163,8 @@ function App() {
                         Open Feed Content
                     </button>
                 </div>
+                <Button onClick={handleURLCall}>Button</Button>
+                <Button onClick={handleUpdateDB}>Update the DB</Button>
 
                 {/* <a rel="noopener noreferrer" href={"https://en.wikipedia.org/api/rest_v1/page/html/Berlin"} target="_blank">Open a new wikiLink</a> */}
             </div>

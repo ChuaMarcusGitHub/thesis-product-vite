@@ -24,5 +24,10 @@ export const getSelectedDetailedArticle = createSelector(
     (data) => data?.detailed || null
 );
 
+export const getActiveTabs = createSelector(
+    summaryRoot,
+    (data) => data.activeTabs
+);
+
 // Load State Items
 export const getIsLoading = createSelector(loadState, (data) => data.isLoading);

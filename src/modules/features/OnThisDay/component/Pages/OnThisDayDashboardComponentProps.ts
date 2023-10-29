@@ -5,13 +5,13 @@ export const bannerContainer ={
 }
 export const bannerGrid = {
     templateColumns: "repeat(5, 20vw)",
-    templateRows: "repeat(5, 4vh)",
+    templateRows: "repeat(10, 2vh)",
 };
 export const searchGridItem = {
     colStart: 2,
     colEnd: 5,
-    rowStart: 3,
-    rowEnd: 5,
+    rowStart: 4,
+    rowEnd: 9,
     bg:'tomato', 
 };
 export const sessionGridItem = {

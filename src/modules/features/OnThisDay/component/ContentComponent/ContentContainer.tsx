@@ -22,6 +22,7 @@ import {
 import YearAccordian from "./YearAccordian";
 import { useSelector } from "react-redux";
 import {
+    getActiveTabs,
     getArticleSummaries,
     getIsLoading,
 } from "@features/OnThisDay/selector/OnThisDaySummarySelector";
@@ -36,10 +37,11 @@ const ContentContainer: React.FC = () => {
     // States
     const isLoading = useSelector(getIsLoading);
     const eventArticles = useSelector(getArticleSummaries);
+    const activeTabs = useSelector(getActiveTabs);
 
     // Use Effects / Memos
     const containerTabs = useMemo(
-        () => getPopulatedArticles(eventArticles),
+        () => getPopulatedArticles(eventArticles, activeTabs),
         [eventArticles]
     );
 

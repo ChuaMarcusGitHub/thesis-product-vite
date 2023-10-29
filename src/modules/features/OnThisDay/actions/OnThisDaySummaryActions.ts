@@ -5,6 +5,7 @@ import {
     IFetchEventsPayload,
     ILoadArticleDetailPayload,
     ISetFeedArticlePayload,
+    IUpdateActiveTabPayload,
 } from "../type/OnThisDayCommonTypes";
 
 export enum OnThisDaySummaryAction {
@@ -19,6 +20,7 @@ export enum OnThisDaySummaryAction {
     LOAD_DETAILED_ARTICLE = "OnThisDaySummaryAction/LOAD_DETAILED_ARTICLE",
     SET_DETAILED_ARTICLE = "OnThisDaySummaryAction/SET_DETAILED_ARTICLE",
     CLEAR_DETAILED_ARTICLE = "OnThisDaySummaryAction/CLEAR_DETAILED_ARTICLE",
+    UPDATE_ACTIVE_TABS = "OnThisDaySummaryAction/UPDATE_ACTIVE_TABS",
 }
 
 // Initialization action
@@ -46,3 +48,6 @@ export const setDetailedArticle = (payload: IArticleDetailedPayload) =>
     action(OnThisDaySummaryAction.SET_DETAILED_ARTICLE, payload);
 export const clearDetailedArticle = () =>
     action(OnThisDaySummaryAction.CLEAR_DETAILED_ARTICLE);
+// Update Tab options
+export const updateActiveTabs = (payload: IUpdateActiveTabPayload ) => 
+    action(OnThisDaySummaryAction.UPDATE_ACTIVE_TABS, payload)

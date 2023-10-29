@@ -1,4 +1,4 @@
-import { IDashboardReducerState } from "@modules/features/Login/types/DashboardTypes";
+import { IDashboardReducerState } from "@src/modules/features/Login/types/LoginActionPayloadTypes";
 import { ActionType, Reducer } from "typesafe-actions";
 import { setterDashboard } from "../actions/DashboardActions";
 
