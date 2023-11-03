@@ -1,4 +1,4 @@
-import { AuthError, Session } from "@supabase/supabase-js";
+import { AuthError, Session, User } from "@supabase/supabase-js";
 
 // Self typed because supabase has no typing for this
 export interface ISessionObject {
@@ -13,13 +13,28 @@ export interface ISessionObject {
 export interface IAuthLoginEmail {
     email: string;
     password: string;
+    username?: string;
 }
 export interface IAuthReducerState {
+    sessionUser?: User | null;
     sessionData?: Session | null;
+}
+export interface IAuthSessionData {
+    user: User | null;
+    session: Session | null;
 }
 export interface IAuthSessionObject {
     data: {
         session: Session | null;
     } | null;
     error: AuthError | null;
+}
+export interface ISessionResponse {
+    session?: Session | null;
+    error?: AuthError | null;
+    status: boolean; // true for successful get, false for any failure
+}
+export interface ICRUDResponse {
+    success: boolean;
+    errorMessage?: string;
 }

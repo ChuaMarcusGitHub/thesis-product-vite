@@ -11,7 +11,8 @@ import styles from "./OnThisDayDashboard.module.scss";
 import ContentContainer from "../ContentComponent/ContentContainer";
 import { useDispatch } from "react-redux";
 import { initializeOnThisDay } from "@features/OnThisDay/actions/OnThisDaySummaryActions";
-import SearchComponent from "../ContentComponent/SerachComponent";
+import SearchComponent from "../ContentComponent/SearchComponent";
+import SigninContainer from "@src/modules/features/Login/components/SignInContainer";
 
 const cx = classNames.bind({ ...styles });
 
@@ -23,7 +24,7 @@ const OnThisDayDashboard: React.FC = () => {
 
     /* ---------- Effect Triggers --------- */
     useEffect(() => {
-        dispatch(initializeOnThisDay());
+        // dispatch(initializeOnThisDay());
     },[]);
     
     /* ---------- Render Methods--------- */
@@ -31,11 +32,12 @@ const OnThisDayDashboard: React.FC = () => {
         return (
             <Box {...bannerContainer}>
                 <Grid {...bannerGrid}>
+                    {/* <GridItem colStart={5} colEnd={6} rowStart={1} rowEnd={2} bg={"black"}/> */}
                     <GridItem {...searchGridItem}>
                         {renderSearchComponent()}
                     </GridItem>
                     <GridItem {...sessionGridItem}>
-                        Login/ Logout Item Goes here
+                        <SigninContainer />
                     </GridItem>
                 </Grid>
             </Box>

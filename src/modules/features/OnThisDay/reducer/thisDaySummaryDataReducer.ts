@@ -10,6 +10,7 @@ import {
     setDetailedArticle,
     setFeedArticles,
     setLoadState,
+    updateActiveTabs,
 } from "../actions/OnThisDaySummaryActions";
 import { IOnThisDaySummaryDataState } from "../type/OnThisDayCommonTypes";
 
@@ -20,6 +21,14 @@ const initialState: IOnThisDaySummaryDataState = {
     births: undefined,
     holidays: undefined,
     selected: undefined,
+    activeTabs: {
+        all: true,
+        deaths: true,
+        births: true,
+        events: true,
+        holidays: true,
+        selected: true,
+    },
     selectedArticle: undefined,
     loadState: {
         isLoading: false,
@@ -34,7 +43,8 @@ type ThisDayActionType =
     | typeof setBriefArticle
     | typeof setLoadState
     | typeof clearBriefArticle
-    | typeof clearDetailedArticle;
+    | typeof clearDetailedArticle
+    | typeof updateActiveTabs;
 
 const thisDaySummaryDataReducer: Reducer<
     IOnThisDaySummaryDataState,
@@ -95,6 +105,11 @@ const thisDaySummaryDataReducer: Reducer<
                     detailed: undefined,
                 },
             };
+        case OnThisDaySummaryAction.UPDATE_ACTIVE_TABS:
+            return{
+                ...state,
+                activeTabs: action.payload,
+            }
         default:
             return state;
     }

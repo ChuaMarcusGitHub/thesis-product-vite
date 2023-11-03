@@ -10,9 +10,9 @@ export const bannerGrid = {
 export const searchGridItem = {
     colStart: 2,
     colEnd: 5,
-    rowStart: 3,
-    rowEnd: 5,
-    bg:'tomato', 
+    rowStart: 2,
+    rowEnd: 6,
+    bg:'skyblue', 
 };
 export const sessionGridItem = {
     colStart: 5,

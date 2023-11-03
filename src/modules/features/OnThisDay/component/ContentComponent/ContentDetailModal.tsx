@@ -29,7 +29,7 @@ import {
 } from "@features/onThisDay/type/OnThisDayCommonTypes";
 import "html-react-parser";
 import {
-    clearDetailedArticle,
+    // clearDetailedArticle,
     loadBriefArticle,
     loadDetailedArticle,
 } from "@features/onThisDay/actions/OnThisDaySummaryActions";

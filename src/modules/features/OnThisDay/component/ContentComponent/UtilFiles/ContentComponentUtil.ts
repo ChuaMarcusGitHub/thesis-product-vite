@@ -1,10 +1,14 @@
 import {
     IArticleCategory,
     IOtdFeedObject,
+    IUpdateActiveTabPayload,
     ON_THIS_DAY_TOPICS,
 } from "@features/OnThisDay/type/OnThisDayCommonTypes";
 import { ISelectOption } from "@src/modules/features/Common/types/FormTypes";
-import { IDateObject } from "@features/OnThisDay/type/OnThisDayComponentTypes";
+import {
+    IDateObject,
+    ITabCheckbox,
+} from "@features/OnThisDay/type/OnThisDayComponentTypes";
 
 export const getAccordianYearsFromProps = (
     typeEvents: IOtdFeedObject
@@ -16,11 +20,13 @@ export const getAccordianYearsFromProps = (
     return years;
 };
 export const getPopulatedArticles = (
-    typeEvents: IArticleCategory
+    typeEvents: IArticleCategory,
+    activeTabs: IUpdateActiveTabPayload,
 ): string[] => {
+
     const tabSelections: string[] = [];
     for (const eventType in typeEvents) {
-        if (typeEvents?.[eventType] !== null) {
+        if (typeEvents?.[eventType] !== null && activeTabs[eventType]) {
             if (eventType === ON_THIS_DAY_TOPICS.SELECTED)
                 tabSelections.unshift(eventType);
             else tabSelections.push(eventType);
@@ -28,14 +34,36 @@ export const getPopulatedArticles = (
     }
     return tabSelections;
 };
-export const returnArrayOfIndexes = () :number[] =>{
+export const returnArrayOfIndexes = (): number[] => {
     const finalIndex = 300;
     const indexArray = [];
-    for(let index = 0; index< finalIndex; ++index){
+    for (let index = 0; index < finalIndex; ++index) {
         indexArray.push(index);
     }
     return indexArray;
-}
+};
+
+export const getDefaultActiveTabs = (): string[] => {
+    const tabArray: string[] = [];
+    for (const value of Object.values(ON_THIS_DAY_TOPICS)) {
+        if (value === ON_THIS_DAY_TOPICS.ALL) tabArray.unshift(value);
+        else tabArray.push(value);
+    }
+    return tabArray;
+};
+export const transformActiveTabPayload = (
+    activeTabs: ITabCheckbox[]
+): IUpdateActiveTabPayload => {
+    let payload: IUpdateActiveTabPayload = {};
+    activeTabs.forEach((tab) => {
+        payload = {
+            ...payload,
+            [tab.type]: tab.isChecked,
+        };
+    });
+
+    return payload;
+};
 export const getMonths = (monthsObject: {
     [month: string]: number;
 }): string[] => {

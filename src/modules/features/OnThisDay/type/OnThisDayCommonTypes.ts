@@ -132,6 +132,9 @@ export interface ILoadArticleDetailPayload {
     title: string;
     shouldClear?: boolean;
 }
+export interface IUpdateActiveTabPayload {
+    [tabs: string]: boolean;
+}
 export interface IOnThisDaySummaryDataState {
     all?: IOtdFeedObject;
     events?: IOtdFeedObject;
@@ -143,6 +146,9 @@ export interface IOnThisDaySummaryDataState {
         detailed?: IArticleDetailedPayload;
         brief?: IArticleBriefObject;
     };
+    activeTabs: { //tabs to be displayed on the content screen
+        [tabs: string]: boolean;
+    }
     loadState: IReducerLoadingState;
 }
 export interface IFetchEventsPayload {
@@ -167,76 +173,3 @@ export interface IArticleBriefObject {
     title: string;
     extract?: string;
 }
-/* Not used -- to be deleted by end of project*/
-/*
-    Sub-objects of the article response
-*/
-interface IArticleDetailLangLinks {
-    lang: string;
-    url: string;
-    langname: string;
-    autonym: string;
-    "*": string;
-}
-interface IArticleDetailCategories {
-    sortkey: string;
-    hidden: string;
-    "*": string;
-}
-interface IArticleDetailLinksTemplates {
-    ns: number;
-    exists: string;
-    "*": string;
-}
-interface IArticleDetailSections {
-    toclevel: number;
-    level: string;
-    line: string;
-    number: string;
-    index: string;
-    fromtitle: string;
-    byteoffset: number;
-    anchor: string;
-    linkAnchor: string;
-}
-interface IArticleDetailIWLinks {
-    prefix: string;
-    url: string;
-    "*": string;
-}
-interface IArticleDetailProperties {
-    name: string;
-    "*": string;
-}
-
-export interface IArticleDetailObject {
-    headhtml: {
-        ["*"]: string;
-    };
-    title: string;
-    pageid: number;
-    revid: number;
-    text: {
-        "*": string;
-    };
-    langlinks: IArticleDetailLangLinks[];
-    categories: IArticleDetailCategories[];
-    links: IArticleDetailLinksTemplates[];
-    templates: IArticleDetailLinksTemplates[];
-    images: string[];
-    externallinks: string[];
-    sections: IArticleDetailSections[];
-    showtoc: string;
-    parsewarnings: string[];
-    displaytitle: string;
-    iwlinks: IArticleDetailIWLinks[];
-    properties: IArticleDetailProperties[];
-}
-export interface IArticleDetail {
-    displayTitle?: string;
-    headHTML: string;
-    textHTML?: string;
-    title?: string;
-    pageId?: number;
-}
-/* Not used -- to be deleted by end of project --- end*/
