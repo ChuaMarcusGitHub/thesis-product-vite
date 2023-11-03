@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
     Modal,
     ModalOverlay,
@@ -11,32 +11,61 @@ import {
     TabPanel,
 } from "@chakra-ui/react";
 import LoginTab from "./LoginTab";
+import {
+    activeTabIndex,
+    SignInTabType,
+} from "@features/Login/types/LoginComponentTypes";
+import SignUpTab from "./SignUpTab";
 
 export interface ILoginModalProps {
     isOpen: boolean;
     onClose: () => void;
+    activeTab: SignInTabType;
 }
 const SignInComponents: React.FC<ILoginModalProps> = ({
     isOpen,
     onClose = () => console.error("LoginModal onClose Method undefined!"),
+    activeTab = SignInTabType.Login,
 }) => {
+    //state
+    const [tabIndex, setTabIndex] = useState(0);
+
+    // Effects
+    useEffect(() => {
+        setTabIndex(activeTabIndex[activeTab]);
+    }, [activeTab]);
+
+    // component Methods
+    const handleIndexChange = (index: number) => {
+        setTabIndex(activeTabIndex[index]);
+    };
     const renderComponent = () => (
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
-                <ModalCloseButton onClick={onClose}/>
-                <Tabs>
-                    <TabList>
+                <Tabs
+                    index={tabIndex}
+                    onChange={handleIndexChange}
+                    isLazy
+                    role={"tab"}
+                >
+                    <TabList role={"tablist"}>
                         <Tab>Log into Account</Tab>
                         <Tab>Sign Up</Tab>
                     </TabList>
 
-                    <TabPanels>
+                    <TabPanels role={"tabpanel"}>
                         <TabPanel>
-                            <LoginTab onClose={onClose} />
+                            <LoginTab
+                                onClose={onClose}
+                                isActive={tabIndex === 0}
+                            />
                         </TabPanel>
                         <TabPanel>
-                            <div> Nobody here but us Chickens!</div>
+                            <SignUpTab
+                                onClose={onClose}
+                                isActve={tabIndex === 1}
+                            />
                         </TabPanel>
                     </TabPanels>
                 </Tabs>

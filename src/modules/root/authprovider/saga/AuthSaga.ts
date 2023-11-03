@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { PayloadAction } from "@reduxjs/toolkit";
+import { setupUserEntry } from "@src/modules/features/Login/actions/LoginActions";
 import { Session } from "@supabase/supabase-js";
 import {
     call,
@@ -14,11 +16,13 @@ import {
     clearSessionData,
     setSessionData,
 } from "../actions/AuthActions";
-import { IAuthLoginEmail } from "../types/AuthSessionTypes";
+import { IAuthLoginEmail, IAuthSessionData } from "../types/AuthSessionTypes";
 import {
     getUserSession,
     loginEmail,
     logout,
+    setUserSession,
+    signup,
 } from "../utils/AuthUtilFunctions";
 
 function* initializeSession() {
@@ -28,7 +32,8 @@ function* initializeSession() {
         console.log("----Session Response success - Response Object----");
         console.log(sessionData);
 
-        if (sessionData.session) yield putResolve(setSessionData(sessionData.session));
+        if (sessionData.session)
+            yield putResolve(setSessionData(sessionData.session));
     } catch (e: any) {
         console.error(
             "Error Encountered at Saga method: AuthAction - initalizeSession"
@@ -41,7 +46,11 @@ function* loginSession(action: PayloadAction<IAuthLoginEmail>) {
     try {
         console.warn(action.payload);
         const sessionData: Session = yield call(loginEmail, action.payload);
-        if (sessionData) yield putResolve(setSessionData(sessionData));
+        if (sessionData) {
+            yield putResolve(setSessionData(sessionData));
+            return true;
+        }
+        return false;
     } catch (e: any) {
         console.error(
             "Error Encountered at Saga method: AuthAction - initalizeSession"
@@ -62,10 +71,38 @@ function* logoutSession() {
     }
 }
 
+function* signUpSessionImpl(action: PayloadAction<IAuthLoginEmail>) {
+    try {
+        if (!action.payload) return null;
+        const response: IAuthSessionData = yield call(signup, action.payload);
+        if (!response) return null;
+
+        if (response.session && response.user) {
+            yield putResolve(setSessionData(response.session));
+            yield call(setUserSession, response.session);
+            // Needs to be after the call as session needs to be established and authenticated
+
+            yield putResolve(
+                setupUserEntry({
+                    uid: response.user.id,
+                    username: action.payload.username || "",
+                    email: action.payload.email || "",
+                })
+            );
+        }
+    } catch (e) {
+        console.error(
+            "Error Encountered at Saga method: AuthAction - signUpSessionImpl"
+        );
+        console.error(e);
+    }
+}
+
 function* watchAuthSaga() {
     yield takeLatest(AuthActions.INIT_SESSION, initializeSession);
     yield takeLatest(AuthActions.LOGIN_SESSION, loginSession);
     yield takeLeading(AuthActions.LOGOUT_SESSION, logoutSession);
+    yield takeLeading(AuthActions.SIGN_UP_SESSION, signUpSessionImpl);
 }
 /* Experiment with creating a dynamic reducer soon */
 const authSaga = fork(watchAuthSaga);

@@ -1,7 +1,7 @@
-import { IArticleDetailObject, IBriefArticleQueryObj, IOtdWikiData } from "./OnThisDayCommonTypes";
+import { IBriefArticleQueryObj, IOtdWikiData } from "./OnThisDayCommonTypes";
 
 export interface IArticleDetailResponse {
-    parse: IArticleDetailObject;
+    parse: string;
 }
 
 export interface IArticleBriefResponse {

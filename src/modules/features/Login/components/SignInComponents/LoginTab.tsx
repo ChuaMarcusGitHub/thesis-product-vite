@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 
 export interface ILoginTabProps {
     onClose: () => void;
+    isActive: boolean;
 }
 
 const LoginTab: React.FC<ILoginTabProps> = ({ onClose }) => {

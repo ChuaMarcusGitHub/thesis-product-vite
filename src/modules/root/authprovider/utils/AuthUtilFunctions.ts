@@ -1,10 +1,6 @@
 import supabaseClient from "@client/supabaseClient";
 import { Session } from "@supabase/supabase-js";
-import {
-    IAuthLoginEmail,
-    IAuthSessionObject,
-    ISessionResponse,
-} from "../types/AuthSessionTypes";
+import { IAuthLoginEmail, IAuthSessionObject } from "../types/AuthSessionTypes";
 
 export const loginEmail = async (credentials: IAuthLoginEmail) => {
     const { data, error }: IAuthSessionObject =
@@ -17,6 +13,22 @@ export const logout = async () => {
     const { error } = await supabaseClient.auth.signOut();
     if (error) throw error;
     return true;
+};
+
+export const signup = async (credentials: IAuthLoginEmail) => {
+    try {
+        const { data: sessionData, error } = await supabaseClient.auth.signUp({
+            email: credentials.email,
+            password: credentials.password,
+        });
+
+        console.log(sessionData);
+        if (error) throw error;
+        return sessionData;
+    } catch (e) {
+        console.error("Error Encoutnered at Signup! : ", e);
+        return null;
+    }
 };
 
 export const setUserSession = async (session: Session) => {

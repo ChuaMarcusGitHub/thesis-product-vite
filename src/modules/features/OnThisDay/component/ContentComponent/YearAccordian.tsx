@@ -9,7 +9,6 @@ import {
     SimpleGrid,
     Fade,
     useDisclosure,
-    ExpandedIndex,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
@@ -43,22 +42,23 @@ const YearAccordian: React.FC<IYearAccordianProps> = ({ typeEvents }) => {
     //----- use States
     const [accordianYears, setAccordianYears] = useState<string[]>([]);
     const [selectedTitle, setSelectedTitle] = useState("");
-    const [indexArray, setIndexArray] = useState<number[]>([]);
+    // const [indexArray, setIndexArray] = useState<number[]>([]);
 
     //----- Use Effects
     useEffect(() => {
         setAccordianYears(getAccordianYearsFromProps(typeEvents));
-        setIndexArray(
-            returnArrayOfIndexes(Object.keys(typeEvents).length || 0)
-        );
+        // setIndexArray(
+        //     returnArrayOfIndexes(Object.keys(typeEvents).length || 0)
+        // );
         console.log(getAccordianYearsFromProps(typeEvents));
-        console.log(returnArrayOfIndexes(Object.keys(typeEvents).length || 0));
+        // console.log(returnArrayOfIndexes(Object.keys(typeEvents).length || 0));
 
         // unmount code
         return () => {
             setAccordianYears([]);
         };
     }, [typeEvents]);
+
     //----- Component Logic
     const handleCardClick = (title: string) => {
         dispatch(loadBriefArticle(title || ""));
@@ -122,7 +122,10 @@ const YearAccordian: React.FC<IYearAccordianProps> = ({ typeEvents }) => {
     );
     const renderComponent = () => {
         return (
-            <Accordion allowMultiple={true} defaultIndex={returnArrayOfIndexes(19)}>
+            <Accordion
+                allowMultiple={true}
+                defaultIndex={returnArrayOfIndexes()}
+            >
                 {accordianYears.map((year, index) =>
                     renderYearAccordian(year, typeEvents?.[year], index)
                 )}

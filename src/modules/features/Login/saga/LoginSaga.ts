@@ -1,15 +1,38 @@
 import { PayloadAction } from "@reduxjs/toolkit";
+import { signUpSession } from "@src/modules/root/authprovider/actions/AuthActions";
 import { ICRUDResponse } from "@src/modules/root/authprovider/types/AuthSessionTypes";
-import { corsHeaders } from "@src/modules/root/webservice/cors";
-import { WEBSERVICE_METHOD } from "@src/modules/root/webservice/WebserviceTypes";
-import { fetchURL } from "@src/modules/root/webservice/WebserviceUtils";
-import { call, fork, put, putResolve, takeLatest } from "redux-saga/effects";
-import { LoginActions, setUserStats } from "../actions/LoginActions";
-import { ILoginDetails, IUserStats } from "../types/LoginActionPayloadTypes";
+
 import {
+    all,
+    call,
+    fork,
+    put,
+    putResolve,
+    takeLatest,
+} from "redux-saga/effects";
+import {
+    LoginActions,
+    setSignupErrors,
+    setUserStats,
+} from "../actions/LoginActions";
+import {
+    IDatabaseCUDResponse,
+    IDbUserStats,
+    ILoginDetails,
+    IUserDatabaseEntryPayload,
+    IUserSignupPayload,
+    IUserStats,
+} from "../types/LoginActionPayloadTypes";
+import { LoginErrorTypes } from "../types/LoginComponentTypes";
+import {
+    supaGetUsernameExists,
     supaGetUserStats,
     supaUpdateUserStats,
+    supaGetEmailExist,
+    updateStatsUsername,
+    updateUserSecUsername,
 } from "./LoginSagaSupabaseCalls";
+import { transformUserStats } from "./LoginSagaUtils";
 
 function* getUserStatsImpl(action: PayloadAction<string>) {
     try {
@@ -54,9 +77,94 @@ function* updateUserStatsDbImpl(action: PayloadAction<IUserStats>) {
     }
 }
 
+function* userSignupImpl(action: PayloadAction<IUserSignupPayload>) {
+    try {
+        const { username = "", email = "", password = "" } = action.payload;
+
+        console.log(`payload:`, action.payload);
+        // should not occur, but in the event  it does:
+        if (!username || !email || !password) {
+            yield putResolve(setSignupErrors([LoginErrorTypes.MISSING_FIELDS]));
+        }
+
+        // Managed to login as db Owner
+        // perform checks on username/ email
+        const responseArray: boolean[] = yield all([
+            // Perform check on username
+            call(supaGetUsernameExists, username),
+            // perform check on email
+            call(supaGetEmailExist, email),
+        ]);
+
+        console.log(responseArray);
+
+        if (responseArray[0] || responseArray[1]) {
+            yield call(handleSignupResponseArray, responseArray);
+            return;
+        }
+        // No errors? Sign up user
+        yield putResolve(
+            signUpSession({
+                email: email,
+                password: password,
+                username: username,
+            })
+        );
+    } catch (e) {
+        console.error("Error Encoutnered at userSignupImpl", e);
+        // trigger Toast?
+    }
+}
+
+function* handleSignupResponseArray(resultArray: boolean[]) {
+    try {
+        const errorList: LoginErrorTypes[] = [];
+        if (resultArray[0]) errorList.push(LoginErrorTypes.USERNAME_TAKEN);
+        if (resultArray[1]) errorList.push(LoginErrorTypes.EMAIL_IN_USE);
+
+        yield put(setSignupErrors(errorList));
+    } catch (e) {
+        console.error("Error Encoutnered at handleSignupResponseArray", e);
+    }
+}
+
+function* setupUserEntry(action: PayloadAction<IUserDatabaseEntryPayload>) {
+    try {
+        const { username = "", uid = "", email = "" } = action.payload;
+
+        if (!email || !username || !uid)
+            throw "Insufficient Details for DB Setup!";
+        // userData is null
+
+        // Update stats with username
+        const results: IDatabaseCUDResponse[] = yield all([
+            call(updateStatsUsername, uid, username),
+            call(updateUserSecUsername, uid, username),
+        ]);
+
+        console.log(results);
+
+        // Test for any error, if exist - trhow and return
+        results.forEach((result) => {
+            if (!result.success) throw result.errorMessage;
+        });
+
+        // No Errors fetch the user's stats
+        const userStats: IDbUserStats = yield call(supaGetUserStats, uid);
+        if (!userStats) throw `Unable to fetch stats for user: ${username}!`;
+
+        yield put(setUserStats(transformUserStats(userStats)));
+    } catch (e) {
+        console.error("Error at Saga method: LoginAction - setupUserEntry");
+        console.log(e);
+    }
+}
+
 function* watchLoginSaga() {
     yield takeLatest(LoginActions.GET_USER_STATS, getUserStatsImpl);
     yield takeLatest(LoginActions.UPDATE_USER_STATS_DB, updateUserStatsDbImpl);
+    yield takeLatest(LoginActions.USER_SIGNUP, userSignupImpl);
+    yield takeLatest(LoginActions.SETUP_USER_ENTRY, setupUserEntry);
 }
 /* Experiment with creating a dynamic reducer soon */
 const loginSaga = fork(watchLoginSaga);

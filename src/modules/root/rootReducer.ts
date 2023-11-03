@@ -13,7 +13,7 @@ import routeReducer from "./history/routeReducer";
 
 const rootReducer = combineReducers({
     OnThisDay: OnThisDayRootReducer,
-    login: loginReducer,
+    userData: loginReducer,
     routes: routeReducer,
     authSession: authReducer,
     config: configReducer,
