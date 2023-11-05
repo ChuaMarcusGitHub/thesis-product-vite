@@ -18,6 +18,7 @@ import {
     IOtdFeedObject,
 } from "@features/onThisDay/type/OnThisDayCommonTypes";
 import {
+    countWords,
     getAccordianYearsFromProps,
     returnArrayOfIndexes,
 } from "./UtilFiles/ContentComponentUtil";
@@ -33,25 +34,23 @@ import ContentDetailModal from "./ContentDetailModal";
 
 export interface IYearAccordianProps {
     typeEvents: IOtdFeedObject;
+    eventType?: string;
 }
 
-const YearAccordian: React.FC<IYearAccordianProps> = ({ typeEvents }) => {
+const YearAccordian: React.FC<IYearAccordianProps> = ({
+    typeEvents,
+    eventType = "",
+}) => {
     // Constants
     const dispatch = useDispatch();
     const { isOpen, onOpen, onClose } = useDisclosure();
     //----- use States
     const [accordianYears, setAccordianYears] = useState<string[]>([]);
     const [selectedTitle, setSelectedTitle] = useState("");
-    // const [indexArray, setIndexArray] = useState<number[]>([]);
 
     //----- Use Effects
     useEffect(() => {
         setAccordianYears(getAccordianYearsFromProps(typeEvents));
-        // setIndexArray(
-        //     returnArrayOfIndexes(Object.keys(typeEvents).length || 0)
-        // );
-        console.log(getAccordianYearsFromProps(typeEvents));
-        // console.log(returnArrayOfIndexes(Object.keys(typeEvents).length || 0));
 
         // unmount code
         return () => {
@@ -60,9 +59,12 @@ const YearAccordian: React.FC<IYearAccordianProps> = ({ typeEvents }) => {
     }, [typeEvents]);
 
     //----- Component Logic
-    const handleCardClick = (title: string) => {
-        dispatch(loadBriefArticle(title || ""));
-        setSelectedTitle(title);
+    const handleCardClick = (
+        _page: IOtdCardPageData,
+        eventDescription: string
+    ) => {
+        dispatch(loadBriefArticle(_page.title || ""));
+        setSelectedTitle(_page.title);
         onOpen();
     };
     const handleCardClose = () => {
@@ -79,7 +81,7 @@ const YearAccordian: React.FC<IYearAccordianProps> = ({ typeEvents }) => {
     ) => (
         <Fade in={eventDescript !== ""} key={`fade-${key}`}>
             <SummaryCard
-                handleClick={() => handleCardClick(page.title)}
+                handleClick={() => handleCardClick(page, eventDescript)}
                 eventDescript={eventDescript}
                 pageData={page}
                 key={key}

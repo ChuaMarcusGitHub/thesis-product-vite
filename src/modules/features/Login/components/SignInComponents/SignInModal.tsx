@@ -3,7 +3,6 @@ import {
     Modal,
     ModalOverlay,
     ModalContent,
-    ModalCloseButton,
     TabList,
     Tab,
     TabPanels,

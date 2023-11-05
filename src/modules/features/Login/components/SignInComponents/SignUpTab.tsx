@@ -39,10 +39,10 @@ const SignUpTab: React.FC<ISignUpTabProps> = ({ onClose, isActve }) => {
     const dispatch = useDispatch();
 
     // States
-    const [email, setEmail] = useState("test2@gmail.com");
-    const [password, setPassword] = useState("Seventyseven7s!");
-    const [confirmPassword, setConfirmPassword] = useState("Seventyseven7s!");
-    const [username, setUsername] = useState("mimosa2");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [username, setUsername] = useState("");
     // Error States
     const [errorChecklist, setErrorChecklist] =
         useState<IErrorTypeChecklist | null>(null);
@@ -69,6 +69,7 @@ const SignUpTab: React.FC<ISignUpTabProps> = ({ onClose, isActve }) => {
             _errorChecklist[LoginErrorTypes.EMAIL_IN_USE] = true;
         if (_errorChecklist !== errorChecklist)
             setErrorChecklist(_errorChecklist);
+
     }, [errorSelectors]);
 
     // ---"Mount/unmount" Effect

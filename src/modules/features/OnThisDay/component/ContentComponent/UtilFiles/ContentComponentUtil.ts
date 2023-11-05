@@ -21,9 +21,8 @@ export const getAccordianYearsFromProps = (
 };
 export const getPopulatedArticles = (
     typeEvents: IArticleCategory,
-    activeTabs: IUpdateActiveTabPayload,
+    activeTabs: IUpdateActiveTabPayload
 ): string[] => {
-
     const tabSelections: string[] = [];
     for (const eventType in typeEvents) {
         if (typeEvents?.[eventType] !== null && activeTabs[eventType]) {
@@ -100,4 +99,8 @@ export const generateDate = (): IDateObject => {
         month: randMonth,
         date: randDate,
     };
+};
+export const countWords = (textBlock: string): number => {
+    if (!textBlock) return 0;
+    return textBlock.split(" ").length;
 };
