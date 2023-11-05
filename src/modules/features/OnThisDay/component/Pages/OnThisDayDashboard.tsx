@@ -13,7 +13,6 @@ import { useDispatch } from "react-redux";
 import { initializeOnThisDay } from "@features/OnThisDay/actions/OnThisDaySummaryActions";
 import SearchComponent from "../ContentComponent/SearchComponent";
 import SigninContainer from "@src/modules/features/Login/components/SignInContainer";
-import { RoutesList } from "@src/modules/root/store/routes";
 
 const cx = classNames.bind({ ...styles });
 
