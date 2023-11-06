@@ -1,6 +1,8 @@
 import supabaseClient from "@client/supabaseClient";
 import { Session } from "@supabase/supabase-js";
 import { IAuthLoginEmail, IAuthSessionObject } from "../types/AuthSessionTypes";
+import { v1 as uuidv4 } from "uuid";
+import { LOCAL_STORAGE_KEYS } from "@src/modules/features/Common/types/LocalStorageTypes";
 
 export const loginEmail = async (credentials: IAuthLoginEmail) => {
     const { data, error }: IAuthSessionObject =
@@ -87,4 +89,24 @@ export const getUserSession = async () => {
         console.error(`error encountered while performing getUserSession`);
         console.error(e);
     }
+};
+
+export const getUserData = async () => {
+    try {
+        console.log("Supabase ");
+    } catch (e) {
+        console.error(`error encountered while performing getUserData: `, e);
+    }
+};
+
+export const getLocalUserId = (): string | null => {
+    return localStorage.getItem(LOCAL_STORAGE_KEYS.localUserId);
+};
+
+// Local Storage Methods
+export const generateAndStoreLocalUserId = (): string => {
+    const newUserId: string = uuidv4();
+    // Store in local Storage
+    localStorage.setItem(LOCAL_STORAGE_KEYS.localUserId, newUserId);
+    return newUserId;
 };

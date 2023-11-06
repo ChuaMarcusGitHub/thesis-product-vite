@@ -86,7 +86,7 @@ const ContentContainer: React.FC = () => {
             return (
                 <TabPanel key={`${eventType}-tab-panel`}>
                     <Box {...contentBoxContainer}>
-                        <YearAccordian typeEvents={eventArticles[eventType]} eventType={eventType}/>
+                        <YearAccordian typeEvents={eventArticles[eventType]} />
                     </Box>
                 </TabPanel>
             );

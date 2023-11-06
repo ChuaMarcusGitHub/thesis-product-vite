@@ -5,13 +5,8 @@ import {
     fetchWebpage,
 } from "@modules/root/webservice/WebserviceUtils";
 import { PayloadAction } from "@reduxjs/toolkit";
-import {
-    call,
-    fork,
-    put,
-    putResolve,
-    takeLeading,
-} from "redux-saga/effects";
+import { call, fork, put, putResolve, takeLeading } from "redux-saga/effects";
+import { analyticsInsertArticleData } from "@features/Common/Analytics/actions/AnalyticsActions";
 import {
     clearDetailedArticle,
     clearFeedArticles,
@@ -22,6 +17,7 @@ import {
     setLoadState,
 } from "../actions/OnThisDaySummaryActions";
 import {
+    ARTICLE_TYPE,
     IArticleBriefObject,
     IFetchEventsDataPayload,
     IFetchEventsPayload,
@@ -32,6 +28,8 @@ import {
 import {
     IArticleBriefResponse,
     IOnThisDayResponse,
+    IAnalyticsDataArticlePayload,
+    IArticleDetailResponse,
 } from "../type/OnThisDayWebserviceTypes";
 import {
     buildBriefArticleQuery,
@@ -42,6 +40,7 @@ import {
     transformBriefArticleObject,
     transformOtdFeedResponse,
 } from "./OnThisDaySummarySagaUtils";
+import { ISendArticleDataPayload } from "../../Common/Analytics/types/AnalyticsPayloadTypes";
 
 const WIKI_ACCESS_TOKEN = import.meta.env.VITE_WIKI_ACCESS_TOKEN;
 const WIKI_APP_AGENT = import.meta.env.VITE_WIKI_APP_AGENT;
@@ -222,7 +221,8 @@ function* loadDetailedArticle(
 
 function* loadBriefArticle(action: PayloadAction<string>) {
     try {
-        const apiUrl: string = buildBriefArticleQuery(action.payload, "json");
+        const title = action.payload || "";
+        const apiUrl: string = buildBriefArticleQuery(title, "json");
         let response: IArticleBriefResponse;
         if (isDev) {
             response = yield call(fetchURL, apiUrl);
@@ -246,6 +246,53 @@ function* loadBriefArticle(action: PayloadAction<string>) {
 
             // --- No problems, set to state
             yield putResolve(setBriefArticle(briefArticle));
+            return briefArticle;
+        } else {
+            throw Error("Error in retreiving query from Wikipedia Extract");
+        }
+    } catch (e) {
+        console.error("Error Encountered in loadBriefArticle Saga method");
+        console.error(e);
+    }
+}
+
+function* triggerAnalyticsBeforeArticleLoadImp(
+    action: PayloadAction<IAnalyticsDataArticlePayload>
+) {
+    try {
+        const {
+            title,
+            tid,
+            descriptionLength,
+            eventType,
+            pageId,
+            articleType = ARTICLE_TYPE.BRIEF,
+        } = action.payload;
+
+        let response: IArticleBriefResponse | IArticleDetailResponse;
+
+        if (articleType === ARTICLE_TYPE.BRIEF) {
+            response = yield call(loadBriefArticle, {
+                type: OnThisDaySummaryAction.LOAD_BRIEF_ARTICLE,
+                payload: title,
+            });
+        } else {
+            response = yield call(loadDetailedArticle, {
+                type: OnThisDaySummaryAction.LOAD_DETAILED_ARTICLE,
+                payload: { title: title, shouldClear: false },
+            });
+        }
+
+        if (response) {
+            // Perform Analysis update
+            const analyticsData: ISendArticleDataPayload = {
+                articleTitle: title,
+                tid: tid || "--",
+                articleId: pageId || -255,
+                descriptionLength: descriptionLength,
+                eventType: eventType,
+            };
+            yield put(analyticsInsertArticleData(analyticsData));
         } else {
             throw Error("Error in retreiving query from Wikipedia Extract");
         }
@@ -269,6 +316,10 @@ function* watchOnThisDaySummarySaga() {
     yield takeLeading(
         OnThisDaySummaryAction.FETCH_DATE_EVENTS,
         fetchDayArticles
+    );
+    yield takeLeading(
+        OnThisDaySummaryAction.TRIGGER_ANALYTICS_WITH_ARTICLE,
+        triggerAnalyticsBeforeArticleLoadImp
     );
 }
 

@@ -13,6 +13,12 @@ export enum API_SUPPORTED_LANGUAGES {
     BOSNIAN = "bs",
 }
 
+export enum ARTICLE_TYPE {
+    INACTIVE = "INACTIVE", // only used for onload
+    BRIEF = "BRIEF",
+    DETAILED = "DETAILED"
+}
+
 export const Months = {
     January: 0,
     February: 1,

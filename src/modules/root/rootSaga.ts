@@ -7,7 +7,8 @@ import { all } from "redux-saga/effects";
 import onThisDaySummarySaga from "@modules/features/OnThisDay/saga/OnThisDaySummarySaga";
 import authSaga from "./authprovider/saga/AuthSaga";
 import loginSaga from "../features/Login/saga/LoginSaga";
+import analyticsSaga from "../features/Common/Analytics/sagas/AnalyticsSaga";
 
 export default function* rootSaga() {
-    yield all([onThisDaySummarySaga, authSaga, loginSaga]);
+    yield all([onThisDaySummarySaga, authSaga, loginSaga, analyticsSaga]);
 }

@@ -13,14 +13,15 @@ import {
 import React, { useEffect, useState } from "react";
 
 import {
+    ARTICLE_TYPE,
     IOtdCardData,
     IOtdCardPageData,
     IOtdFeedObject,
 } from "@features/onThisDay/type/OnThisDayCommonTypes";
 import {
-    countWords,
     getAccordianYearsFromProps,
     returnArrayOfIndexes,
+    transformToAnalyticsArticlePayload,
 } from "./UtilFiles/ContentComponentUtil";
 import SummaryCard from "./SummaryCard";
 import { emptyPage } from "./UtilFiles/DefaultObjects";
@@ -28,30 +29,30 @@ import { accordianPanelGrid } from "../YearAccordianPropStyles";
 import { useDispatch } from "react-redux";
 import {
     clearBriefArticle,
-    loadBriefArticle,
+    triggerAnalyticsWithArticle,
 } from "@features/OnThisDay/actions/OnThisDaySummaryActions";
 import ContentDetailModal from "./ContentDetailModal";
+import { IAnalyticsDataArticlePayload } from "../../type/OnThisDayWebserviceTypes";
 
 export interface IYearAccordianProps {
     typeEvents: IOtdFeedObject;
-    eventType?: string;
 }
 
-const YearAccordian: React.FC<IYearAccordianProps> = ({
-    typeEvents,
-    eventType = "",
-}) => {
+const YearAccordian: React.FC<IYearAccordianProps> = ({ typeEvents }) => {
     // Constants
     const dispatch = useDispatch();
     const { isOpen, onOpen, onClose } = useDisclosure();
     //----- use States
     const [accordianYears, setAccordianYears] = useState<string[]>([]);
-    const [selectedTitle, setSelectedTitle] = useState("");
+    const [articleType, setArticleType] = useState<ARTICLE_TYPE>(
+        ARTICLE_TYPE.INACTIVE
+    );
+    const [activePageData, setActivePageData] =
+        useState<IOtdCardPageData | null>(null);
 
     //----- Use Effects
     useEffect(() => {
         setAccordianYears(getAccordianYearsFromProps(typeEvents));
-
         // unmount code
         return () => {
             setAccordianYears([]);
@@ -61,15 +62,19 @@ const YearAccordian: React.FC<IYearAccordianProps> = ({
     //----- Component Logic
     const handleCardClick = (
         _page: IOtdCardPageData,
-        eventDescription: string
+        eventDescription: string,
+        topic: string
     ) => {
-        dispatch(loadBriefArticle(_page.title || ""));
-        setSelectedTitle(_page.title);
+        const articlePayload: IAnalyticsDataArticlePayload =
+            transformToAnalyticsArticlePayload(_page, eventDescription, topic);
+        setActivePageData(_page);
+        dispatch(triggerAnalyticsWithArticle(articlePayload));
+        setArticleType(articlePayload.articleType);
         onOpen();
     };
     const handleCardClose = () => {
         dispatch(clearBriefArticle());
-        setSelectedTitle("");
+        setActivePageData(null);
         onClose();
     };
 
@@ -77,11 +82,12 @@ const YearAccordian: React.FC<IYearAccordianProps> = ({
     const renderYearEvents = (
         page: IOtdCardPageData,
         eventDescript: string,
-        key: number
+        key: number,
+        topic: string
     ) => (
         <Fade in={eventDescript !== ""} key={`fade-${key}`}>
             <SummaryCard
-                handleClick={() => handleCardClick(page, eventDescript)}
+                handleClick={() => handleCardClick(page, eventDescript, topic)}
                 eventDescript={eventDescript}
                 pageData={page}
                 key={key}
@@ -115,7 +121,8 @@ const YearAccordian: React.FC<IYearAccordianProps> = ({
                             return renderYearEvents(
                                 pageData,
                                 event.event,
-                                index
+                                index,
+                                event.tag
                             );
                         })}
                 </SimpleGrid>
@@ -134,7 +141,8 @@ const YearAccordian: React.FC<IYearAccordianProps> = ({
                 <ContentDetailModal
                     isOpen={isOpen}
                     onClose={handleCardClose}
-                    title={selectedTitle}
+                    articleType={articleType}
+                    pageData={activePageData}
                 />
             </Accordion>
         );

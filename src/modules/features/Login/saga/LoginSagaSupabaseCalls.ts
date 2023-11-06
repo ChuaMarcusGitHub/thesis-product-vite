@@ -1,15 +1,17 @@
 // const supabase: SupabaseClient = createClient(supabaseUrl, supabaseKey);
 import supabaseClient from "@src/clientfolder/supabaseClient";
 import {
-    IUserStats,
-    SUPABASE_RESPONSE,
-} from "../types/LoginActionPayloadTypes";
+    CRUD_OP,
+    SUPABASE_TABLES,
+} from "@features/Common/Supabase/SupabaseCommonTypes";
+import { handleCUDRsponseStatus } from "@features/Common/Supabase/SupabaseCommonUtils";
+import { IUserStats } from "../types/LoginActionPayloadTypes";
 
 const FILE_LOC_ERR_STRING = "Error encountered in LoginSupabase Calls |";
 export const supaGetUserStats = async (user_id_input: string) => {
     try {
         const { data: userStats, error } = await supabaseClient
-            .from("USER_STATS")
+            .from(SUPABASE_TABLES.USER_STATS)
             .select("*")
             .eq("user_id", user_id_input)
             .single();
@@ -28,7 +30,7 @@ export const supaGetUserStats = async (user_id_input: string) => {
 export const supaUpdateUserStats = async (payload: IUserStats) => {
     try {
         const { status: responseStatus, statusText } = await supabaseClient
-            .from("USER_STATS")
+            .from(SUPABASE_TABLES.USER_STATS)
             .update({
                 articles_read: payload.articlesRead,
                 time_spent: payload.timeSpent,
@@ -36,20 +38,12 @@ export const supaUpdateUserStats = async (payload: IUserStats) => {
             .eq("user_id", payload.userId);
 
         //check for status update
-        if (
-            responseStatus &&
-            responseStatus !== SUPABASE_RESPONSE.UPDATE_SUCCESS
-        ) {
-            console.error(
-                "Error encountered when updating Supabase, Error Msg:",
-                statusText
-            );
-            return {
-                success: false,
-                errorMessage: statusText,
-            };
-        }
-        return { success: true, errorMessage: "" };
+
+        return handleCUDRsponseStatus(
+            CRUD_OP.UPDATE,
+            responseStatus,
+            statusText
+        );
     } catch (e) {
         console.error(`${FILE_LOC_ERR_STRING}| supaUpdateUserStats`);
         console.error(e);
@@ -59,7 +53,7 @@ export const supaUpdateUserStats = async (payload: IUserStats) => {
 export const supaGetUsernameExists = async (username_input: string) => {
     try {
         const { data: usernames, error } = await supabaseClient
-            .from("SEC_USER")
+            .from(SUPABASE_TABLES.SEC_USER)
             .select("username")
             .eq("username", username_input);
         /*
@@ -85,7 +79,7 @@ export const supaGetUsernameExists = async (username_input: string) => {
 export const supaGetEmailExist = async (email_input: string) => {
     try {
         const { data: emails, error } = await supabaseClient
-            .from("SEC_USER")
+            .from(SUPABASE_TABLES.SEC_USER)
             .select("email")
             .eq("email", email_input);
 
@@ -109,13 +103,17 @@ export const updateUserSecUsername = async (
 ) => {
     try {
         const { status: responseStatus, statusText } = await supabaseClient
-            .from("SEC_USER")
+            .from(SUPABASE_TABLES.SEC_USER)
             .update({
                 username: username_input,
             })
             .eq("user_id", user_id_input);
 
-        return handleCUDRsponseStatus(responseStatus, statusText);
+        return handleCUDRsponseStatus(
+            CRUD_OP.UPDATE,
+            responseStatus,
+            statusText
+        );
     } catch (e) {
         console.error(`${FILE_LOC_ERR_STRING}| createUserEntry`);
         console.error(e);
@@ -127,30 +125,20 @@ export const updateStatsUsername = async (
 ) => {
     try {
         const { status: responseStatus, statusText } = await supabaseClient
-            .from("USER_STATS")
+            .from(SUPABASE_TABLES.USER_STATS)
             .update({
                 username: username_input,
             })
             .eq("user_id", user_id_input);
 
         //check for status update
-        return handleCUDRsponseStatus(responseStatus, statusText);
+        return handleCUDRsponseStatus(
+            CRUD_OP.UPDATE,
+            responseStatus,
+            statusText
+        );
     } catch (e) {
         console.error(`${FILE_LOC_ERR_STRING}| initializeStats`);
         console.error(e);
     }
-};
-
-const handleCUDRsponseStatus = (responseStatus: number, statusText: string) => {
-    if (responseStatus && responseStatus !== SUPABASE_RESPONSE.UPDATE_SUCCESS) {
-        console.error(
-            "Error encountered when updating Supabase, Error Msg:",
-            statusText
-        );
-        return {
-            success: false,
-            errorMessage: statusText,
-        };
-    }
-    return { success: true, errorMessage: "" };
 };

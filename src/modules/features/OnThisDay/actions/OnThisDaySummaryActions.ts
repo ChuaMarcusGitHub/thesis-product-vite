@@ -7,6 +7,7 @@ import {
     ISetFeedArticlePayload,
     IUpdateActiveTabPayload,
 } from "../type/OnThisDayCommonTypes";
+import { IAnalyticsDataArticlePayload } from "../type/OnThisDayWebserviceTypes";
 
 export enum OnThisDaySummaryAction {
     INIT = "OnThisDaySummaryAction/INIT",
@@ -21,6 +22,7 @@ export enum OnThisDaySummaryAction {
     SET_DETAILED_ARTICLE = "OnThisDaySummaryAction/SET_DETAILED_ARTICLE",
     CLEAR_DETAILED_ARTICLE = "OnThisDaySummaryAction/CLEAR_DETAILED_ARTICLE",
     UPDATE_ACTIVE_TABS = "OnThisDaySummaryAction/UPDATE_ACTIVE_TABS",
+    TRIGGER_ANALYTICS_WITH_ARTICLE = "OnThisDaySummaryAction/TRIGGER_ANALYTICS_WITH_ARTICLE"
 }
 
 // Initialization action
@@ -36,6 +38,8 @@ export const setFeedArticles = (eventPayload: ISetFeedArticlePayload) =>
 export const clearFeedArticles = () =>
     action(OnThisDaySummaryAction.CLEAR_FEED_ARTICLES);
 // Detail Actions
+export const triggerAnalyticsWithArticle = (payload: IAnalyticsDataArticlePayload ) => 
+    action(OnThisDaySummaryAction.TRIGGER_ANALYTICS_WITH_ARTICLE, payload)
 export const loadBriefArticle = (payload: string) =>
     action(OnThisDaySummaryAction.LOAD_BRIEF_ARTICLE, payload);
 export const setBriefArticle = (payload: IArticleBriefObject) =>

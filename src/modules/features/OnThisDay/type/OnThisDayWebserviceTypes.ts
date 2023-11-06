@@ -1,4 +1,4 @@
-import { IBriefArticleQueryObj, IOtdWikiData } from "./OnThisDayCommonTypes";
+import { ARTICLE_TYPE, IBriefArticleQueryObj, IOtdWikiData } from "./OnThisDayCommonTypes";
 
 export interface IArticleDetailResponse {
     parse: string;
@@ -11,7 +11,7 @@ export interface IArticleBriefResponse {
             "*": string;
         };
     };
-    query: IBriefArticleQueryObj
+    query: IBriefArticleQueryObj;
     /*
         sample object - query:{
             "3354":{
@@ -25,5 +25,13 @@ export interface IArticleBriefResponse {
 }
 export interface IOnThisDayResponse {
     [type: string]: IOtdWikiData[];
-    
+}
+
+export interface IAnalyticsDataArticlePayload {
+    descriptionLength: number;
+    eventType: string;
+    pageId: number;
+    tid?: string;
+    title: string;
+    articleType: ARTICLE_TYPE;
 }
