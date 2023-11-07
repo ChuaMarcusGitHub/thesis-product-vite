@@ -1,4 +1,5 @@
 import { action } from "typesafe-actions";
+import { IContentDetailModalProps } from "../component/ContentComponent/ContentDetailModal";
 import {
     IArticleBriefObject,
     IArticleDetailedPayload,
@@ -22,7 +23,8 @@ export enum OnThisDaySummaryAction {
     SET_DETAILED_ARTICLE = "OnThisDaySummaryAction/SET_DETAILED_ARTICLE",
     CLEAR_DETAILED_ARTICLE = "OnThisDaySummaryAction/CLEAR_DETAILED_ARTICLE",
     UPDATE_ACTIVE_TABS = "OnThisDaySummaryAction/UPDATE_ACTIVE_TABS",
-    TRIGGER_ANALYTICS_WITH_ARTICLE = "OnThisDaySummaryAction/TRIGGER_ANALYTICS_WITH_ARTICLE"
+    TRIGGER_ANALYTICS_WITH_ARTICLE = "OnThisDaySummaryAction/TRIGGER_ANALYTICS_WITH_ARTICLE",
+    SET_MODAL_PROPS = "OnThisDaySummaryAction/SET_MODAL_PROPS",
 }
 
 // Initialization action
@@ -38,8 +40,9 @@ export const setFeedArticles = (eventPayload: ISetFeedArticlePayload) =>
 export const clearFeedArticles = () =>
     action(OnThisDaySummaryAction.CLEAR_FEED_ARTICLES);
 // Detail Actions
-export const triggerAnalyticsWithArticle = (payload: IAnalyticsDataArticlePayload ) => 
-    action(OnThisDaySummaryAction.TRIGGER_ANALYTICS_WITH_ARTICLE, payload)
+export const triggerAnalyticsWithArticle = (
+    payload: IAnalyticsDataArticlePayload
+) => action(OnThisDaySummaryAction.TRIGGER_ANALYTICS_WITH_ARTICLE, payload);
 export const loadBriefArticle = (payload: string) =>
     action(OnThisDaySummaryAction.LOAD_BRIEF_ARTICLE, payload);
 export const setBriefArticle = (payload: IArticleBriefObject) =>
@@ -53,5 +56,8 @@ export const setDetailedArticle = (payload: IArticleDetailedPayload) =>
 export const clearDetailedArticle = () =>
     action(OnThisDaySummaryAction.CLEAR_DETAILED_ARTICLE);
 // Update Tab options
-export const updateActiveTabs = (payload: IUpdateActiveTabPayload ) => 
-    action(OnThisDaySummaryAction.UPDATE_ACTIVE_TABS, payload)
+export const updateActiveTabs = (payload: IUpdateActiveTabPayload) =>
+    action(OnThisDaySummaryAction.UPDATE_ACTIVE_TABS, payload);
+// Modal Actions
+export const setModalProperties = (payload: IContentDetailModalProps) =>
+    action(OnThisDaySummaryAction.SET_MODAL_PROPS, payload);

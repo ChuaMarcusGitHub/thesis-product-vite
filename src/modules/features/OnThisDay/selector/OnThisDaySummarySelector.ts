@@ -28,6 +28,11 @@ export const getActiveTabs = createSelector(
     summaryRoot,
     (data) => data.activeTabs
 );
+// Modal Props
+export const getModalProps = createSelector(
+    summaryRoot,
+    (data) => data.modalProps
+);
 
 // Load State Items
 export const getIsLoading = createSelector(loadState, (data) => data.isLoading);

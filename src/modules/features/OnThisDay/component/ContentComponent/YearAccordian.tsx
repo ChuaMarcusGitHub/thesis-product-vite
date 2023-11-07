@@ -13,7 +13,6 @@ import {
 import React, { useEffect, useState } from "react";
 
 import {
-    ARTICLE_TYPE,
     IOtdCardData,
     IOtdCardPageData,
     IOtdFeedObject,
@@ -29,9 +28,10 @@ import { accordianPanelGrid } from "../YearAccordianPropStyles";
 import { useDispatch } from "react-redux";
 import {
     clearBriefArticle,
+    setModalProperties,
     triggerAnalyticsWithArticle,
 } from "@features/OnThisDay/actions/OnThisDaySummaryActions";
-import ContentDetailModal from "./ContentDetailModal";
+import { defaultModalProps } from "./ContentDetailModal";
 import { IAnalyticsDataArticlePayload } from "../../type/OnThisDayWebserviceTypes";
 
 export interface IYearAccordianProps {
@@ -44,11 +44,6 @@ const YearAccordian: React.FC<IYearAccordianProps> = ({ typeEvents }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     //----- use States
     const [accordianYears, setAccordianYears] = useState<string[]>([]);
-    const [articleType, setArticleType] = useState<ARTICLE_TYPE>(
-        ARTICLE_TYPE.INACTIVE
-    );
-    const [activePageData, setActivePageData] =
-        useState<IOtdCardPageData | null>(null);
 
     //----- Use Effects
     useEffect(() => {
@@ -67,14 +62,20 @@ const YearAccordian: React.FC<IYearAccordianProps> = ({ typeEvents }) => {
     ) => {
         const articlePayload: IAnalyticsDataArticlePayload =
             transformToAnalyticsArticlePayload(_page, eventDescription, topic);
-        setActivePageData(_page);
         dispatch(triggerAnalyticsWithArticle(articlePayload));
-        setArticleType(articlePayload.articleType);
+        dispatch(
+            setModalProperties({
+                pageData: _page,
+                isOpen: isOpen,
+                onClose: handleCardClose,
+                articleType: articlePayload.articleType,
+            })
+        );
         onOpen();
     };
     const handleCardClose = () => {
         dispatch(clearBriefArticle());
-        setActivePageData(null);
+        dispatch(setModalProperties(defaultModalProps));
         onClose();
     };
 
@@ -138,12 +139,6 @@ const YearAccordian: React.FC<IYearAccordianProps> = ({ typeEvents }) => {
                 {accordianYears.map((year, index) =>
                     renderYearAccordian(year, typeEvents?.[year], index)
                 )}
-                <ContentDetailModal
-                    isOpen={isOpen}
-                    onClose={handleCardClose}
-                    articleType={articleType}
-                    pageData={activePageData}
-                />
             </Accordion>
         );
     };

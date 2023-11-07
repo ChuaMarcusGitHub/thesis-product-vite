@@ -18,6 +18,7 @@ import {
 import React, { useState, useRef, useMemo, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+    getModalProps,
     getSelectedBriefArticle,
     getSelectedDetailedArticle,
 } from "@modules/features/OnThisDay/selector/OnThisDaySummarySelector";
@@ -54,14 +55,19 @@ export interface IContentDetailModalProps {
     onClose: () => void;
     articleType: ARTICLE_TYPE;
 }
+// eslint-disable-next-line react-refresh/only-export-components
+export const defaultModalProps: IContentDetailModalProps = {
+    isOpen: false,
+    pageData: null,
+    articleType: ARTICLE_TYPE.INACTIVE,
+    onClose: () => console.warn("onClose not defined!"),
+};
 
-const ContentDetailModal: React.FC<IContentDetailModalProps> = ({
-    pageData = null,
-    isOpen = false,
-    onClose = () =>
-        console.error("ContentDetailModal onClose Method undefined!"),
-    articleType = ARTICLE_TYPE.INACTIVE,
-}) => {
+const ContentDetailModal: React.FC = () => {
+    // Selector
+    const { pageData, isOpen, onClose, articleType }: IContentDetailModalProps =
+        useSelector(getModalProps);
+        
     // Constants
     const dispatch = useDispatch();
     const bodyRef = useRef<HTMLDivElement>(null);
@@ -90,8 +96,19 @@ const ContentDetailModal: React.FC<IContentDetailModalProps> = ({
 
     // Use Effects
     useEffect(() => {
-        setLastKnownType(articleType);
+        //unmount effect (scenario when user clicks and navigates away from website)
+        console.log("mounted");
+        return () => {
+            handleClose();
+            if (timerIdRef.current) clearTimeout(timerIdRef.current);
+        };
+    }, []);
 
+    useEffect(() => {
+        console.log(`last known type: ${lastKnownType}`);
+    }, [lastKnownType]);
+
+    useEffect(() => {
         let isTabDataActive = false;
         if (articleType === ARTICLE_TYPE.BRIEF)
             isTabDataActive = !!briefArticle;
@@ -101,12 +118,11 @@ const ContentDetailModal: React.FC<IContentDetailModalProps> = ({
             console.log("Data loaded, setting time");
             timerIdRef.current = setTimeout(() => {
                 if (isOpen) setTabOpenTime(new Date());
-            }, 1000);
+            }, 500);
+            setLastKnownType(articleType);
         }
-        return () => {
-            if (timerIdRef.current) clearTimeout(timerIdRef.current);
-        };
-    }, [isOpen, briefArticle, detailedArticle]);
+        if (progressPercent > 0) setProgressPercent(0);
+    }, [isOpen]);
 
     // Component Methods
     const trackScroll = () => {
@@ -132,7 +148,6 @@ const ContentDetailModal: React.FC<IContentDetailModalProps> = ({
                         shouldClear: false,
                     })
                 );
-                setLastKnownType(ARTICLE_TYPE.DETAILED);
             } else if (
                 detailedArticle &&
                 detailedArticle.pageId !== briefArticle?.pageId
@@ -144,27 +159,38 @@ const ContentDetailModal: React.FC<IContentDetailModalProps> = ({
                         shouldClear: true,
                     })
                 );
-                setLastKnownType(ARTICLE_TYPE.BRIEF);
             }
         } else {
             if (!briefArticle) dispatch(loadBriefArticle(pageData!.title));
         }
         setProgressPercent(0);
-        setIsDetailedArticle(!isDetailedArticle);
+        const newIsDetailedFlag = !isDetailedArticle;
+        setIsDetailedArticle(newIsDetailedFlag);
+        console.log(
+            `new ArticleType: ${
+                newIsDetailedFlag ? ARTICLE_TYPE.DETAILED : ARTICLE_TYPE.BRIEF
+            }`
+        );
+        setLastKnownType(
+            newIsDetailedFlag ? ARTICLE_TYPE.DETAILED : ARTICLE_TYPE.BRIEF
+        );
     };
 
     const handleClose = () => {
-        setIsDetailedArticle(false);
-        setProgressPercent(0);
         // If there is data to be tracked track said data.
         if (tabOpenTime && lastKnownType !== ARTICLE_TYPE.INACTIVE) {
             const modalAnalytics = transformToAnalyticsModalPayload(
                 pageData,
                 tabOpenTime,
-                articleType
+                lastKnownType
             );
             dispatch(analyticsInsertModalData(modalAnalytics));
+            // Reset Analytics
+            setTabOpenTime(null);
         }
+        setIsDetailedArticle(false);
+        setProgressPercent(0);
+        setLastKnownType(ARTICLE_TYPE.INACTIVE);
         onClose();
     };
 
