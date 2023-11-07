@@ -1,4 +1,5 @@
 import { IReducerLoadingState } from "@src/modules/root/webservice/WebserviceTypes";
+import { IContentDetailModalProps } from "../component/ContentComponent/ContentDetailModal";
 import { IDateObject } from "./OnThisDayComponentTypes";
 
 export enum API_SUPPORTED_LANGUAGES {
@@ -11,6 +12,12 @@ export enum API_SUPPORTED_LANGUAGES {
     SPANISH = "es",
     ARABIC = "ar",
     BOSNIAN = "bs",
+}
+
+export enum ARTICLE_TYPE {
+    INACTIVE = "INACTIVE", // only used for onload
+    BRIEF = "BRIEF",
+    DETAILED = "DETAILED",
 }
 
 export const Months = {
@@ -146,9 +153,11 @@ export interface IOnThisDaySummaryDataState {
         detailed?: IArticleDetailedPayload;
         brief?: IArticleBriefObject;
     };
-    activeTabs: { //tabs to be displayed on the content screen
+    activeTabs: {
+        //tabs to be displayed on the content screen
         [tabs: string]: boolean;
-    }
+    };
+    modalProps: IContentDetailModalProps;
     loadState: IReducerLoadingState;
 }
 export interface IFetchEventsPayload {

@@ -20,16 +20,17 @@ import {
 import {
     getAccordianYearsFromProps,
     returnArrayOfIndexes,
+    transformToAnalyticsArticlePayload,
 } from "./UtilFiles/ContentComponentUtil";
 import SummaryCard from "./SummaryCard";
 import { emptyPage } from "./UtilFiles/DefaultObjects";
 import { accordianPanelGrid } from "../YearAccordianPropStyles";
 import { useDispatch } from "react-redux";
 import {
-    clearBriefArticle,
-    loadBriefArticle,
+    clearModalProps,
+    triggerAnalyticsWithArticle,
 } from "@features/OnThisDay/actions/OnThisDaySummaryActions";
-import ContentDetailModal from "./ContentDetailModal";
+import { IAnalyticsDataArticlePayload } from "../../type/OnThisDayWebserviceTypes";
 
 export interface IYearAccordianProps {
     typeEvents: IOtdFeedObject;
@@ -38,21 +39,13 @@ export interface IYearAccordianProps {
 const YearAccordian: React.FC<IYearAccordianProps> = ({ typeEvents }) => {
     // Constants
     const dispatch = useDispatch();
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const { onOpen, onClose } = useDisclosure();
     //----- use States
     const [accordianYears, setAccordianYears] = useState<string[]>([]);
-    const [selectedTitle, setSelectedTitle] = useState("");
-    // const [indexArray, setIndexArray] = useState<number[]>([]);
 
     //----- Use Effects
     useEffect(() => {
         setAccordianYears(getAccordianYearsFromProps(typeEvents));
-        // setIndexArray(
-        //     returnArrayOfIndexes(Object.keys(typeEvents).length || 0)
-        // );
-        console.log(getAccordianYearsFromProps(typeEvents));
-        // console.log(returnArrayOfIndexes(Object.keys(typeEvents).length || 0));
-
         // unmount code
         return () => {
             setAccordianYears([]);
@@ -60,14 +53,24 @@ const YearAccordian: React.FC<IYearAccordianProps> = ({ typeEvents }) => {
     }, [typeEvents]);
 
     //----- Component Logic
-    const handleCardClick = (title: string) => {
-        dispatch(loadBriefArticle(title || ""));
-        setSelectedTitle(title);
-        onOpen();
+    const handleCardClick = (
+        _page: IOtdCardPageData,
+        eventDescription: string,
+        topic: string
+    ) => {
+        const articlePayload: IAnalyticsDataArticlePayload =
+            transformToAnalyticsArticlePayload(
+                _page,
+                eventDescription,
+                topic,
+                true,
+                onOpen,
+                handleCardClose
+            );
+        dispatch(triggerAnalyticsWithArticle(articlePayload));
     };
     const handleCardClose = () => {
-        dispatch(clearBriefArticle());
-        setSelectedTitle("");
+        dispatch(clearModalProps());
         onClose();
     };
 
@@ -75,11 +78,12 @@ const YearAccordian: React.FC<IYearAccordianProps> = ({ typeEvents }) => {
     const renderYearEvents = (
         page: IOtdCardPageData,
         eventDescript: string,
-        key: number
+        key: number,
+        topic: string
     ) => (
         <Fade in={eventDescript !== ""} key={`fade-${key}`}>
             <SummaryCard
-                handleClick={() => handleCardClick(page.title)}
+                handleClick={() => handleCardClick(page, eventDescript, topic)}
                 eventDescript={eventDescript}
                 pageData={page}
                 key={key}
@@ -113,7 +117,8 @@ const YearAccordian: React.FC<IYearAccordianProps> = ({ typeEvents }) => {
                             return renderYearEvents(
                                 pageData,
                                 event.event,
-                                index
+                                index,
+                                event.tag
                             );
                         })}
                 </SimpleGrid>
@@ -129,11 +134,6 @@ const YearAccordian: React.FC<IYearAccordianProps> = ({ typeEvents }) => {
                 {accordianYears.map((year, index) =>
                     renderYearAccordian(year, typeEvents?.[year], index)
                 )}
-                <ContentDetailModal
-                    isOpen={isOpen}
-                    onClose={handleCardClose}
-                    title={selectedTitle}
-                />
             </Accordion>
         );
     };

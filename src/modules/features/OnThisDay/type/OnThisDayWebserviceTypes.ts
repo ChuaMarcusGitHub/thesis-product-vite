@@ -1,4 +1,9 @@
-import { IBriefArticleQueryObj, IOtdWikiData } from "./OnThisDayCommonTypes";
+import {
+    ARTICLE_TYPE,
+    IBriefArticleQueryObj,
+    IOtdCardPageData,
+    IOtdWikiData,
+} from "./OnThisDayCommonTypes";
 
 export interface IArticleDetailResponse {
     parse: string;
@@ -11,7 +16,7 @@ export interface IArticleBriefResponse {
             "*": string;
         };
     };
-    query: IBriefArticleQueryObj
+    query: IBriefArticleQueryObj;
     /*
         sample object - query:{
             "3354":{
@@ -25,5 +30,14 @@ export interface IArticleBriefResponse {
 }
 export interface IOnThisDayResponse {
     [type: string]: IOtdWikiData[];
-    
+}
+
+export interface IAnalyticsDataArticlePayload {
+    descriptionLength: number;
+    eventType: string;
+    pageData?: IOtdCardPageData;
+    articleType: ARTICLE_TYPE;
+    isModalOpen: boolean;
+    onOpenHandler: () => void;
+    onCloseHandler: () => void;
 }

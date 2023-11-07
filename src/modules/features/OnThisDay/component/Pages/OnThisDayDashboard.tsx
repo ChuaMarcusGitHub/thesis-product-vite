@@ -13,6 +13,7 @@ import { useDispatch } from "react-redux";
 import { initializeOnThisDay } from "@features/OnThisDay/actions/OnThisDaySummaryActions";
 import SearchComponent from "../ContentComponent/SearchComponent";
 import SigninContainer from "@src/modules/features/Login/components/SignInContainer";
+import ContentDetailModal from "../ContentComponent/ContentDetailModal";
 
 const cx = classNames.bind({ ...styles });
 
@@ -24,9 +25,9 @@ const OnThisDayDashboard: React.FC = () => {
 
     /* ---------- Effect Triggers --------- */
     useEffect(() => {
-        // dispatch(initializeOnThisDay());
-    },[]);
-    
+        dispatch(initializeOnThisDay());
+    }, []);
+
     /* ---------- Render Methods--------- */
     const renderBanner = () => {
         return (
@@ -45,7 +46,7 @@ const OnThisDayDashboard: React.FC = () => {
     };
 
     const renderSearchComponent = () => {
-        return <SearchComponent/>;
+        return <SearchComponent />;
     };
 
     const renderContent = () => {
@@ -60,6 +61,7 @@ const OnThisDayDashboard: React.FC = () => {
             <Box>
                 {renderBanner()}
                 {renderContent()}
+                <ContentDetailModal />
             </Box>
         );
     };

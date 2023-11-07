@@ -10,13 +10,13 @@ import {
     putResolve,
     takeLatest,
 } from "redux-saga/effects";
+import { IDatabaseCUDResponse } from "@features/Common/Supabase/SupabaseCommonTypes";
 import {
     LoginActions,
     setSignupErrors,
     setUserStats,
 } from "../actions/LoginActions";
 import {
-    IDatabaseCUDResponse,
     IDbUserStats,
     ILoginDetails,
     IUserDatabaseEntryPayload,

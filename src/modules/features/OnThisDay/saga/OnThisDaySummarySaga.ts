@@ -6,13 +6,16 @@ import {
 } from "@modules/root/webservice/WebserviceUtils";
 import { PayloadAction } from "@reduxjs/toolkit";
 import {
+    all,
     call,
     fork,
     put,
     putResolve,
     takeLeading,
 } from "redux-saga/effects";
+import { analyticsInsertArticleData } from "@features/Common/Analytics/actions/AnalyticsActions";
 import {
+    clearBriefArticle,
     clearDetailedArticle,
     clearFeedArticles,
     OnThisDaySummaryAction,
@@ -20,18 +23,23 @@ import {
     setDetailedArticle,
     setFeedArticles,
     setLoadState,
+    setModalProperties,
 } from "../actions/OnThisDaySummaryActions";
 import {
+    ARTICLE_TYPE,
     IArticleBriefObject,
     IFetchEventsDataPayload,
     IFetchEventsPayload,
     ILoadArticleDetailPayload,
+    IOtdCardPageData,
     ISetFeedArticlePayload,
     ON_THIS_DAY_TOPICS,
 } from "../type/OnThisDayCommonTypes";
 import {
     IArticleBriefResponse,
     IOnThisDayResponse,
+    IAnalyticsDataArticlePayload,
+    IArticleDetailResponse,
 } from "../type/OnThisDayWebserviceTypes";
 import {
     buildBriefArticleQuery,
@@ -42,6 +50,11 @@ import {
     transformBriefArticleObject,
     transformOtdFeedResponse,
 } from "./OnThisDaySummarySagaUtils";
+import { ISendArticleDataPayload } from "../../Common/Analytics/types/AnalyticsPayloadTypes";
+import {
+    defaultModalProps,
+    IContentDetailModalProps,
+} from "../component/ContentComponent/ContentDetailModal";
 
 const WIKI_ACCESS_TOKEN = import.meta.env.VITE_WIKI_ACCESS_TOKEN;
 const WIKI_APP_AGENT = import.meta.env.VITE_WIKI_APP_AGENT;
@@ -222,7 +235,8 @@ function* loadDetailedArticle(
 
 function* loadBriefArticle(action: PayloadAction<string>) {
     try {
-        const apiUrl: string = buildBriefArticleQuery(action.payload, "json");
+        const title = action.payload || "";
+        const apiUrl: string = buildBriefArticleQuery(title, "json");
         let response: IArticleBriefResponse;
         if (isDev) {
             response = yield call(fetchURL, apiUrl);
@@ -246,12 +260,87 @@ function* loadBriefArticle(action: PayloadAction<string>) {
 
             // --- No problems, set to state
             yield putResolve(setBriefArticle(briefArticle));
+            return briefArticle;
         } else {
             throw Error("Error in retreiving query from Wikipedia Extract");
         }
     } catch (e) {
         console.error("Error Encountered in loadBriefArticle Saga method");
         console.error(e);
+    }
+}
+
+function* triggerAnalyticsBeforeArticleLoadImp(
+    action: PayloadAction<IAnalyticsDataArticlePayload>
+) {
+    try {
+        const {
+            descriptionLength,
+            eventType,
+            pageData,
+            articleType = ARTICLE_TYPE.BRIEF,
+            isModalOpen = false,
+            onCloseHandler,
+            onOpenHandler,
+        } = action.payload;
+
+        if (!pageData) {
+            throw "pageData missing! Unable to continue!";
+            return false;
+        }
+        const { tid, title, pageId }: IOtdCardPageData = pageData;
+
+        let response: IArticleBriefResponse | IArticleDetailResponse;
+
+        if (articleType === ARTICLE_TYPE.BRIEF) {
+            response = yield call(loadBriefArticle, {
+                type: OnThisDaySummaryAction.LOAD_BRIEF_ARTICLE,
+                payload: title,
+            });
+        } else {
+            response = yield call(loadDetailedArticle, {
+                type: OnThisDaySummaryAction.LOAD_DETAILED_ARTICLE,
+                payload: { title: title, shouldClear: false },
+            });
+        }
+
+        if (response) {
+            // Perform Analysis update
+            const analyticsData: ISendArticleDataPayload = {
+                articleTitle: title,
+                tid: tid || "--",
+                articleId: pageId || -255,
+                descriptionLength: descriptionLength,
+                eventType: eventType,
+            };
+            yield put(analyticsInsertArticleData(analyticsData));
+
+            // Build modal Data
+            const modalProps: IContentDetailModalProps = {
+                pageData: pageData,
+                isOpen: isModalOpen,
+                onClose: onCloseHandler,
+                articleType: articleType,
+            };
+
+            onOpenHandler();
+            yield put(setModalProperties(modalProps));
+        } else {
+            throw Error("Error in retreiving query from Wikipedia Extract");
+        }
+    } catch (e) {
+        console.error("Error Encountered in loadBriefArticle Saga method");
+        console.error(e);
+    }
+}
+function* clearModalPropsImpl() {
+    try {
+        yield all([
+            put(clearBriefArticle()),
+            put(setModalProperties(defaultModalProps)),
+        ]);
+    } catch (e) {
+        console.error("Error encountered in clearModalPropsImpl!");
     }
 }
 
@@ -269,6 +358,14 @@ function* watchOnThisDaySummarySaga() {
     yield takeLeading(
         OnThisDaySummaryAction.FETCH_DATE_EVENTS,
         fetchDayArticles
+    );
+    yield takeLeading(
+        OnThisDaySummaryAction.TRIGGER_ANALYTICS_WITH_ARTICLE,
+        triggerAnalyticsBeforeArticleLoadImp
+    );
+    yield takeLeading(
+        OnThisDaySummaryAction.CLEAR_MODAL_PROPS,
+        clearModalPropsImpl
     );
 }
 

@@ -1,5 +1,7 @@
 import {
+    ARTICLE_TYPE,
     IArticleCategory,
+    IOtdCardPageData,
     IOtdFeedObject,
     IUpdateActiveTabPayload,
     ON_THIS_DAY_TOPICS,
@@ -9,6 +11,8 @@ import {
     IDateObject,
     ITabCheckbox,
 } from "@features/OnThisDay/type/OnThisDayComponentTypes";
+import { IAnalyticsDataArticlePayload } from "../../../type/OnThisDayWebserviceTypes";
+import { ISendAnalyticsModalDataPayload } from "@src/modules/features/Common/Analytics/types/AnalyticsPayloadTypes";
 
 export const getAccordianYearsFromProps = (
     typeEvents: IOtdFeedObject
@@ -21,9 +25,8 @@ export const getAccordianYearsFromProps = (
 };
 export const getPopulatedArticles = (
     typeEvents: IArticleCategory,
-    activeTabs: IUpdateActiveTabPayload,
+    activeTabs: IUpdateActiveTabPayload
 ): string[] => {
-
     const tabSelections: string[] = [];
     for (const eventType in typeEvents) {
         if (typeEvents?.[eventType] !== null && activeTabs[eventType]) {
@@ -99,5 +102,48 @@ export const generateDate = (): IDateObject => {
     return {
         month: randMonth,
         date: randDate,
+    };
+};
+export const countWords = (textBlock: string): number => {
+    if (!textBlock) return 0;
+    return textBlock.split(" ").length;
+};
+
+export const transformToAnalyticsArticlePayload = (
+    pageData: IOtdCardPageData,
+    eventDescription: string,
+    topic: string,
+    isModalOpen = false,
+    onOpenHandler = () => {},
+    onCloseHandler = () => {},
+    articleType = ARTICLE_TYPE.BRIEF
+): IAnalyticsDataArticlePayload => {
+    return {
+        descriptionLength: countWords(eventDescription),
+        pageData: pageData,
+        eventType: topic,
+        articleType: articleType,
+        isModalOpen: isModalOpen,
+        onOpenHandler: onOpenHandler,
+        onCloseHandler: onCloseHandler,
+    };
+};
+
+export const transformToAnalyticsModalPayload = (
+    pageData: IOtdCardPageData | null,
+    tabOpenTime: Date,
+    lastActiveTab: ARTICLE_TYPE
+): ISendAnalyticsModalDataPayload | null => {
+    if (!pageData) return null;
+    const tabCloseTime: Date = new Date();
+    const timeDifferenceMS = tabCloseTime.getTime() - tabOpenTime.getTime();
+
+    return {
+        articleId: pageData.pageId || -255,
+        articleTitle: pageData.title || null,
+        articleType: lastActiveTab,
+        openAt: tabOpenTime.toISOString(),
+        closeAt: tabCloseTime.toISOString(),
+        timeSpentMS: timeDifferenceMS,
     };
 };

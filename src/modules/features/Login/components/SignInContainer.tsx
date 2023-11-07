@@ -1,13 +1,11 @@
 import { Box, Button, HStack, useDisclosure } from "@chakra-ui/react";
-import { initSession } from "@src/modules/root/authprovider/actions/AuthActions";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 import { SignInTabType } from "../types/LoginComponentTypes";
 import SignInComponents from "./SignInComponents/SignInModal";
 
 const SigninContainer: React.FC = () => {
     // Constants
-    const dispatch = useDispatch();
     const { isOpen, onOpen, onClose } = useDisclosure();
     // State
     const [tabValue, setTabValue] = useState<SignInTabType>(

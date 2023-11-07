@@ -10,8 +10,10 @@ import {
     setDetailedArticle,
     setFeedArticles,
     setLoadState,
+    setModalProperties,
     updateActiveTabs,
 } from "../actions/OnThisDaySummaryActions";
+import { defaultModalProps } from "../component/ContentComponent/ContentDetailModal";
 import { IOnThisDaySummaryDataState } from "../type/OnThisDayCommonTypes";
 
 const initialState: IOnThisDaySummaryDataState = {
@@ -33,6 +35,7 @@ const initialState: IOnThisDaySummaryDataState = {
     loadState: {
         isLoading: false,
     },
+    modalProps: defaultModalProps,
 };
 
 type ThisDayActionType =
@@ -44,7 +47,8 @@ type ThisDayActionType =
     | typeof setLoadState
     | typeof clearBriefArticle
     | typeof clearDetailedArticle
-    | typeof updateActiveTabs;
+    | typeof updateActiveTabs
+    | typeof setModalProperties;
 
 const thisDaySummaryDataReducer: Reducer<
     IOnThisDaySummaryDataState,
@@ -106,10 +110,15 @@ const thisDaySummaryDataReducer: Reducer<
                 },
             };
         case OnThisDaySummaryAction.UPDATE_ACTIVE_TABS:
-            return{
+            return {
                 ...state,
                 activeTabs: action.payload,
-            }
+            };
+        case OnThisDaySummaryAction.SET_MODAL_PROPS:
+            return {
+                ...state,
+                modalProps: action.payload,
+            };
         default:
             return state;
     }
