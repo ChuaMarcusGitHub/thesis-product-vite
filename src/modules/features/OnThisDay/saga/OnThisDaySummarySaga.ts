@@ -5,9 +5,17 @@ import {
     fetchWebpage,
 } from "@modules/root/webservice/WebserviceUtils";
 import { PayloadAction } from "@reduxjs/toolkit";
-import { call, fork, put, putResolve, takeLeading } from "redux-saga/effects";
+import {
+    all,
+    call,
+    fork,
+    put,
+    putResolve,
+    takeLeading,
+} from "redux-saga/effects";
 import { analyticsInsertArticleData } from "@features/Common/Analytics/actions/AnalyticsActions";
 import {
+    clearBriefArticle,
     clearDetailedArticle,
     clearFeedArticles,
     OnThisDaySummaryAction,
@@ -15,6 +23,7 @@ import {
     setDetailedArticle,
     setFeedArticles,
     setLoadState,
+    setModalProperties,
 } from "../actions/OnThisDaySummaryActions";
 import {
     ARTICLE_TYPE,
@@ -22,6 +31,7 @@ import {
     IFetchEventsDataPayload,
     IFetchEventsPayload,
     ILoadArticleDetailPayload,
+    IOtdCardPageData,
     ISetFeedArticlePayload,
     ON_THIS_DAY_TOPICS,
 } from "../type/OnThisDayCommonTypes";
@@ -41,6 +51,10 @@ import {
     transformOtdFeedResponse,
 } from "./OnThisDaySummarySagaUtils";
 import { ISendArticleDataPayload } from "../../Common/Analytics/types/AnalyticsPayloadTypes";
+import {
+    defaultModalProps,
+    IContentDetailModalProps,
+} from "../component/ContentComponent/ContentDetailModal";
 
 const WIKI_ACCESS_TOKEN = import.meta.env.VITE_WIKI_ACCESS_TOKEN;
 const WIKI_APP_AGENT = import.meta.env.VITE_WIKI_APP_AGENT;
@@ -261,13 +275,20 @@ function* triggerAnalyticsBeforeArticleLoadImp(
 ) {
     try {
         const {
-            title,
-            tid,
             descriptionLength,
             eventType,
-            pageId,
+            pageData,
             articleType = ARTICLE_TYPE.BRIEF,
+            isModalOpen = false,
+            onCloseHandler,
+            onOpenHandler,
         } = action.payload;
+
+        if (!pageData) {
+            throw "pageData missing! Unable to continue!";
+            return false;
+        }
+        const { tid, title, pageId }: IOtdCardPageData = pageData;
 
         let response: IArticleBriefResponse | IArticleDetailResponse;
 
@@ -293,12 +314,33 @@ function* triggerAnalyticsBeforeArticleLoadImp(
                 eventType: eventType,
             };
             yield put(analyticsInsertArticleData(analyticsData));
+
+            // Build modal Data
+            const modalProps: IContentDetailModalProps = {
+                pageData: pageData,
+                isOpen: isModalOpen,
+                onClose: onCloseHandler,
+                articleType: articleType,
+            };
+
+            onOpenHandler();
+            yield put(setModalProperties(modalProps));
         } else {
             throw Error("Error in retreiving query from Wikipedia Extract");
         }
     } catch (e) {
         console.error("Error Encountered in loadBriefArticle Saga method");
         console.error(e);
+    }
+}
+function* clearModalPropsImpl() {
+    try {
+        yield all([
+            put(clearBriefArticle()),
+            put(setModalProperties(defaultModalProps)),
+        ]);
+    } catch (e) {
+        console.error("Error encountered in clearModalPropsImpl!");
     }
 }
 
@@ -320,6 +362,10 @@ function* watchOnThisDaySummarySaga() {
     yield takeLeading(
         OnThisDaySummaryAction.TRIGGER_ANALYTICS_WITH_ARTICLE,
         triggerAnalyticsBeforeArticleLoadImp
+    );
+    yield takeLeading(
+        OnThisDaySummaryAction.CLEAR_MODAL_PROPS,
+        clearModalPropsImpl
     );
 }
 

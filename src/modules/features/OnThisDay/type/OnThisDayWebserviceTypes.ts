@@ -1,4 +1,9 @@
-import { ARTICLE_TYPE, IBriefArticleQueryObj, IOtdWikiData } from "./OnThisDayCommonTypes";
+import {
+    ARTICLE_TYPE,
+    IBriefArticleQueryObj,
+    IOtdCardPageData,
+    IOtdWikiData,
+} from "./OnThisDayCommonTypes";
 
 export interface IArticleDetailResponse {
     parse: string;
@@ -30,8 +35,9 @@ export interface IOnThisDayResponse {
 export interface IAnalyticsDataArticlePayload {
     descriptionLength: number;
     eventType: string;
-    pageId: number;
-    tid?: string;
-    title: string;
+    pageData?: IOtdCardPageData;
     articleType: ARTICLE_TYPE;
+    isModalOpen: boolean;
+    onOpenHandler: () => void;
+    onCloseHandler: () => void;
 }

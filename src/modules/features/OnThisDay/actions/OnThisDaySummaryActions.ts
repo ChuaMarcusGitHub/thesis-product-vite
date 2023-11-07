@@ -25,6 +25,7 @@ export enum OnThisDaySummaryAction {
     UPDATE_ACTIVE_TABS = "OnThisDaySummaryAction/UPDATE_ACTIVE_TABS",
     TRIGGER_ANALYTICS_WITH_ARTICLE = "OnThisDaySummaryAction/TRIGGER_ANALYTICS_WITH_ARTICLE",
     SET_MODAL_PROPS = "OnThisDaySummaryAction/SET_MODAL_PROPS",
+    CLEAR_MODAL_PROPS = "OnThisDaySummaryAction/CLEAR_MODAL_PROPS",
 }
 
 // Initialization action
@@ -61,3 +62,5 @@ export const updateActiveTabs = (payload: IUpdateActiveTabPayload) =>
 // Modal Actions
 export const setModalProperties = (payload: IContentDetailModalProps) =>
     action(OnThisDaySummaryAction.SET_MODAL_PROPS, payload);
+export const clearModalProps = () =>
+    action(OnThisDaySummaryAction.CLEAR_MODAL_PROPS);

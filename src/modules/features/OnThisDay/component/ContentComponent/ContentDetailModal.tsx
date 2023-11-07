@@ -67,7 +67,7 @@ const ContentDetailModal: React.FC = () => {
     // Selector
     const { pageData, isOpen, onClose, articleType }: IContentDetailModalProps =
         useSelector(getModalProps);
-        
+
     // Constants
     const dispatch = useDispatch();
     const bodyRef = useRef<HTMLDivElement>(null);
@@ -94,19 +94,22 @@ const ContentDetailModal: React.FC = () => {
         ARTICLE_TYPE.INACTIVE
     );
 
+    const handleRefresh = () => {
+        handleClose();
+        window.removeEventListener("beforeunload", handleRefresh);
+    };
+
+    window.addEventListener("beforeunload", handleRefresh);
+
     // Use Effects
     useEffect(() => {
         //unmount effect (scenario when user clicks and navigates away from website)
-        console.log("mounted");
+
         return () => {
             handleClose();
             if (timerIdRef.current) clearTimeout(timerIdRef.current);
         };
     }, []);
-
-    useEffect(() => {
-        console.log(`last known type: ${lastKnownType}`);
-    }, [lastKnownType]);
 
     useEffect(() => {
         let isTabDataActive = false;

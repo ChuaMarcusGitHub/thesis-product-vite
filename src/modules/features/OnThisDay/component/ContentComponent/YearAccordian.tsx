@@ -27,11 +27,9 @@ import { emptyPage } from "./UtilFiles/DefaultObjects";
 import { accordianPanelGrid } from "../YearAccordianPropStyles";
 import { useDispatch } from "react-redux";
 import {
-    clearBriefArticle,
-    setModalProperties,
+    clearModalProps,
     triggerAnalyticsWithArticle,
 } from "@features/OnThisDay/actions/OnThisDaySummaryActions";
-import { defaultModalProps } from "./ContentDetailModal";
 import { IAnalyticsDataArticlePayload } from "../../type/OnThisDayWebserviceTypes";
 
 export interface IYearAccordianProps {
@@ -41,7 +39,7 @@ export interface IYearAccordianProps {
 const YearAccordian: React.FC<IYearAccordianProps> = ({ typeEvents }) => {
     // Constants
     const dispatch = useDispatch();
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const { onOpen, onClose } = useDisclosure();
     //----- use States
     const [accordianYears, setAccordianYears] = useState<string[]>([]);
 
@@ -61,21 +59,18 @@ const YearAccordian: React.FC<IYearAccordianProps> = ({ typeEvents }) => {
         topic: string
     ) => {
         const articlePayload: IAnalyticsDataArticlePayload =
-            transformToAnalyticsArticlePayload(_page, eventDescription, topic);
+            transformToAnalyticsArticlePayload(
+                _page,
+                eventDescription,
+                topic,
+                true,
+                onOpen,
+                handleCardClose
+            );
         dispatch(triggerAnalyticsWithArticle(articlePayload));
-        dispatch(
-            setModalProperties({
-                pageData: _page,
-                isOpen: isOpen,
-                onClose: handleCardClose,
-                articleType: articlePayload.articleType,
-            })
-        );
-        onOpen();
     };
     const handleCardClose = () => {
-        dispatch(clearBriefArticle());
-        dispatch(setModalProperties(defaultModalProps));
+        dispatch(clearModalProps());
         onClose();
     };
 

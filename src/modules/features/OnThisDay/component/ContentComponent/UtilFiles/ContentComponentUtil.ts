@@ -113,15 +113,19 @@ export const transformToAnalyticsArticlePayload = (
     pageData: IOtdCardPageData,
     eventDescription: string,
     topic: string,
+    isModalOpen = false,
+    onOpenHandler = () => {},
+    onCloseHandler = () => {},
     articleType = ARTICLE_TYPE.BRIEF
 ): IAnalyticsDataArticlePayload => {
     return {
         descriptionLength: countWords(eventDescription),
+        pageData: pageData,
         eventType: topic,
-        tid: pageData.tid,
-        pageId: pageData.pageId,
-        title: pageData.title,
         articleType: articleType,
+        isModalOpen: isModalOpen,
+        onOpenHandler: onOpenHandler,
+        onCloseHandler: onCloseHandler,
     };
 };
 
