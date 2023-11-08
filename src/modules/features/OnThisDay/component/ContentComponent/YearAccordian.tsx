@@ -39,7 +39,7 @@ export interface IYearAccordianProps {
 const YearAccordian: React.FC<IYearAccordianProps> = ({ typeEvents }) => {
     // Constants
     const dispatch = useDispatch();
-    const { onOpen, onClose } = useDisclosure();
+    const { onClose } = useDisclosure();
     //----- use States
     const [accordianYears, setAccordianYears] = useState<string[]>([]);
 
@@ -63,8 +63,6 @@ const YearAccordian: React.FC<IYearAccordianProps> = ({ typeEvents }) => {
                 _page,
                 eventDescription,
                 topic,
-                true,
-                onOpen,
                 handleCardClose
             );
         dispatch(triggerAnalyticsWithArticle(articlePayload));

@@ -37,7 +37,5 @@ export interface IAnalyticsDataArticlePayload {
     eventType: string;
     pageData?: IOtdCardPageData;
     articleType: ARTICLE_TYPE;
-    isModalOpen: boolean;
-    onOpenHandler: () => void;
     onCloseHandler: () => void;
 }

@@ -3,6 +3,7 @@ import { createSelector } from "@reduxjs/toolkit";
 
 const summaryRoot = (state: AppState) => state.OnThisDay.summaryData;
 const loadState = (state: AppState) => state.OnThisDay.summaryData.loadState;
+const modalProps = (state: AppState) => state.OnThisDay.summaryData.modalProps;
 const selectedArticle = (state: AppState) =>
     state.OnThisDay.summaryData.selectedArticle;
 
@@ -29,10 +30,7 @@ export const getActiveTabs = createSelector(
     (data) => data.activeTabs
 );
 // Modal Props
-export const getModalProps = createSelector(
-    summaryRoot,
-    (data) => data.modalProps
-);
-
+export const getModalData = createSelector(modalProps, (data) => data.data);
+export const getModalOpen = createSelector(modalProps, (data) => data.isOpen);
 // Load State Items
 export const getIsLoading = createSelector(loadState, (data) => data.isLoading);
