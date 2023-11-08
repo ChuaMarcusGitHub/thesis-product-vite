@@ -1,4 +1,9 @@
-import { Button, Stack, useDisclosure } from "@chakra-ui/react";
+import {
+    Button,
+    Stack,
+    useDisclosure,
+    UseToastOptions,
+} from "@chakra-ui/react";
 import SignInModal from "@modules/features/Login/components/SignInComponents/SignInModal";
 import {
     initializeOnThisDay,
@@ -16,7 +21,7 @@ import {
     getSessionData,
 } from "@modules/root/authprovider/selector/AuthSelector";
 import { Session } from "@supabase/supabase-js";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./App.css";
 // import SummaryCard from "./modules/features/OnThisDay/component/ContentComponent/SummaryCard";
@@ -29,6 +34,7 @@ import {
     userSignup,
 } from "./modules/features/Login/actions/LoginActions";
 import { SignInTabType } from "./modules/features/Login/types/LoginComponentTypes";
+import { useToastHook } from "./modules/features/MessageToast/hook/useToastHook";
 // const testSample = JSON.parse(JSON.stringify(sampleFeed));
 
 function App() {
@@ -47,6 +53,7 @@ function App() {
     const isLoggedIn: boolean = useSelector(getIsLoggedIn);
     // const testArticle = useSelector(getSelectedDetailedArticle);
 
+    const [openToast, newToast] = useToastHook();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const {
         isOpen: isContentOpen,
@@ -113,7 +120,7 @@ function App() {
             updateUserStats({
                 userId: uuid,
                 articlesRead: 10,
-                timeSpent: "99.92",
+                timeSpent: 99.92,
             })
         );
     };
@@ -126,6 +133,13 @@ function App() {
                 password: "Seventyseven7s!",
             })
         );
+    };
+
+    const handleOpenToast = () => {
+        const testToast: UseToastOptions = {
+            position: "top",
+        };
+        newToast(testToast);
     };
     // ----- Sandbox ---------
 
@@ -193,6 +207,7 @@ function App() {
                     <Button onClick={handleURLCall}>Button</Button>
                     <Button onClick={handleUpdateDB}>Update the DB</Button>
                     <Button onClick={handleSignUp}>Handle Signup</Button>
+                    <Button onClick={handleOpenToast}>{` OpenToast`}</Button>
                 </Stack>
 
                 {/* <a rel="noopener noreferrer" href={"https://en.wikipedia.org/api/rest_v1/page/html/Berlin"} target="_blank">Open a new wikiLink</a> */}
