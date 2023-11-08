@@ -157,7 +157,10 @@ export interface IOnThisDaySummaryDataState {
         //tabs to be displayed on the content screen
         [tabs: string]: boolean;
     };
-    modalProps: IContentDetailModalProps;
+    modalProps: {
+        data: IContentDetailModalProps;
+        isOpen: boolean;
+    };
     loadState: IReducerLoadingState;
 }
 export interface IFetchEventsPayload {

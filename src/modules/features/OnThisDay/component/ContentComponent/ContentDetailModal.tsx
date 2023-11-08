@@ -18,7 +18,8 @@ import {
 import React, { useState, useRef, useMemo, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-    getModalProps,
+    getModalData,
+    getModalOpen,
     getSelectedBriefArticle,
     getSelectedDetailedArticle,
 } from "@modules/features/OnThisDay/selector/OnThisDaySummarySelector";
@@ -51,13 +52,11 @@ import { analyticsInsertModalData } from "@src/modules/features/Common/Analytics
 const cx = classNames.bind({ ...styles });
 export interface IContentDetailModalProps {
     pageData: IOtdCardPageData | null;
-    isOpen: boolean;
     onClose: () => void;
     articleType: ARTICLE_TYPE;
 }
 // eslint-disable-next-line react-refresh/only-export-components
 export const defaultModalProps: IContentDetailModalProps = {
-    isOpen: false,
     pageData: null,
     articleType: ARTICLE_TYPE.INACTIVE,
     onClose: () => console.warn("onClose not defined!"),
@@ -65,8 +64,8 @@ export const defaultModalProps: IContentDetailModalProps = {
 
 const ContentDetailModal: React.FC = () => {
     // Selector
-    const { pageData, isOpen, onClose, articleType }: IContentDetailModalProps =
-        useSelector(getModalProps);
+    const { pageData, onClose, articleType }: IContentDetailModalProps =
+        useSelector(getModalData);
 
     // Constants
     const dispatch = useDispatch();
@@ -80,6 +79,7 @@ const ContentDetailModal: React.FC = () => {
     const detailedArticle: IArticleDetailedPayload | null = useSelector(
         getSelectedDetailedArticle
     );
+    const isModalOpen = useSelector(getModalOpen);
 
     const briefArticle: IArticleBriefObject | null = useSelector(
         getSelectedBriefArticle
@@ -120,12 +120,12 @@ const ContentDetailModal: React.FC = () => {
         if (isTabDataActive) {
             console.log("Data loaded, setting time");
             timerIdRef.current = setTimeout(() => {
-                if (isOpen) setTabOpenTime(new Date());
+                if (isModalOpen) setTabOpenTime(new Date());
             }, 500);
             setLastKnownType(articleType);
         }
         if (progressPercent > 0) setProgressPercent(0);
-    }, [isOpen]);
+    }, [isModalOpen]);
 
     // Component Methods
     const trackScroll = () => {
@@ -231,7 +231,7 @@ const ContentDetailModal: React.FC = () => {
     const renderComponent = () => {
         return (
             <Modal
-                isOpen={isOpen}
+                isOpen={isModalOpen}
                 onClose={handleClose}
                 blockScrollOnMount={true}
                 closeOnOverlayClick={false}

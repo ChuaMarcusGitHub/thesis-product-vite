@@ -23,6 +23,7 @@ import {
     setDetailedArticle,
     setFeedArticles,
     setLoadState,
+    setModalOpen,
     setModalProperties,
 } from "../actions/OnThisDaySummaryActions";
 import {
@@ -279,15 +280,15 @@ function* triggerAnalyticsBeforeArticleLoadImp(
             eventType,
             pageData,
             articleType = ARTICLE_TYPE.BRIEF,
-            isModalOpen = false,
             onCloseHandler,
-            onOpenHandler,
         } = action.payload;
 
         if (!pageData) {
             throw "pageData missing! Unable to continue!";
             return false;
         }
+        // There is data, open modal
+        yield put(setModalOpen(true));
         const { tid, title, pageId }: IOtdCardPageData = pageData;
 
         let response: IArticleBriefResponse | IArticleDetailResponse;
@@ -318,12 +319,10 @@ function* triggerAnalyticsBeforeArticleLoadImp(
             // Build modal Data
             const modalProps: IContentDetailModalProps = {
                 pageData: pageData,
-                isOpen: isModalOpen,
                 onClose: onCloseHandler,
                 articleType: articleType,
             };
 
-            onOpenHandler();
             yield put(setModalProperties(modalProps));
         } else {
             throw Error("Error in retreiving query from Wikipedia Extract");
@@ -338,6 +337,7 @@ function* clearModalPropsImpl() {
         yield all([
             put(clearBriefArticle()),
             put(setModalProperties(defaultModalProps)),
+            put(setModalOpen(false)),
         ]);
     } catch (e) {
         console.error("Error encountered in clearModalPropsImpl!");

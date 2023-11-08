@@ -113,8 +113,6 @@ export const transformToAnalyticsArticlePayload = (
     pageData: IOtdCardPageData,
     eventDescription: string,
     topic: string,
-    isModalOpen = false,
-    onOpenHandler = () => {},
     onCloseHandler = () => {},
     articleType = ARTICLE_TYPE.BRIEF
 ): IAnalyticsDataArticlePayload => {
@@ -123,8 +121,7 @@ export const transformToAnalyticsArticlePayload = (
         pageData: pageData,
         eventType: topic,
         articleType: articleType,
-        isModalOpen: isModalOpen,
-        onOpenHandler: onOpenHandler,
+
         onCloseHandler: onCloseHandler,
     };
 };
