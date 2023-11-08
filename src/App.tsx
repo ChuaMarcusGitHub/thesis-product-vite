@@ -1,9 +1,4 @@
-import {
-    Button,
-    Stack,
-    useDisclosure,
-    UseToastOptions,
-} from "@chakra-ui/react";
+import { Button, Stack, useDisclosure } from "@chakra-ui/react";
 import SignInModal from "@modules/features/Login/components/SignInComponents/SignInModal";
 import {
     initializeOnThisDay,
@@ -21,7 +16,7 @@ import {
     getSessionData,
 } from "@modules/root/authprovider/selector/AuthSelector";
 import { Session } from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./App.css";
 // import SummaryCard from "./modules/features/OnThisDay/component/ContentComponent/SummaryCard";
@@ -34,7 +29,13 @@ import {
     userSignup,
 } from "./modules/features/Login/actions/LoginActions";
 import { SignInTabType } from "./modules/features/Login/types/LoginComponentTypes";
-import { useToastHook } from "./modules/features/MessageToast/hook/useToastHook";
+import {
+    OTD_ERROR_KEY,
+    OTD_ERROR_OBJECTS,
+} from "./modules/features/OnThisDay/type/OnThisDayWebserviceTypes";
+import { setToastData } from "./modules/features/Toast/actions/ToastActions";
+import { useToastHook } from "./modules/features/Toast/hook/useToastHook";
+import { getToastData } from "./modules/features/Toast/selector/ToastSelector";
 // const testSample = JSON.parse(JSON.stringify(sampleFeed));
 
 function App() {
@@ -52,8 +53,15 @@ function App() {
     const sessionData: Session | null | undefined = useSelector(getSessionData);
     const isLoggedIn: boolean = useSelector(getIsLoggedIn);
     // const testArticle = useSelector(getSelectedDetailedArticle);
+    const [, newToast] = useToastHook();
+    const toastError = useSelector(getToastData);
 
-    const [openToast, newToast] = useToastHook();
+    useEffect(() => {
+        if (toastError) {
+            newToast(toastError);
+        }
+    }, [toastError]);
+
     const { isOpen, onOpen, onClose } = useDisclosure();
     const {
         isOpen: isContentOpen,
@@ -136,10 +144,7 @@ function App() {
     };
 
     const handleOpenToast = () => {
-        const testToast: UseToastOptions = {
-            position: "top",
-        };
-        newToast(testToast);
+        dispatch(setToastData(OTD_ERROR_OBJECTS[OTD_ERROR_KEY.LOAD_ARTICLE]));
     };
     // ----- Sandbox ---------
 
