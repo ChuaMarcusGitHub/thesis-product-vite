@@ -41,6 +41,8 @@ import {
     IOnThisDayResponse,
     IAnalyticsDataArticlePayload,
     IArticleDetailResponse,
+    OTD_ERROR_OBJECTS,
+    OTD_ERROR_KEY,
 } from "../type/OnThisDayWebserviceTypes";
 import {
     buildBriefArticleQuery,
@@ -60,6 +62,7 @@ import { getReadlist } from "../selector/OnThisDaySummarySelector";
 import { supaAddToReadList } from "./OTDSupabaseCalls";
 import { getSessionUser } from "@src/modules/root/authprovider/selector/AuthSelector";
 import { User } from "@supabase/supabase-js";
+import { setToastData } from "@features/Toast/actions/ToastActions";
 
 const WIKI_ACCESS_TOKEN = import.meta.env.VITE_WIKI_ACCESS_TOKEN;
 const WIKI_APP_AGENT = import.meta.env.VITE_WIKI_APP_AGENT;
@@ -107,6 +110,7 @@ function* initializeOnThisDay() {
     } catch (e: unknown) {
         //Throw error here
         console.error(`Unable to initialize 'OnThisDay'! error:${e}`);
+        yield put(setToastData(OTD_ERROR_OBJECTS[OTD_ERROR_KEY.FETCH_ARTICLE]));
     } finally {
         yield put(setLoadState(false));
     }
@@ -141,7 +145,11 @@ function* fetchOnThisDayData(params: IFetchEventsDataPayload) {
         }
         return response;
     } catch (e) {
-        console.error("Error encountered at 'fetchOnThisDayData Saga method'");
+        console.error(
+            "Error encountered at 'fetchOnThisDayData Saga method' :",
+            e
+        );
+        yield put(setToastData(OTD_ERROR_OBJECTS[OTD_ERROR_KEY.FETCH_ARTICLE]));
     }
 }
 
@@ -235,6 +243,7 @@ function* loadDetailedArticle(
     } catch (e) {
         console.error("Error in loadSelectedArticle");
         console.error(e);
+        yield put(setToastData(OTD_ERROR_OBJECTS[OTD_ERROR_KEY.LOAD_ARTICLE]));
     }
 }
 
@@ -272,6 +281,7 @@ function* loadBriefArticle(action: PayloadAction<string>) {
     } catch (e) {
         console.error("Error Encountered in loadBriefArticle Saga method");
         console.error(e);
+        yield put(setToastData(OTD_ERROR_OBJECTS[OTD_ERROR_KEY.LOAD_ARTICLE]));
     }
 }
 
@@ -289,7 +299,6 @@ function* triggerAnalyticsBeforeArticleLoadImp(
 
         if (!pageData) {
             throw "pageData missing! Unable to continue!";
-            return false;
         }
         // There is data, open modal
         yield put(setModalOpen(true));
