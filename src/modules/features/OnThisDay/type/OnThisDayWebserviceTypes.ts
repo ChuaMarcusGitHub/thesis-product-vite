@@ -1,3 +1,4 @@
+import { basicErrorTemplate } from "@features/Toast/type/ToastTypes";
 import {
     ARTICLE_TYPE,
     IBriefArticleQueryObj,
@@ -39,3 +40,18 @@ export interface IAnalyticsDataArticlePayload {
     articleType: ARTICLE_TYPE;
     onCloseHandler: () => void;
 }
+export enum OTD_ERROR_KEY {
+    LOAD_ARTICLE = "loadArticle",
+    FETCH_ARTICLE = "fetchArticles",
+}
+
+export const OTD_ERROR_OBJECTS = {
+    fetchArticles: {
+        description: "Unable to fetch articles!",
+        ...basicErrorTemplate,
+    },
+    loadArticle: {
+        description: "Unable to load Article!",
+        ...basicErrorTemplate,
+    },
+};

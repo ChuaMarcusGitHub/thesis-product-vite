@@ -29,6 +29,13 @@ import {
     userSignup,
 } from "./modules/features/Login/actions/LoginActions";
 import { SignInTabType } from "./modules/features/Login/types/LoginComponentTypes";
+import {
+    OTD_ERROR_KEY,
+    OTD_ERROR_OBJECTS,
+} from "./modules/features/OnThisDay/type/OnThisDayWebserviceTypes";
+import { setToastData } from "./modules/features/Toast/actions/ToastActions";
+import { useToastHook } from "./modules/features/Toast/hook/useToastHook";
+import { getToastData } from "./modules/features/Toast/selector/ToastSelector";
 // const testSample = JSON.parse(JSON.stringify(sampleFeed));
 
 function App() {
@@ -46,6 +53,14 @@ function App() {
     const sessionData: Session | null | undefined = useSelector(getSessionData);
     const isLoggedIn: boolean = useSelector(getIsLoggedIn);
     // const testArticle = useSelector(getSelectedDetailedArticle);
+    const [, newToast] = useToastHook();
+    const toastError = useSelector(getToastData);
+
+    useEffect(() => {
+        if (toastError) {
+            newToast(toastError);
+        }
+    }, [toastError]);
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const {
@@ -113,7 +128,7 @@ function App() {
             updateUserStats({
                 userId: uuid,
                 articlesRead: 10,
-                timeSpent: "99.92",
+                timeSpent: 99.92,
             })
         );
     };
@@ -126,6 +141,10 @@ function App() {
                 password: "Seventyseven7s!",
             })
         );
+    };
+
+    const handleOpenToast = () => {
+        dispatch(setToastData(OTD_ERROR_OBJECTS[OTD_ERROR_KEY.LOAD_ARTICLE]));
     };
     // ----- Sandbox ---------
 
@@ -193,6 +212,7 @@ function App() {
                     <Button onClick={handleURLCall}>Button</Button>
                     <Button onClick={handleUpdateDB}>Update the DB</Button>
                     <Button onClick={handleSignUp}>Handle Signup</Button>
+                    <Button onClick={handleOpenToast}>{` OpenToast`}</Button>
                 </Stack>
 
                 {/* <a rel="noopener noreferrer" href={"https://en.wikipedia.org/api/rest_v1/page/html/Berlin"} target="_blank">Open a new wikiLink</a> */}
