@@ -3,10 +3,12 @@ import { IOtdCardPageData } from "@modules/features/OnThisDay/type/OnThisDayComm
 import {
     Card,
     CardBody,
+    CardFooter,
     Image,
     Skeleton,
     SkeletonText,
     Text,
+    Button,
 } from "@chakra-ui/react";
 import cardStyles from "./SummaryCard.module.scss";
 import classNames from "classnames/bind";
@@ -16,6 +18,8 @@ import {
     ICommonSkeletonProps,
 } from "@src/modules/features/Skeletons/SkeletonTypes";
 import { imageStyles } from "./SummaryCardPropStyles";
+import { useDispatch } from "react-redux";
+import { addToReadList } from "../../actions/OnThisDaySummaryActions";
 
 const cx = classNames.bind({ ...cardStyles });
 interface IContentCardProps {
@@ -30,6 +34,7 @@ const SummaryCard: React.FC<IContentCardProps> = ({
     pageData,
 }) => {
     // Constants
+    const dispatch = useDispatch();
     const isLoaded = useMemo(() => {
         return eventDescript || (pageData?.thumbnail.source && pageData?.title);
     }, [pageData?.thumbnail?.source, pageData?.title, eventDescript]);
@@ -39,8 +44,17 @@ const SummaryCard: React.FC<IContentCardProps> = ({
         fadeDuration: DEFAULT_FADE_DURATION,
     };
 
+    // Logic Methods
+    const handleAddToReadlist = () => {
+        if (pageData) dispatch(addToReadList(pageData));
+    };
+
+    // Render Methods
     const renderHeader = () => (
-        <div className={cx("summary-card-header-container")}>
+        <div
+            className={cx("summary-card-header-container")}
+            onClick={handleClick}
+        >
             <Skeleton
                 minW={"50px"}
                 maxW={"40%"}
@@ -73,7 +87,7 @@ const SummaryCard: React.FC<IContentCardProps> = ({
     );
 
     const renderBody = () => (
-        <CardBody>
+        <CardBody onClick={handleClick}>
             <SkeletonText
                 {...skelProps}
                 mt={"4"}
@@ -87,11 +101,20 @@ const SummaryCard: React.FC<IContentCardProps> = ({
             </SkeletonText>
         </CardBody>
     );
+
+    const renderFooter = () => (
+        <CardFooter>
+            {pageData && (
+                <Button onClick={handleAddToReadlist}> Add to Readlist</Button>
+            )}
+        </CardFooter>
+    );
     const renderComponent = () => {
         return (
-            <Card onClick={handleClick} id={pageData?.tid || "undefined"}>
+            <Card id={pageData?.tid || "undefined"}>
                 {renderHeader()}
                 {renderBody()}
+                {renderFooter()}
             </Card>
         );
     };

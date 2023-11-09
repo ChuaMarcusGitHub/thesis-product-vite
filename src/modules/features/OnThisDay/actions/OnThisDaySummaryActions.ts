@@ -5,6 +5,7 @@ import {
     IArticleDetailedPayload,
     IFetchEventsPayload,
     ILoadArticleDetailPayload,
+    IOtdCardPageData,
     ISetFeedArticlePayload,
     IUpdateActiveTabPayload,
 } from "../type/OnThisDayCommonTypes";
@@ -28,6 +29,8 @@ export enum OnThisDaySummaryAction {
     SET_MODAL_OPEN = "OnThisDaySummaryAction/SET_MODAL_OPEN",
     SET_MODAL_PROPS = "OnThisDaySummaryAction/SET_MODAL_PROPS",
     CLEAR_MODAL_PROPS = "OnThisDaySummaryAction/CLEAR_MODAL_PROPS",
+    // Readlist
+    ADD_TO_READLIST = "OnThisDaySummaryAction/ADD_TO_READLIST",
 }
 
 // Initialization action
@@ -68,3 +71,6 @@ export const setModalProperties = (payload: IContentDetailModalProps) =>
     action(OnThisDaySummaryAction.SET_MODAL_PROPS, payload);
 export const clearModalProps = () =>
     action(OnThisDaySummaryAction.CLEAR_MODAL_PROPS);
+// Readlist Actions
+export const addToReadList = (payload: IOtdCardPageData) =>
+    action(OnThisDaySummaryAction.ADD_TO_READLIST, payload);

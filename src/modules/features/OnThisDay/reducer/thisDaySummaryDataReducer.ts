@@ -41,6 +41,7 @@ const initialState: IOnThisDaySummaryDataState = {
         data: defaultModalProps,
         isOpen: false,
     },
+    readList: null,
 };
 
 type ThisDayActionType =

@@ -18,6 +18,7 @@ import {
 import { Session } from "@supabase/supabase-js";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import "./App.css";
 // import SummaryCard from "./modules/features/OnThisDay/component/ContentComponent/SummaryCard";
 
@@ -29,6 +30,7 @@ import {
     userSignup,
 } from "./modules/features/Login/actions/LoginActions";
 import { SignInTabType } from "./modules/features/Login/types/LoginComponentTypes";
+import { RoutesList } from "./modules/root/store/routes";
 // const testSample = JSON.parse(JSON.stringify(sampleFeed));
 
 function App() {
@@ -113,7 +115,7 @@ function App() {
             updateUserStats({
                 userId: uuid,
                 articlesRead: 10,
-                timeSpent: "99.92",
+                timeSpent: 99.92,
             })
         );
     };
@@ -126,6 +128,9 @@ function App() {
                 password: "Seventyseven7s!",
             })
         );
+    };
+    const handleRouteToReadlist = () => {
+        // setRoute(RoutesList.READ_LIST);
     };
     // ----- Sandbox ---------
 
@@ -193,6 +198,12 @@ function App() {
                     <Button onClick={handleURLCall}>Button</Button>
                     <Button onClick={handleUpdateDB}>Update the DB</Button>
                     <Button onClick={handleSignUp}>Handle Signup</Button>
+                    <Link to={RoutesList.ON_THIS_DAY}>
+                        <Button>Route to On This Day</Button>
+                    </Link>
+                    <Link to={RoutesList.READ_LIST}>
+                        <Button>Route to Read list</Button>
+                    </Link>
                 </Stack>
 
                 {/* <a rel="noopener noreferrer" href={"https://en.wikipedia.org/api/rest_v1/page/html/Berlin"} target="_blank">Open a new wikiLink</a> */}

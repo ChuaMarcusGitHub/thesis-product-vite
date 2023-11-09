@@ -34,3 +34,5 @@ export const getModalData = createSelector(modalProps, (data) => data.data);
 export const getModalOpen = createSelector(modalProps, (data) => data.isOpen);
 // Load State Items
 export const getIsLoading = createSelector(loadState, (data) => data.isLoading);
+// Read list
+export const getReadlist = createSelector(summaryRoot, (data) => data.readList);

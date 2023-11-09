@@ -1,5 +1,3 @@
-// import { WEBSERVICE_METHOD } from "@modules/root/webservice/WebserviceTypes";
-// import { WebServiceURLs } from "@modules/root/webservice/WebserviceURLs";
 import {
     fetchURL,
     fetchWebpage,
@@ -11,6 +9,7 @@ import {
     fork,
     put,
     putResolve,
+    select,
     takeLeading,
 } from "redux-saga/effects";
 import { analyticsInsertArticleData } from "@features/Common/Analytics/actions/AnalyticsActions";
@@ -33,6 +32,7 @@ import {
     IFetchEventsPayload,
     ILoadArticleDetailPayload,
     IOtdCardPageData,
+    IReadlistObject,
     ISetFeedArticlePayload,
     ON_THIS_DAY_TOPICS,
 } from "../type/OnThisDayCommonTypes";
@@ -51,11 +51,15 @@ import {
     transformBriefArticleObject,
     transformOtdFeedResponse,
 } from "./OnThisDaySummarySagaUtils";
-import { ISendArticleDataPayload } from "../../Common/Analytics/types/AnalyticsPayloadTypes";
+import { ISendArticleDataPayload } from "@features/Common/Analytics/types/AnalyticsPayloadTypes";
 import {
     defaultModalProps,
     IContentDetailModalProps,
 } from "../component/ContentComponent/ContentDetailModal";
+import { getReadlist } from "../selector/OnThisDaySummarySelector";
+import { supaAddToReadList } from "./OTDSupabaseCalls";
+import { getSessionUser } from "@src/modules/root/authprovider/selector/AuthSelector";
+import { User } from "@supabase/supabase-js";
 
 const WIKI_ACCESS_TOKEN = import.meta.env.VITE_WIKI_ACCESS_TOKEN;
 const WIKI_APP_AGENT = import.meta.env.VITE_WIKI_APP_AGENT;
@@ -344,6 +348,27 @@ function* clearModalPropsImpl() {
     }
 }
 
+function* addToReadListImp(action: PayloadAction<IOtdCardPageData>) {
+    try {
+        if (!action.payload) throw "Payload missing!";
+
+        // Check for userId
+        const currentUser: User = yield select(getSessionUser)
+        if(!currentUser) {
+            //Toast
+        }
+        const newPage: IOtdCardPageData = action.payload;
+        let finalList: IReadlistObject = {};
+        const existingList: IReadlistObject = yield select(getReadlist);
+        if (existingList) finalList = { ...existingList };
+        // Add new items
+        finalList = { ...finalList, [newPage.pageId]: newPage };
+        yield call(supaAddToReadList, finalList)
+    } catch (e) {
+        console.error("Error encountered in addToReadListImp!");
+    }
+}
+
 // Watcher Method
 function* watchOnThisDaySummarySaga() {
     yield takeLeading(OnThisDaySummaryAction.INIT, initializeOnThisDay);
@@ -367,6 +392,7 @@ function* watchOnThisDaySummarySaga() {
         OnThisDaySummaryAction.CLEAR_MODAL_PROPS,
         clearModalPropsImpl
     );
+    yield takeLeading(OnThisDaySummaryAction.ADD_TO_READLIST, addToReadListImp);
 }
 
 const onThisDaySummarySaga = fork(watchOnThisDaySummarySaga);

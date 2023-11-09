@@ -1,4 +1,4 @@
-import { Box, Grid, GridItem } from "@chakra-ui/react";
+import { Box, Button, Grid, GridItem, useDisclosure } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import classNames from "classnames/bind";
 import {
@@ -6,6 +6,7 @@ import {
     bannerGrid,
     searchGridItem,
     sessionGridItem,
+    sideBarItem,
 } from "./OnThisDayDashboardComponentProps";
 import styles from "./OnThisDayDashboard.module.scss";
 import ContentContainer from "../ContentComponent/ContentContainer";
@@ -14,12 +15,14 @@ import { initializeOnThisDay } from "@features/OnThisDay/actions/OnThisDaySummar
 import SearchComponent from "../ContentComponent/SearchComponent";
 import SigninContainer from "@src/modules/features/Login/components/SignInContainer";
 import ContentDetailModal from "../ContentComponent/ContentDetailModal";
+import Sidebar from "@src/modules/features/Sidebar/components/Sidebar";
 
 const cx = classNames.bind({ ...styles });
 
 const OnThisDayDashboard: React.FC = () => {
     /* ---------- Constants --------- */
     const dispatch = useDispatch();
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     /* ---------- States --------- */
 
@@ -39,6 +42,9 @@ const OnThisDayDashboard: React.FC = () => {
                     </GridItem>
                     <GridItem {...sessionGridItem}>
                         <SigninContainer />
+                    </GridItem>
+                    <GridItem {...sideBarItem}>
+                        <Button onClick={() => onOpen()}> Side Menu</Button>
                     </GridItem>
                 </Grid>
             </Box>
@@ -62,6 +68,7 @@ const OnThisDayDashboard: React.FC = () => {
                 {renderBanner()}
                 {renderContent()}
                 <ContentDetailModal />
+                <Sidebar isOpen={isOpen} onClose={onClose} />
             </Box>
         );
     };
