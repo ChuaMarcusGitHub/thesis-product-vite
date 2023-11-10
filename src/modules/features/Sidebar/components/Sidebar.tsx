@@ -27,9 +27,9 @@ const Sidebar: React.FC<ISidebarProps> = ({
     const [sideBarNavItems] = useState<INavigationItem[]>(getSidebarNavitems());
 
     const renderNavigationItems = () => {
-        return sideBarNavItems.map((navItem) => {
+        return sideBarNavItems.map((navItem, index) => {
             return (
-                <Box display={"flex"}>
+                <Box display={"flex"} key={`nav-item-${index}`}>
                     <Button width={"100%"}>
                         <Link to={navItem.linkTo}>{navItem.text}</Link>
                     </Button>

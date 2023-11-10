@@ -18,8 +18,12 @@ import {
     ICommonSkeletonProps,
 } from "@src/modules/features/Skeletons/SkeletonTypes";
 import { imageStyles } from "./SummaryCardPropStyles";
-import { useDispatch } from "react-redux";
-import { addToReadList } from "../../actions/OnThisDaySummaryActions";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    addToReadList,
+    removeFromReadList,
+} from "../../actions/OnThisDaySummaryActions";
+import { getReadlist } from "../../selector/OnThisDaySummarySelector";
 
 const cx = classNames.bind({ ...cardStyles });
 interface IContentCardProps {
@@ -33,12 +37,19 @@ const SummaryCard: React.FC<IContentCardProps> = ({
     eventDescript,
     pageData,
 }) => {
+    // Selector
+    const readingList = useSelector(getReadlist);
     // Constants
     const dispatch = useDispatch();
     const isLoaded = useMemo(() => {
         return eventDescript || (pageData?.thumbnail.source && pageData?.title);
     }, [pageData?.thumbnail?.source, pageData?.title, eventDescript]);
 
+    const isInReadList = useMemo(() => {
+        if (readingList && pageData?.pageId)
+            return readingList[pageData.pageId];
+        else return false;
+    }, [readingList, pageData?.pageId]);
     const skelProps: ICommonSkeletonProps = {
         isLoaded: !!isLoaded,
         fadeDuration: DEFAULT_FADE_DURATION,
@@ -47,6 +58,10 @@ const SummaryCard: React.FC<IContentCardProps> = ({
     // Logic Methods
     const handleAddToReadlist = () => {
         if (pageData) dispatch(addToReadList(pageData));
+    };
+
+    const handleRemoveFromReadlist = () => {
+        if (pageData) dispatch(removeFromReadList(pageData?.pageId));
     };
 
     // Render Methods
@@ -104,9 +119,16 @@ const SummaryCard: React.FC<IContentCardProps> = ({
 
     const renderFooter = () => (
         <CardFooter>
-            {pageData && (
-                <Button onClick={handleAddToReadlist}> Add to Readlist</Button>
-            )}
+            {pageData &&
+                (isInReadList ? (
+                    <Button onClick={handleRemoveFromReadlist}>
+                        Remove from Readlist
+                    </Button>
+                ) : (
+                    <Button onClick={handleAddToReadlist}>
+                        Add to Readlist
+                    </Button>
+                ))}
         </CardFooter>
     );
     const renderComponent = () => {

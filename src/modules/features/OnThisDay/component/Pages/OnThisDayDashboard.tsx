@@ -10,12 +10,14 @@ import {
 } from "./OnThisDayDashboardComponentProps";
 import styles from "./OnThisDayDashboard.module.scss";
 import ContentContainer from "../ContentComponent/ContentContainer";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { initializeOnThisDay } from "@features/OnThisDay/actions/OnThisDaySummaryActions";
 import SearchComponent from "../ContentComponent/SearchComponent";
 import SigninContainer from "@src/modules/features/Login/components/SignInContainer";
 import ContentDetailModal from "../ContentComponent/ContentDetailModal";
 import Sidebar from "@src/modules/features/Sidebar/components/Sidebar";
+import useToastHook from "@src/modules/features/Toast/hook/useToastHook";
+import { getToastData } from "@src/modules/features/Toast/selector/ToastSelector";
 
 const cx = classNames.bind({ ...styles });
 
@@ -24,12 +26,22 @@ const OnThisDayDashboard: React.FC = () => {
     const dispatch = useDispatch();
     const { isOpen, onOpen, onClose } = useDisclosure();
 
+    // Toast hook
+    const [, newToast] = useToastHook();
+    const toastError = useSelector(getToastData);
+
     /* ---------- States --------- */
 
     /* ---------- Effect Triggers --------- */
     useEffect(() => {
         dispatch(initializeOnThisDay());
     }, []);
+
+    useEffect(() => {
+        if (toastError) {
+            newToast(toastError);
+        }
+    }, [toastError]);
 
     /* ---------- Render Methods--------- */
     const renderBanner = () => {

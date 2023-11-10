@@ -91,14 +91,6 @@ export const getUserSession = async () => {
     }
 };
 
-export const getUserData = async () => {
-    try {
-        console.log("Supabase ");
-    } catch (e) {
-        console.error(`error encountered while performing getUserData: `, e);
-    }
-};
-
 export const getLocalUserId = (): string | null => {
     return localStorage.getItem(LOCAL_STORAGE_KEYS.localUserId);
 };

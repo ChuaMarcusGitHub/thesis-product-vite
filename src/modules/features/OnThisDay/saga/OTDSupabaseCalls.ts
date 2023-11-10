@@ -6,6 +6,7 @@ import {
 } from "@features/Common/Supabase/SupabaseCommonTypes";
 import { handleCUDRsponseStatus } from "@features/Common/Supabase/SupabaseCommonUtils";
 import { IReadlistObject } from "../type/OnThisDayCommonTypes";
+import { IReadlistCUDObject } from "../type/OnThisDayWebserviceTypes";
 
 const FILE_LOC_ERR_STRING = "Error encountered in OnThisDaySupabase Calls |";
 export const supaAddToReadList = async (
@@ -14,7 +15,7 @@ export const supaAddToReadList = async (
 ) => {
     try {
         const { status: responseStatus, statusText } = await supabaseClient
-            .from(SUPABASE_TABLES.USER_STATS)
+            .from(SUPABASE_TABLES.USER_READLIST)
             .insert({
                 user_id: user_id_input,
                 updated_at: new Date().toISOString(),
@@ -23,6 +24,29 @@ export const supaAddToReadList = async (
 
         return handleCUDRsponseStatus(
             CRUD_OP.INSERT,
+            responseStatus,
+            statusText
+        );
+    } catch (e) {
+        console.error(`${FILE_LOC_ERR_STRING}| supaGetUserStats`, e);
+    }
+};
+
+export const supaUpdateReadList = async (
+    user_id_input: string,
+    payload: IReadlistObject
+) => {
+    try {
+        const { status: responseStatus, statusText } = await supabaseClient
+            .from(SUPABASE_TABLES.USER_READLIST)
+            .update({
+                updated_at: new Date().toISOString(),
+                read_list_data: payload,
+            })
+            .eq("user_id", user_id_input);
+
+        return handleCUDRsponseStatus(
+            CRUD_OP.UPDATE,
             responseStatus,
             statusText
         );
@@ -44,7 +68,7 @@ export const supaFetchReadlist = async (user_id_input: string) => {
             return null;
         }
 
-        return userReadlist;
+        return userReadlist as IReadlistCUDObject;
     } catch (e) {
         console.error(`${FILE_LOC_ERR_STRING}| supaGetUserStats`, e);
     }

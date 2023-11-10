@@ -24,6 +24,7 @@ import {
     setLoadState,
     setModalOpen,
     setModalProperties,
+    updateReadListStore,
 } from "../actions/OnThisDaySummaryActions";
 import {
     ARTICLE_TYPE,
@@ -43,6 +44,9 @@ import {
     IArticleDetailResponse,
     OTD_ERROR_OBJECTS,
     OTD_ERROR_KEY,
+    OTD_TOAST_MSG,
+    OTD_MSG_OBJ,
+    IReadlistCUDObject,
 } from "../type/OnThisDayWebserviceTypes";
 import {
     buildBriefArticleQuery,
@@ -59,7 +63,7 @@ import {
     IContentDetailModalProps,
 } from "../component/ContentComponent/ContentDetailModal";
 import { getReadlist } from "../selector/OnThisDaySummarySelector";
-import { supaAddToReadList } from "./OTDSupabaseCalls";
+import { supaFetchReadlist, supaUpdateReadList } from "./OTDSupabaseCalls";
 import { getSessionUser } from "@src/modules/root/authprovider/selector/AuthSelector";
 import { User } from "@supabase/supabase-js";
 import { setToastData } from "@features/Toast/actions/ToastActions";
@@ -107,6 +111,9 @@ function* initializeOnThisDay() {
 
             yield put(setFeedArticles(allArticleObj));
         }
+
+        // load Readlist for user
+        yield call(loadUserReadlist);
     } catch (e: unknown) {
         //Throw error here
         console.error(`Unable to initialize 'OnThisDay'! error:${e}`);
@@ -150,6 +157,34 @@ function* fetchOnThisDayData(params: IFetchEventsDataPayload) {
             e
         );
         yield put(setToastData(OTD_ERROR_OBJECTS[OTD_ERROR_KEY.FETCH_ARTICLE]));
+    }
+}
+function* loadUserReadlist() {
+    try {
+        const userData: User = yield select(getSessionUser);
+        if (!userData) {
+            return; // No watchlist because user not logged in
+        }
+
+        console.log("User detected - attempting login...");
+        const readList: IReadlistCUDObject = yield call(
+            supaFetchReadlist,
+            userData.id
+        );
+        if (!readList) {
+            // no readlist to transpose.
+            return;
+        }
+        // readlist active
+        console.log(readList);
+
+        yield put(
+            updateReadListStore(
+                JSON.parse(JSON.stringify(readList.read_list_data))
+            )
+        );
+    } catch (e) {
+        console.error("Error Encountered at loadUserReadList:", e);
     }
 }
 
@@ -362,19 +397,74 @@ function* addToReadListImp(action: PayloadAction<IOtdCardPageData>) {
         if (!action.payload) throw "Payload missing!";
 
         // Check for userId
-        const currentUser: User = yield select(getSessionUser)
-        if(!currentUser) {
+        const currentUser: User = yield select(getSessionUser);
+        if (!currentUser) {
             //Toast
+            setToastData(OTD_ERROR_OBJECTS[OTD_ERROR_KEY.NOT_AUTHED]);
+            throw "User not Authed / Logged in!";
         }
+
+        // User Logged in, attempt to load data from existing reducer
         const newPage: IOtdCardPageData = action.payload;
         let finalList: IReadlistObject = {};
         const existingList: IReadlistObject = yield select(getReadlist);
-        if (existingList) finalList = { ...existingList };
+
         // Add new items
-        finalList = { ...finalList, [newPage.pageId]: newPage };
-        yield call(supaAddToReadList, finalList)
+        finalList = { ...existingList, [newPage.pageId]: newPage };
+        const { success, errorMessage } = yield call(
+            supaUpdateReadList,
+            currentUser.id,
+            finalList
+        );
+        if (errorMessage) {
+            setToastData(OTD_ERROR_OBJECTS[OTD_ERROR_KEY.READLIST_FAIL]);
+            throw errorMessage;
+        } else if (success && !errorMessage) {
+            setToastData(OTD_MSG_OBJ[OTD_TOAST_MSG.READLIST_SUCCESS]);
+        }
+
+        // Update readlist in store
+        yield put(updateReadListStore(finalList));
+        // Show toast for success
+        yield put(setToastData(OTD_MSG_OBJ[OTD_TOAST_MSG.READLIST_SUCCESS]));
     } catch (e) {
-        console.error("Error encountered in addToReadListImp!");
+        console.error("Error encountered in addToReadListImp: ", e);
+    }
+}
+
+function* removeFromReadListImpl(action: PayloadAction<number>) {
+    try {
+        const pageId = action.payload;
+        if (!pageId) throw `Invalid payload! PageId: ${pageId}`;
+
+        // Payload Active
+        const readList: IReadlistObject = yield select(getReadlist);
+        const userData: User = yield select(getSessionUser);
+        if (!readList || !userData.id) {
+            console.error("ReadList: ", readList);
+            throw `Missing data! user_id: ${
+                userData.id
+            } | readList: ${JSON.stringify(readList)}`;
+        }
+
+        const newReadList = { ...readList };
+        delete newReadList[pageId];
+
+        //Update DB Readlist
+        const { success, errorMessage } = yield call(
+            supaUpdateReadList,
+            userData.id,
+            newReadList
+        );
+        if (!success || errorMessage)
+            throw `Error in CRUD Transaction :${errorMessage}`;
+
+        // success in CRUD
+        setToastData(OTD_MSG_OBJ[OTD_TOAST_MSG.REMOVE_PAGE_SUCCESS]);
+        // Update in store
+        yield put(updateReadListStore(newReadList));
+    } catch (e) {
+        console.error("Error encountered in removeFromReadListImpl: ", e);
     }
 }
 
@@ -402,6 +492,10 @@ function* watchOnThisDaySummarySaga() {
         clearModalPropsImpl
     );
     yield takeLeading(OnThisDaySummaryAction.ADD_TO_READLIST, addToReadListImp);
+    yield takeLeading(
+        OnThisDaySummaryAction.REMOVE_FROM_READLIST,
+        removeFromReadListImpl
+    );
 }
 
 const onThisDaySummarySaga = fork(watchOnThisDaySummarySaga);
