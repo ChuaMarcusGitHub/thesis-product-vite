@@ -1,23 +1,27 @@
 import React, { useMemo } from "react";
-import { IOtdCardPageData } from "@modules/features/OnThisDay/type/OnThisDayCommonTypes";
+import {
+    IOtdCardPageData,
+    IReadingCardData,
+} from "@modules/features/OnThisDay/type/OnThisDayCommonTypes";
 import {
     Card,
     CardBody,
     CardFooter,
     Image,
-    Skeleton,
-    SkeletonText,
     Text,
     Button,
+    Stack,
+    Box,
+    Heading,
 } from "@chakra-ui/react";
-import cardStyles from "./SummaryCard.module.scss";
-import classNames from "classnames/bind";
+// import cardStyles from "./SummaryCard.module.scss";
+// import classNames from "classnames/bind";
 
-import {
-    DEFAULT_FADE_DURATION,
-    ICommonSkeletonProps,
-} from "@src/modules/features/Skeletons/SkeletonTypes";
-import { imageStyles } from "./SummaryCardPropStyles";
+// import {
+//     DEFAULT_FADE_DURATION,
+//     ICommonSkeletonProps,
+// } from "@src/modules/features/Skeletons/SkeletonTypes";
+import { imageContainerStyle } from "./SummaryCardPropStyles";
 import { useDispatch, useSelector } from "react-redux";
 import {
     addToReadList,
@@ -25,43 +29,49 @@ import {
 } from "../../actions/OnThisDaySummaryActions";
 import { getReadlist } from "../../selector/OnThisDaySummarySelector";
 
-const cx = classNames.bind({ ...cardStyles });
+// const cx = classNames.bind({ ...cardStyles });
 interface IContentCardProps {
     handleClick?: () => void;
     eventDescript?: string;
-    pageData?: IOtdCardPageData | null;
+    pageData?: IOtdCardPageData | IReadingCardData | null;
+    topic?: string;
 }
 
 const SummaryCard: React.FC<IContentCardProps> = ({
     handleClick = () => console.warn("Summary Card - onCLick not defined!"),
     eventDescript,
     pageData,
+    topic = "",
 }) => {
     // Selector
     const readingList = useSelector(getReadlist);
     // Constants
     const dispatch = useDispatch();
-    const isLoaded = useMemo(() => {
-        return eventDescript || (pageData?.thumbnail.source && pageData?.title);
-    }, [pageData?.thumbnail?.source, pageData?.title, eventDescript]);
+    // const isLoaded = useMemo(() => {
+    //     return eventDescript || (pageData?.thumbnail.source && pageData?.title);
+    // }, [pageData?.thumbnail?.source, pageData?.title, eventDescript]);
 
     const isInReadList = useMemo(() => {
         if (readingList && pageData?.pageId)
             return readingList[pageData.pageId];
         else return false;
     }, [readingList, pageData?.pageId]);
-    
-    // const isInReadList =
-    //     readingList && pageData?.pageId && readingList[pageData.pageId];
 
-    const skelProps: ICommonSkeletonProps = {
-        isLoaded: !!isLoaded,
-        fadeDuration: DEFAULT_FADE_DURATION,
-    };
+    // const skelProps: ICommonSkeletonProps = {
+    //     isLoaded: !!isLoaded,
+    //     fadeDuration: DEFAULT_FADE_DURATION,
+    // };
 
     // Logic Methods
     const handleAddToReadlist = () => {
-        if (pageData) dispatch(addToReadList(pageData));
+        if (pageData)
+            dispatch(
+                addToReadList({
+                    ...pageData,
+                    eventType: topic,
+                    eventDescription: eventDescript,
+                })
+            );
     };
 
     const handleRemoveFromReadlist = () => {
@@ -69,56 +79,12 @@ const SummaryCard: React.FC<IContentCardProps> = ({
     };
 
     // Render Methods
-    const renderHeader = () => (
-        <div
-            className={cx("summary-card-header-container")}
-            onClick={handleClick}
-        >
-            <Skeleton
-                minW={"50px"}
-                maxW={"40%"}
-                minH={"50px"}
-                maxH={"100px"}
-                borderRadius={"50%"}
-                {...skelProps}
-                alignSelf={"left"}
-            >
-                {pageData?.thumbnail && (
-                    <Image
-                        src={pageData?.thumbnail.source}
-                        alt={pageData?.title || ""}
-                        {...imageStyles}
-                    />
-                )}
-            </Skeleton>
-
-            <Skeleton
-                height={5}
-                width={"50%"}
-                {...skelProps}
-                alignSelf={"center"}
-            >
-                <Text textAlign={"left"} maxW={"100%"} fontWeight={"bold"}>
-                    {pageData?.title}
-                </Text>
-            </Skeleton>
-        </div>
-    );
+    const renderHeader = () => <Heading size="md">{pageData?.title}</Heading>;
 
     const renderBody = () => (
-        <CardBody onClick={handleClick}>
-            <SkeletonText
-                {...skelProps}
-                mt={"4"}
-                noOfLines={4}
-                spacing={4}
-                skeletonHeight={"2"}
-            >
-                <Text noOfLines={[1, 3, 4]} textAlign={"left"}>
-                    {eventDescript}
-                </Text>
-            </SkeletonText>
-        </CardBody>
+        <Text py="2" noOfLines={[1, 3, 4]} textAlign={"left"}>
+            {eventDescript}
+        </Text>
     );
 
     const renderFooter = () => (
@@ -135,12 +101,32 @@ const SummaryCard: React.FC<IContentCardProps> = ({
                 ))}
         </CardFooter>
     );
+
+    const renderImage = () => (
+        <Box {...imageContainerStyle} onClick={handleClick}>
+            <Image
+                objectFit="contain"
+                src={pageData?.thumbnail.source}
+                alt={pageData?.title || ""}
+            />
+        </Box>
+    );
     const renderComponent = () => {
         return (
-            <Card id={pageData?.tid || "undefined"}>
-                {renderHeader()}
-                {renderBody()}
-                {renderFooter()}
+            <Card
+                direction={{ base: "column", sm: "row" }}
+                overflow="hidden"
+                variant="outline"
+                height={"250px"}
+            >
+                {pageData?.thumbnail && renderImage()}
+                <Stack>
+                    <CardBody onClick={handleClick}>
+                        {renderHeader()}
+                        {renderBody()}
+                    </CardBody>
+                    {renderFooter()}
+                </Stack>
             </Card>
         );
     };

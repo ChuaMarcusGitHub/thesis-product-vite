@@ -1,12 +1,11 @@
-export const imageStyles = {
-    maxW: "150",
-    maxH: "130",
-    height: "inherit",
-    width: "inherit",
+export const imageContainerStyle = {
+    display: "flex",
+    minW: "200px",
+    height: "100%",
+    justifyContent: "center",
 };
 
 export const cardContainerStyle = {
-    minL: "lg",
     height: "inherit",
-    width: "inherit"
-}
+    width: "inherit",
+};

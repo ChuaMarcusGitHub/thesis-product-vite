@@ -6,6 +6,7 @@ import {
     IFetchEventsPayload,
     ILoadArticleDetailPayload,
     IOtdCardPageData,
+    IReadingCardData,
     IReadlistObject,
     ISetFeedArticlePayload,
     IUpdateActiveTabPayload,
@@ -79,7 +80,7 @@ export const clearModalProps = () =>
 // Readlist Actions
 export const fetchReadList = (userId: string) =>
     action(OnThisDaySummaryAction.FETCH_USER_READLIST, userId);
-export const addToReadList = (payload: IOtdCardPageData) =>
+export const addToReadList = (payload: IReadingCardData) =>
     action(OnThisDaySummaryAction.ADD_TO_READLIST, payload);
 export const updateReadListStore = (payload: IReadlistObject) =>
     action(OnThisDaySummaryAction.UPDATE_READLIST_STORE, payload);

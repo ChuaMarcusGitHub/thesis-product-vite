@@ -33,6 +33,7 @@ import {
     IFetchEventsPayload,
     ILoadArticleDetailPayload,
     IOtdCardPageData,
+    IReadingCardData,
     IReadlistObject,
     ISetFeedArticlePayload,
     ON_THIS_DAY_TOPICS,
@@ -390,7 +391,7 @@ function* clearModalPropsImpl() {
     }
 }
 
-function* addToReadListImp(action: PayloadAction<IOtdCardPageData>) {
+function* addToReadListImp(action: PayloadAction<IReadingCardData>) {
     try {
         if (!action.payload) throw "Payload missing!";
 
@@ -398,12 +399,14 @@ function* addToReadListImp(action: PayloadAction<IOtdCardPageData>) {
         const currentUser: User = yield select(getSessionUser);
         if (!currentUser) {
             //Toast
-            setToastData(OTD_ERROR_OBJECTS[OTD_ERROR_KEY.NOT_AUTHED]);
+            yield put(
+                setToastData(OTD_ERROR_OBJECTS[OTD_ERROR_KEY.NOT_AUTHED])
+            );
             throw "User not Authed / Logged in!";
         }
 
         // User Logged in, attempt to load data from existing reducer
-        const newPage: IOtdCardPageData = action.payload;
+        const newPage: IReadingCardData = action.payload;
         let finalList: IReadlistObject = {};
         const existingList: IReadlistObject = yield select(getReadlist);
 
@@ -415,10 +418,14 @@ function* addToReadListImp(action: PayloadAction<IOtdCardPageData>) {
             finalList
         );
         if (errorMessage) {
-            setToastData(OTD_ERROR_OBJECTS[OTD_ERROR_KEY.READLIST_FAIL]);
+            yield put(
+                setToastData(OTD_ERROR_OBJECTS[OTD_ERROR_KEY.READLIST_FAIL])
+            );
             throw errorMessage;
         } else if (success && !errorMessage) {
-            setToastData(OTD_MSG_OBJ[OTD_TOAST_MSG.READLIST_SUCCESS]);
+            yield put(
+                setToastData(OTD_MSG_OBJ[OTD_TOAST_MSG.READLIST_SUCCESS])
+            );
         }
 
         // Update readlist in store
@@ -458,7 +465,7 @@ function* removeFromReadListImpl(action: PayloadAction<number>) {
             throw `Error in CRUD Transaction :${errorMessage}`;
 
         // success in CRUD
-        setToastData(OTD_MSG_OBJ[OTD_TOAST_MSG.REMOVE_PAGE_SUCCESS]);
+        yield put(setToastData(OTD_MSG_OBJ[OTD_TOAST_MSG.REMOVE_PAGE_SUCCESS]));
         // Update in store
         yield put(updateReadListStore(newReadList));
     } catch (e) {

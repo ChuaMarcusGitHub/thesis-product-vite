@@ -35,8 +35,6 @@ const OnThisDayDashboard: React.FC = () => {
     const [, newToast] = useToastHook();
     const toastError = useSelector(getToastData);
 
-    /* ---------- States --------- */
-
     /* ---------- Selectors --------- */
     const isLoggedIn: boolean = useSelector(getIsLoggedIn);
     const userData: IUserStats | null = useSelector(getUserStats);

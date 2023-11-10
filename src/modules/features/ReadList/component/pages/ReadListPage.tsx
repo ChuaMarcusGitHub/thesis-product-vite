@@ -7,6 +7,7 @@ import {
     GridItem,
     Heading,
 } from "@chakra-ui/react";
+import ContentDetailModal from "@src/modules/features/OnThisDay/component/ContentComponent/ContentDetailModal";
 import ReadListContainer from "../ReadListContainer";
 
 import {
@@ -29,7 +30,7 @@ const ReadListPage: React.FC = () => {
     );
     const renderReadlistContainer = () => (
         <Box {...readListContainerWrapper}>
-            <ReadListContainer />
+            <ReadListContainer placeholder={""} />
         </Box>
     );
     const renderComponent = () => (
@@ -38,6 +39,7 @@ const ReadListPage: React.FC = () => {
                 {renderBannerContainer()}
                 {renderReadlistContainer()}
             </Stack>
+            <ContentDetailModal />
         </Box>
     );
     return renderComponent();

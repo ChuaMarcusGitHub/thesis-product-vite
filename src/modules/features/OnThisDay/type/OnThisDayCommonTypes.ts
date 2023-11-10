@@ -116,8 +116,12 @@ export interface IOtdCardPageData {
     thumbnail: IThumbnailData;
     tid: string;
 }
+export interface IReadingCardData extends IOtdCardPageData {
+    eventDescription?: string;
+    eventType: string;
+}
 export interface IReadlistObject {
-    [pageId: number]: IOtdCardPageData;
+    [pageId: number]: IReadingCardData;
 }
 export interface IOtdCardData {
     year: number;
