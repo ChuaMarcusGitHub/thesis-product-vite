@@ -50,6 +50,10 @@ const SummaryCard: React.FC<IContentCardProps> = ({
             return readingList[pageData.pageId];
         else return false;
     }, [readingList, pageData?.pageId]);
+    
+    // const isInReadList =
+    //     readingList && pageData?.pageId && readingList[pageData.pageId];
+
     const skelProps: ICommonSkeletonProps = {
         isLoaded: !!isLoaded,
         fadeDuration: DEFAULT_FADE_DURATION,

@@ -67,6 +67,23 @@ export const transformActiveTabPayload = (
 
     return payload;
 };
+
+export const convertMsToStringTime = (ms: number) => {
+    let stringTime = "";
+    let secondsTaken = ms / 1000;
+
+    let minutesTaken = secondsTaken / 60;
+    const hoursTaken = Math.floor(minutesTaken / 60);
+
+    // Cleanup remaining
+    minutesTaken = Math.floor(minutesTaken % 60);
+    secondsTaken = Math.floor(secondsTaken % 60);
+
+    
+    stringTime = `Hr: ${hoursTaken} min: ${String(minutesTaken).padStart(2,'0')} sec: ${String(secondsTaken).padStart(2, '0')}`
+
+    return stringTime;
+}
 export const getMonths = (monthsObject: {
     [month: string]: number;
 }): string[] => {

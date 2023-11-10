@@ -18,7 +18,6 @@ import {
 } from "../actions/LoginActions";
 import {
     IDbUserStats,
-    ILoginDetails,
     IUserDatabaseEntryPayload,
     IUserSignupPayload,
     IUserStats,
@@ -39,16 +38,21 @@ import { setToastData } from "../../Toast/actions/ToastActions";
 
 function* getUserStatsImpl(action: PayloadAction<string>) {
     try {
-        // const uuid = action.payload;
-        // const uuid = "db650c1a-653c-406c-82ef-3c06e85b8d2b";
-        // const testUrl =
-        //     "jwyyocimufwwpegtzgpt.supabase.co/functions/v1/get-user-stats";
-        const response: ILoginDetails = yield call(
+        const userId: string = action.payload;
+        // guard clause in case action misused or previous call not working
+        if (!userId) throw `UserID Invalid!! Id Value: ${userId}`;
+
+        const response: IDbUserStats = yield call(
             supaGetUserStats,
             action.payload
         );
 
-        if (response) console.log(response);
+        // Should not occur, since DB should generate stats on signup
+        if (!response) throw `User doesn't have available stats!`;
+
+        console.log("Stats Fetched:", response);
+        // set user Stats
+        yield put(setUserStats(transformUserStats(response)));
     } catch (e) {
         console.error("Error encountered at getUserStatsImpl");
         console.error(e);

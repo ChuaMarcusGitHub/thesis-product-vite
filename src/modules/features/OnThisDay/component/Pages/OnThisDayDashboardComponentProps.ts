@@ -26,5 +26,12 @@ export const sideBarItem = {
     border: "1px solid black",
     paddingLeft: 5,
     paddingTop: 2,
-    
+};
+export const userStatsGridItem = {
+    colStart: 5,
+    colEnd: 6,
+    rowStart: 3,
+    rowEnd: 6,
+    border: "1px solid red",
+    padding: "10px"
 };

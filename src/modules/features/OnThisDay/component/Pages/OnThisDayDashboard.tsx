@@ -7,6 +7,7 @@ import {
     searchGridItem,
     sessionGridItem,
     sideBarItem,
+    userStatsGridItem,
 } from "./OnThisDayDashboardComponentProps";
 import styles from "./OnThisDayDashboard.module.scss";
 import ContentContainer from "../ContentComponent/ContentContainer";
@@ -18,6 +19,10 @@ import ContentDetailModal from "../ContentComponent/ContentDetailModal";
 import Sidebar from "@src/modules/features/Sidebar/components/Sidebar";
 import useToastHook from "@src/modules/features/Toast/hook/useToastHook";
 import { getToastData } from "@src/modules/features/Toast/selector/ToastSelector";
+import { getIsLoggedIn } from "@src/modules/root/authprovider/selector/AuthSelector";
+import { IUserStats } from "@src/modules/features/Login/types/LoginActionPayloadTypes";
+import { getUserStats } from "@src/modules/features/Login/selector/LoginSelector";
+import UserStatsContainer from "../ContentComponent/UserStatsContainer";
 
 const cx = classNames.bind({ ...styles });
 
@@ -32,6 +37,10 @@ const OnThisDayDashboard: React.FC = () => {
 
     /* ---------- States --------- */
 
+    /* ---------- Selectors --------- */
+    const isLoggedIn: boolean = useSelector(getIsLoggedIn);
+    const userData: IUserStats | null = useSelector(getUserStats);
+
     /* ---------- Effect Triggers --------- */
     useEffect(() => {
         dispatch(initializeOnThisDay());
@@ -43,6 +52,7 @@ const OnThisDayDashboard: React.FC = () => {
         }
     }, [toastError]);
 
+
     /* ---------- Render Methods--------- */
     const renderBanner = () => {
         return (
@@ -53,11 +63,20 @@ const OnThisDayDashboard: React.FC = () => {
                         {renderSearchComponent()}
                     </GridItem>
                     <GridItem {...sessionGridItem}>
-                        <SigninContainer />
+                        <SigninContainer
+                            isLoggedIn={isLoggedIn}
+                            userData={userData}
+                        />
                     </GridItem>
+                    <GridItem></GridItem>
                     <GridItem {...sideBarItem}>
                         <Button onClick={() => onOpen()}> Side Menu</Button>
                     </GridItem>
+                    {isLoggedIn && (
+                        <GridItem {...userStatsGridItem}>
+                            <UserStatsContainer userData={userData} />
+                        </GridItem>
+                    )}
                 </Grid>
             </Box>
         );

@@ -111,9 +111,6 @@ function* initializeOnThisDay() {
 
             yield put(setFeedArticles(allArticleObj));
         }
-
-        // load Readlist for user
-        yield call(loadUserReadlist);
     } catch (e: unknown) {
         //Throw error here
         console.error(`Unable to initialize 'OnThisDay'! error:${e}`);
@@ -159,9 +156,10 @@ function* fetchOnThisDayData(params: IFetchEventsDataPayload) {
         yield put(setToastData(OTD_ERROR_OBJECTS[OTD_ERROR_KEY.FETCH_ARTICLE]));
     }
 }
-function* loadUserReadlist() {
+function* loadUserReadlist(action: PayloadAction<string>) {
     try {
-        const userData: User = yield select(getSessionUser);
+        // const userData: User = yield select(getSessionUser);
+        const userData = action.payload;
         if (!userData) {
             return; // No watchlist because user not logged in
         }
@@ -169,7 +167,7 @@ function* loadUserReadlist() {
         console.log("User detected - attempting login...");
         const readList: IReadlistCUDObject = yield call(
             supaFetchReadlist,
-            userData.id
+            userData
         );
         if (!readList) {
             // no readlist to transpose.
@@ -495,6 +493,10 @@ function* watchOnThisDaySummarySaga() {
     yield takeLeading(
         OnThisDaySummaryAction.REMOVE_FROM_READLIST,
         removeFromReadListImpl
+    );
+    yield takeLeading(
+        OnThisDaySummaryAction.FETCH_USER_READLIST,
+        loadUserReadlist
     );
 }
 

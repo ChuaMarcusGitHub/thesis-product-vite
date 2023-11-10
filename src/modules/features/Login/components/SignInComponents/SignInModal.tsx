@@ -20,6 +20,7 @@ export interface ILoginModalProps {
     isOpen: boolean;
     onClose: () => void;
     activeTab: SignInTabType;
+    isLoggedIn: boolean;
 }
 const SignInComponents: React.FC<ILoginModalProps> = ({
     isOpen,

@@ -21,7 +21,7 @@ export const supaGetUserStats = async (user_id_input: string) => {
             return null;
         }
 
-        return userStats;
+        return userStats as IUserStats;
     } catch (e) {
         console.error(`${FILE_LOC_ERR_STRING}| supaGetUserStats`, e);
     }

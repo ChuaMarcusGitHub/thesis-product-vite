@@ -14,6 +14,7 @@ import {
     setModalProperties,
     updateActiveTabs,
     updateReadListStore,
+    clearReadList,
 } from "../actions/OnThisDaySummaryActions";
 import { defaultModalProps } from "../component/ContentComponent/ContentDetailModal";
 
@@ -57,7 +58,8 @@ type ThisDayActionType =
     | typeof updateActiveTabs
     | typeof setModalProperties
     | typeof setModalOpen
-    | typeof updateReadListStore;
+    | typeof updateReadListStore
+    | typeof clearReadList;
 
 const thisDaySummaryDataReducer: Reducer<
     IOnThisDaySummaryDataState,
@@ -143,6 +145,11 @@ const thisDaySummaryDataReducer: Reducer<
             return {
                 ...state,
                 readList: action.payload,
+            };
+        case OnThisDaySummaryAction.CLEAR_READLIST:
+            return {
+                ...state,
+                readList: null,
             };
         default:
             return state;
