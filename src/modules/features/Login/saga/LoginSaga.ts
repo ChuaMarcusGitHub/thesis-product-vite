@@ -34,7 +34,9 @@ import {
     updateUserSecUsername,
 } from "./LoginSagaSupabaseCalls";
 import { transformUserStats } from "./LoginSagaUtils";
-import { setToastData } from "../../Toast/actions/ToastActions";
+import { createStandaloneToast } from "@chakra-ui/react";
+
+const { toast } = createStandaloneToast();
 
 function* getUserStatsImpl(action: PayloadAction<string>) {
     try {
@@ -56,9 +58,7 @@ function* getUserStatsImpl(action: PayloadAction<string>) {
     } catch (e) {
         console.error("Error encountered at getUserStatsImpl");
         console.error(e);
-        yield put(
-            setToastData(LOGIN_ERROR_OBJECTS[LOGIN_ERROR_KEY.INIT_STATS])
-        );
+        toast(LOGIN_ERROR_OBJECTS[LOGIN_ERROR_KEY.INIT_STATS]);
     }
 }
 
@@ -122,7 +122,7 @@ function* userSignupImpl(action: PayloadAction<IUserSignupPayload>) {
         );
     } catch (e) {
         console.error("Error Encoutnered at userSignupImpl", e);
-        yield put(setToastData(LOGIN_ERROR_OBJECTS[LOGIN_ERROR_KEY.SIGNUP]));
+        toast(LOGIN_ERROR_OBJECTS[LOGIN_ERROR_KEY.SIGNUP]);
     }
 }
 
@@ -135,7 +135,7 @@ function* handleSignupResponseArray(resultArray: boolean[]) {
         yield put(setSignupErrors(errorList));
     } catch (e) {
         console.error("Error Encoutnered at handleSignupResponseArray", e);
-        // yield put(setToastData(LOGIN_ERROR_OBJECTS[LOGIN_ERROR_KEY.SIGNUP]));
+        toast(LOGIN_ERROR_OBJECTS[LOGIN_ERROR_KEY.SIGNUP]);
     }
 }
 
@@ -168,7 +168,7 @@ function* setupUserEntry(action: PayloadAction<IUserDatabaseEntryPayload>) {
     } catch (e) {
         console.error("Error at Saga method: LoginAction - setupUserEntry");
         console.log(e);
-        // yield put(setToastData(LOGIN_ERROR_OBJECTS[LOGIN_ERROR_KEY.SIGNUP]));
+        toast(LOGIN_ERROR_OBJECTS[LOGIN_ERROR_KEY.SIGNUP]);
     }
 }
 

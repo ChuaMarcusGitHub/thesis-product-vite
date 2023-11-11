@@ -6,9 +6,7 @@ import {
     DrawerContent,
     DrawerCloseButton,
     Stack,
-    Text,
     Box,
-    Button,
     StackDivider,
 } from "@chakra-ui/react";
 import { useState } from "react";

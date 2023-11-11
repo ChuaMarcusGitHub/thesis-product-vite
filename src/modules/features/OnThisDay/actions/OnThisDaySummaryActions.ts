@@ -5,7 +5,6 @@ import {
     IArticleDetailedPayload,
     IFetchEventsPayload,
     ILoadArticleDetailPayload,
-    IOtdCardPageData,
     IReadingCardData,
     IReadlistObject,
     ISetFeedArticlePayload,

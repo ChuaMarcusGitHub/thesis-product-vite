@@ -5,7 +5,6 @@ import {
     SimpleGrid,
     useDisclosure,
 } from "@chakra-ui/react";
-import { getIsLoggedIn } from "@src/modules/root/authprovider/selector/AuthSelector";
 import { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
