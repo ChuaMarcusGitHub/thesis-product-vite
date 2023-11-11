@@ -26,7 +26,10 @@ export interface ISendAnalyticsModalDataPayload {
     closeAt: string;
     timeSpentMS: number;
 }
-
+export interface IFetchUserIdData{
+    userId: string; //uid for session/user
+    userAuthed: boolean; // if user is localstorage or logged in user
+}
 export interface IAnalyticsModalDataPayload {
     userId: string;
     articleTitle: string;

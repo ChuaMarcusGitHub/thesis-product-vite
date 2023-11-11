@@ -35,7 +35,7 @@ export const ReadListContainer: React.FC<IReadListContainerProps> = () => {
     const dispatch = useDispatch();
     const { onClose } = useDisclosure();
     // Selectors
-    const isLoggedIn: boolean = useSelector(getIsLoggedIn);
+    // const isLoggedIn: boolean = useSelector(getIsLoggedIn);
     const userReadList: IReadlistObject = useSelector(getReadlist);
 
     // Memos

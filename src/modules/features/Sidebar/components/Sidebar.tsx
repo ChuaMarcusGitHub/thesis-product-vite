@@ -30,9 +30,7 @@ const Sidebar: React.FC<ISidebarProps> = ({
         return sideBarNavItems.map((navItem, index) => {
             return (
                 <Box display={"flex"} key={`nav-item-${index}`}>
-                    <Button width={"100%"}>
-                        <Link to={navItem.linkTo}>{navItem.text}</Link>
-                    </Button>
+                    <Link to={navItem.linkTo}>{navItem.text}</Link>
                 </Box>
             );
         });
