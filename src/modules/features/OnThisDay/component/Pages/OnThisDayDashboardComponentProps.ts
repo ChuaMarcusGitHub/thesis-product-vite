@@ -11,19 +11,29 @@ export const searchGridItem = {
     colEnd: 5,
     rowStart: 2,
     rowEnd: 6,
-    bg: "skyblue",
 };
 export const sessionGridItem = {
     colStart: 5,
     colEnd: 6,
-    bg: "papayawhip",
+};
+export const colourModeGridItem = {
+    colStart: 5,
+    colEnd: 6,
+    rowStart: 2,
+    rowEnd: 3,
+};
+export const colourModeContainer = {
+    paddingLeft: "5px",
+    display: "flex",
+    width: "100$",
+    height: "100%",
+    alignItems: "center",
 };
 export const sideBarItem = {
     colStart: 1,
     colEnd: 2,
     rowStart: 3,
     rowEnd: 5,
-    border: "1px solid black",
     paddingLeft: 5,
     paddingTop: 2,
 };
@@ -32,6 +42,5 @@ export const userStatsGridItem = {
     colEnd: 6,
     rowStart: 3,
     rowEnd: 6,
-    border: "1px solid red",
-    padding: "10px"
+    padding: "10px",
 };
