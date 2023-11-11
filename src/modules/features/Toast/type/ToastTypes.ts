@@ -12,6 +12,13 @@ export const basicErrorTemplate: UseToastOptions = {
     duration: 5000,
     title: "Error",
 };
+
+export const basicSuccessTemplate: UseToastOptions = {
+    status: TOAST_STATUS.SUCCESS,
+    isClosable: true,
+    duration: 3000,
+    title: "Success"
+}
 export interface IToastReducerState {
     toastData: Partial<UseToastOptions> | null;
 }

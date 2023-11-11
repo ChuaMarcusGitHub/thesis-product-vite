@@ -1,76 +1,39 @@
-import {
-    Routes,
-    Route,
-    Navigate,
-    useLocation,
-} from "react-router-dom";
-
-import { useSelector, useDispatch } from "react-redux";
-import Dashboard from "@modules/features/Dashboard/components/Dashboard";
 import OnThisDayDashboard from "@modules/features/OnThisDay/component/Pages/OnThisDayDashboard";
-import { routesListSelector } from "../history/routeReducer";
-import { setRoute } from "../history/routeActions";
-import { useEffect } from "react";
 import App from "@src/App";
+import ErrorPage from "@src/modules/features/Common/ErrorElements/component/ErrorElementPage";
+import ReadListPage from "@src/modules/features/ReadList/component/pages/ReadListPage";
+import { createBrowserRouter, RouteObject } from "react-router-dom";
 
 // Component Imports
 
 /* Routes String */
 export enum RoutesList {
     ROOT = "/",
-    DASHBOARD = "/dashboard",
     SANDBOX = "/sandbox",
     ON_THIS_DAY = "/onThisDay",
-    DEFAULT_DASHBOARD = "*",
+    READ_LIST = "/readlist",
 }
 
-const RouterMap = [
-    // { path: RoutesList.ROOT, component: <OnThisDayDashboard /> },
-    { path: RoutesList.ROOT, component: <App /> },
-    // { path: RoutesList.SANDBOX, component: <App /> },
-    { path: RoutesList.DASHBOARD, component: <Dashboard /> },
-    { path: RoutesList.ON_THIS_DAY, component: <OnThisDayDashboard /> },
+const routerMap: RouteObject[] = [
     {
-        path: RoutesList.DEFAULT_DASHBOARD,
-        component: <Navigate to={RoutesList.ON_THIS_DAY} />,
+        path: RoutesList.ROOT,
+        element: <OnThisDayDashboard />,
+        // element: <ReadListPage />,
+        // element: <App />,
+        errorElement: <ErrorPage />,
     },
+    {
+        path: RoutesList.READ_LIST,
+        element: <ReadListPage />,
+        errorElement: <ErrorPage />,
+    },
+    // {
+    //     path: RoutesList.SANDBOX,
+    //     element: <App />,
+    //     errorElement: <ErrorPage />,
+    // },
 ];
 
-const Routing = () => {
-    const dispatch = useDispatch();
-    const location = useLocation();
-    const routeList = useSelector(routesListSelector);
+const router = createBrowserRouter([...routerMap]);
 
-    const knownLocation = Object.keys(RoutesList)
-        .map((key) => RoutesList[key as keyof typeof RoutesList])
-        .toString();
-    useEffect(() => {
-        const path = location.pathname;
-        const finalPath = knownLocation.includes(path)
-            ? path
-            : RoutesList.DASHBOARD;
-
-        if (
-            routeList[routeList.length - 1] &&
-            routeList[routeList.length - 1] === finalPath
-        )
-            return;
-        else dispatch(setRoute(finalPath));
-    }, [dispatch, knownLocation, location, routeList]);
-
-    return (
-        <Routes>
-            {RouterMap.map((route) => {
-                return (
-                    <Route
-                        key={`route-${route.path}`}
-                        path={route.path}
-                        element={route.component}
-                    />
-                );
-            })}
-        </Routes>
-    );
-};
-
-export default Routing;
+export default router;

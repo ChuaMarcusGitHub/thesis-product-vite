@@ -85,6 +85,7 @@ const YearAccordian: React.FC<IYearAccordianProps> = ({ typeEvents }) => {
                 eventDescript={eventDescript}
                 pageData={page}
                 key={key}
+                topic={topic}
             />
         </Fade>
     );

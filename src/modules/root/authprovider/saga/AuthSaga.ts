@@ -1,8 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { PayloadAction } from "@reduxjs/toolkit";
-import { setupUserEntry } from "@src/modules/features/Login/actions/LoginActions";
+import {
+    clearUserStats,
+    getUserStats,
+    setupUserEntry,
+} from "@src/modules/features/Login/actions/LoginActions";
+import {
+    clearReadList,
+    fetchReadList,
+} from "@src/modules/features/OnThisDay/actions/OnThisDaySummaryActions";
 import { Session } from "@supabase/supabase-js";
 import {
+    all,
     call,
     fork,
     put,
@@ -32,8 +41,17 @@ function* initializeSession() {
         console.log("----Session Response success - Response Object----");
         console.log(sessionData);
 
-        if (sessionData.session)
-            yield putResolve(setSessionData(sessionData.session));
+        if (!sessionData.session) return;
+
+        // Add session to store
+        yield putResolve(setSessionData(sessionData.session));
+        // Prepare to fetch related Stats for user
+        const userId = sessionData.session.user?.id || null;
+
+        if (!userId) return;
+
+        yield put(fetchReadList(userId));
+        yield put(getUserStats(userId));
     } catch (e: any) {
         console.error(
             "Error Encountered at Saga method: AuthAction - initalizeSession"
@@ -44,10 +62,14 @@ function* initializeSession() {
 
 function* loginSession(action: PayloadAction<IAuthLoginEmail>) {
     try {
-        console.warn(action.payload);
         const sessionData: Session = yield call(loginEmail, action.payload);
         if (sessionData) {
-            yield putResolve(setSessionData(sessionData));
+            yield all([
+                putResolve(setSessionData(sessionData)),
+                put(getUserStats(sessionData.user.id)),
+                put(fetchReadList(sessionData.user.id)),
+            ]);
+
             return true;
         }
         return false;
@@ -62,7 +84,13 @@ function* loginSession(action: PayloadAction<IAuthLoginEmail>) {
 function* logoutSession() {
     try {
         const isSuccess: boolean = yield call(logout);
-        if (isSuccess) yield put(clearSessionData());
+        if (isSuccess) {
+            yield all([
+                put(clearSessionData()),
+                put(clearUserStats()),
+                put(clearReadList()),
+            ]);
+        }
     } catch (e: any) {
         console.error(
             "Error Encountered at Saga method: AuthAction - initalizeSession"

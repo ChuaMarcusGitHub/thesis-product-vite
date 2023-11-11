@@ -5,6 +5,9 @@ import {
     IArticleDetailedPayload,
     IFetchEventsPayload,
     ILoadArticleDetailPayload,
+    IOtdCardPageData,
+    IReadingCardData,
+    IReadlistObject,
     ISetFeedArticlePayload,
     IUpdateActiveTabPayload,
 } from "../type/OnThisDayCommonTypes";
@@ -28,6 +31,12 @@ export enum OnThisDaySummaryAction {
     SET_MODAL_OPEN = "OnThisDaySummaryAction/SET_MODAL_OPEN",
     SET_MODAL_PROPS = "OnThisDaySummaryAction/SET_MODAL_PROPS",
     CLEAR_MODAL_PROPS = "OnThisDaySummaryAction/CLEAR_MODAL_PROPS",
+    // Readlist
+    FETCH_USER_READLIST = "OnThisDaySummaryAction/FETCH_USER_READLIST",
+    ADD_TO_READLIST = "OnThisDaySummaryAction/ADD_TO_READLIST",
+    UPDATE_READLIST_STORE = "OnThisDaySummaryAction/UPDATE_READLIST_STORE",
+    REMOVE_FROM_READLIST = "OnThisDaySummaryAction/REMOVE_FROM_READLIST",
+    CLEAR_READLIST = "OnThisDaySummaryAction/CLEAR_READLIST",
 }
 
 // Initialization action
@@ -68,3 +77,14 @@ export const setModalProperties = (payload: IContentDetailModalProps) =>
     action(OnThisDaySummaryAction.SET_MODAL_PROPS, payload);
 export const clearModalProps = () =>
     action(OnThisDaySummaryAction.CLEAR_MODAL_PROPS);
+// Readlist Actions
+export const fetchReadList = (userId: string) =>
+    action(OnThisDaySummaryAction.FETCH_USER_READLIST, userId);
+export const addToReadList = (payload: IReadingCardData) =>
+    action(OnThisDaySummaryAction.ADD_TO_READLIST, payload);
+export const updateReadListStore = (payload: IReadlistObject) =>
+    action(OnThisDaySummaryAction.UPDATE_READLIST_STORE, payload);
+export const removeFromReadList = (pageId: number) =>
+    action(OnThisDaySummaryAction.REMOVE_FROM_READLIST, pageId);
+export const clearReadList = () =>
+    action(OnThisDaySummaryAction.CLEAR_READLIST);

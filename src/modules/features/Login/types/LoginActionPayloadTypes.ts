@@ -1,7 +1,4 @@
-import {
-    basicErrorTemplate,
-    TOAST_STATUS,
-} from "@features/Toast/type/ToastTypes";
+import { basicErrorTemplate } from "@features/Toast/type/ToastTypes";
 import { LoginErrorTypes } from "./LoginComponentTypes";
 
 export interface ILoginReducerState {
@@ -31,7 +28,7 @@ export interface IUserStats {
     userId?: string;
     username?: string | null;
     articlesRead: number;
-    timeSpent: number; // float string
+    timeSpent: number; // float
 }
 export interface IDbUserStats {
     username?: string | null;

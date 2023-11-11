@@ -116,6 +116,13 @@ export interface IOtdCardPageData {
     thumbnail: IThumbnailData;
     tid: string;
 }
+export interface IReadingCardData extends IOtdCardPageData {
+    eventDescription?: string;
+    eventType: string;
+}
+export interface IReadlistObject {
+    [pageId: number]: IReadingCardData;
+}
 export interface IOtdCardData {
     year: number;
     event: string;
@@ -161,6 +168,7 @@ export interface IOnThisDaySummaryDataState {
         data: IContentDetailModalProps;
         isOpen: boolean;
     };
+    readList: IReadlistObject | null;
     loadState: IReducerLoadingState;
 }
 export interface IFetchEventsPayload {

@@ -125,7 +125,7 @@ const ContentDetailModal: React.FC = () => {
             setLastKnownType(articleType);
         }
         if (progressPercent > 0) setProgressPercent(0);
-    }, [isModalOpen]);
+    }, [isModalOpen, isLoaded]);
 
     // Component Methods
     const trackScroll = () => {

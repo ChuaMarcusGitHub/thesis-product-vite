@@ -8,14 +8,12 @@ import { combineReducers } from "redux";
 import loginReducer from "../features/Login/reducer/LoginReducer";
 import toastReducer from "../features/Toast/reducer/ToastReducer";
 import authReducer from "./authprovider/reducer/AuthReducer";
-import routeReducer from "./history/routeReducer";
 
 //import reducers here
 
 const rootReducer = combineReducers({
     OnThisDay: OnThisDayRootReducer,
     userData: loginReducer,
-    routes: routeReducer,
     authSession: authReducer,
     config: configReducer,
     toast: toastReducer,
