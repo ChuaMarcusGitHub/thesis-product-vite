@@ -10,6 +10,7 @@ import {
     put,
     putResolve,
     select,
+    takeEvery,
     takeLeading,
 } from "redux-saga/effects";
 import { analyticsInsertArticleData } from "@features/Common/Analytics/actions/AnalyticsActions";
@@ -67,7 +68,9 @@ import { getReadlist } from "../selector/OnThisDaySummarySelector";
 import { supaFetchReadlist, supaUpdateReadList } from "./OTDSupabaseCalls";
 import { getSessionUser } from "@src/modules/root/authprovider/selector/AuthSelector";
 import { User } from "@supabase/supabase-js";
-import { setToastData } from "@features/Toast/actions/ToastActions";
+import { createStandaloneToast } from "@chakra-ui/react";
+
+const { toast } = createStandaloneToast();
 
 const WIKI_ACCESS_TOKEN = import.meta.env.VITE_WIKI_ACCESS_TOKEN;
 const WIKI_APP_AGENT = import.meta.env.VITE_WIKI_APP_AGENT;
@@ -115,7 +118,7 @@ function* initializeOnThisDay() {
     } catch (e: unknown) {
         //Throw error here
         console.error(`Unable to initialize 'OnThisDay'! error:${e}`);
-        yield put(setToastData(OTD_ERROR_OBJECTS[OTD_ERROR_KEY.FETCH_ARTICLE]));
+        toast(OTD_ERROR_OBJECTS[OTD_ERROR_KEY.FETCH_ARTICLE]);
     } finally {
         yield put(setLoadState(false));
     }
@@ -154,7 +157,7 @@ function* fetchOnThisDayData(params: IFetchEventsDataPayload) {
             "Error encountered at 'fetchOnThisDayData Saga method' :",
             e
         );
-        yield put(setToastData(OTD_ERROR_OBJECTS[OTD_ERROR_KEY.FETCH_ARTICLE]));
+        toast(OTD_ERROR_OBJECTS[OTD_ERROR_KEY.FETCH_ARTICLE]);
     }
 }
 function* loadUserReadlist(action: PayloadAction<string>) {
@@ -277,7 +280,7 @@ function* loadDetailedArticle(
     } catch (e) {
         console.error("Error in loadSelectedArticle");
         console.error(e);
-        yield put(setToastData(OTD_ERROR_OBJECTS[OTD_ERROR_KEY.LOAD_ARTICLE]));
+        toast(OTD_ERROR_OBJECTS[OTD_ERROR_KEY.LOAD_ARTICLE]);
     }
 }
 
@@ -315,7 +318,7 @@ function* loadBriefArticle(action: PayloadAction<string>) {
     } catch (e) {
         console.error("Error Encountered in loadBriefArticle Saga method");
         console.error(e);
-        yield put(setToastData(OTD_ERROR_OBJECTS[OTD_ERROR_KEY.LOAD_ARTICLE]));
+        toast(OTD_ERROR_OBJECTS[OTD_ERROR_KEY.LOAD_ARTICLE]);
     }
 }
 
@@ -399,9 +402,7 @@ function* addToReadListImp(action: PayloadAction<IReadingCardData>) {
         const currentUser: User = yield select(getSessionUser);
         if (!currentUser) {
             //Toast
-            yield put(
-                setToastData(OTD_ERROR_OBJECTS[OTD_ERROR_KEY.NOT_AUTHED])
-            );
+            toast(OTD_ERROR_OBJECTS[OTD_ERROR_KEY.NOT_AUTHED]);
             throw "User not Authed / Logged in!";
         }
 
@@ -418,20 +419,14 @@ function* addToReadListImp(action: PayloadAction<IReadingCardData>) {
             finalList
         );
         if (errorMessage) {
-            yield put(
-                setToastData(OTD_ERROR_OBJECTS[OTD_ERROR_KEY.READLIST_FAIL])
-            );
+            toast(OTD_ERROR_OBJECTS[OTD_ERROR_KEY.READLIST_FAIL]);
             throw errorMessage;
         } else if (success && !errorMessage) {
-            yield put(
-                setToastData(OTD_MSG_OBJ[OTD_TOAST_MSG.READLIST_SUCCESS])
-            );
+            toast(OTD_MSG_OBJ[OTD_TOAST_MSG.READLIST_SUCCESS]);
         }
 
         // Update readlist in store
         yield put(updateReadListStore(finalList));
-        // Show toast for success
-        yield put(setToastData(OTD_MSG_OBJ[OTD_TOAST_MSG.READLIST_SUCCESS]));
     } catch (e) {
         console.error("Error encountered in addToReadListImp: ", e);
     }
@@ -465,7 +460,7 @@ function* removeFromReadListImpl(action: PayloadAction<number>) {
             throw `Error in CRUD Transaction :${errorMessage}`;
 
         // success in CRUD
-        yield put(setToastData(OTD_MSG_OBJ[OTD_TOAST_MSG.REMOVE_PAGE_SUCCESS]));
+        toast(OTD_MSG_OBJ[OTD_TOAST_MSG.REMOVE_PAGE_SUCCESS]);
         // Update in store
         yield put(updateReadListStore(newReadList));
     } catch (e) {
@@ -496,8 +491,8 @@ function* watchOnThisDaySummarySaga() {
         OnThisDaySummaryAction.CLEAR_MODAL_PROPS,
         clearModalPropsImpl
     );
-    yield takeLeading(OnThisDaySummaryAction.ADD_TO_READLIST, addToReadListImp);
-    yield takeLeading(
+    yield takeEvery(OnThisDaySummaryAction.ADD_TO_READLIST, addToReadListImp);
+    yield takeEvery(
         OnThisDaySummaryAction.REMOVE_FROM_READLIST,
         removeFromReadListImpl
     );

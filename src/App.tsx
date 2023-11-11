@@ -18,7 +18,6 @@ import {
 import { Session } from "@supabase/supabase-js";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import "./App.css";
 // import SummaryCard from "./modules/features/OnThisDay/component/ContentComponent/SummaryCard";
 
@@ -30,7 +29,6 @@ import {
     userSignup,
 } from "./modules/features/Login/actions/LoginActions";
 import { SignInTabType } from "./modules/features/Login/types/LoginComponentTypes";
-import { RoutesList } from "./modules/root/store/routes";
 import {
     OTD_ERROR_KEY,
     OTD_ERROR_OBJECTS,
@@ -61,6 +59,7 @@ function App() {
     useEffect(() => {
         if (toastError) {
             newToast(toastError);
+            setToastData(null);
         }
     }, [toastError]);
 
@@ -144,8 +143,6 @@ function App() {
             })
         );
     };
-    const handleRouteToReadlist = () => {
-        // setRoute(RoutesList.READ_LIST);
 
     const handleOpenToast = () => {
         dispatch(setToastData(OTD_ERROR_OBJECTS[OTD_ERROR_KEY.LOAD_ARTICLE]));
@@ -192,6 +189,7 @@ function App() {
                             onClose={onClose}
                             isOpen={isOpen}
                             activeTab={SignInTabType.Login}
+                            isLoggedIn={false}
                         />
                     </div>
                 )}

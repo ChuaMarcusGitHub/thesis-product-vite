@@ -1,5 +1,5 @@
 import OnThisDayDashboard from "@modules/features/OnThisDay/component/Pages/OnThisDayDashboard";
-import App from "@src/App";
+// import App from "@src/App";
 import ErrorPage from "@src/modules/features/Common/ErrorElements/component/ErrorElementPage";
 import ReadListPage from "@src/modules/features/ReadList/component/pages/ReadListPage";
 import { createBrowserRouter, RouteObject } from "react-router-dom";
