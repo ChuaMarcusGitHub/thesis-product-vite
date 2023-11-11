@@ -7,5 +7,4 @@ export const summaryCardGridItem = {
     w: "100%",
     h: "100%",
     minH: "240px",
-    border: "1px solid black",
 }

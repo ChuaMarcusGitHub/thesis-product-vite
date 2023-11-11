@@ -5,13 +5,11 @@ export const readListPageContainer = {
 };
 export const bannerContainer = {
     width: "100%",
-    border: "1px solid black",
     marginBottom: "5px",
 };
 export const bannerGrid = {
     templateColumns: "repeat(5, 20vw)",
     templateRows: "repeat(5, 4vh)",
-    border: "1px solid magenta",
 };
 export const titleGrid = {
     colStart: 2,
@@ -27,7 +25,6 @@ export const titleGrid = {
 export const titleBox = {};
 
 export const readListContainerWrapper = {
-    border: "1px solid cyan",
     width: "100%",
     minH: "30vh",
 };

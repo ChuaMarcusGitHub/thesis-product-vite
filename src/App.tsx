@@ -1,4 +1,4 @@
-import { Button, Stack, useDisclosure } from "@chakra-ui/react";
+import { Button, Stack, useColorMode, useDisclosure } from "@chakra-ui/react";
 import SignInModal from "@modules/features/Login/components/SignInComponents/SignInModal";
 import {
     initializeOnThisDay,
@@ -56,6 +56,8 @@ function App() {
     const [, newToast] = useToastHook();
     const toastError = useSelector(getToastData);
 
+    // Colourmode
+    const { colorMode, toggleColorMode } = useColorMode();
     useEffect(() => {
         if (toastError) {
             newToast(toastError);
@@ -215,6 +217,9 @@ function App() {
                     <Button onClick={handleUpdateDB}>Update the DB</Button>
                     <Button onClick={handleSignUp}>Handle Signup</Button>
                     <Button onClick={handleOpenToast}>{` OpenToast`}</Button>
+                    <Button onClick={toggleColorMode}>
+                        Toggle {colorMode === "light" ? "Dark" : "Light"}
+                    </Button>
                 </Stack>
 
                 {/* <a rel="noopener noreferrer" href={"https://en.wikipedia.org/api/rest_v1/page/html/Berlin"} target="_blank">Open a new wikiLink</a> */}

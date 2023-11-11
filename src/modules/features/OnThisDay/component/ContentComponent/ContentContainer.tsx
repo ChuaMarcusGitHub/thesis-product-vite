@@ -95,7 +95,7 @@ const ContentContainer: React.FC = () => {
     const renderComponent = () => {
         return (
             <Box {...boxContainer}>
-                <Tabs>
+                <Tabs isLazy>
                     <TabList>
                         {isLoaded ? (
                             renderTabs()

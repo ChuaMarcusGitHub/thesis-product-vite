@@ -62,7 +62,7 @@ const SigninContainer: React.FC<ISignInComtainerProps> = ({
 
     const renderComponent = () => {
         return (
-            <Box border={"1px solid black"} width={"100%"}>
+            <Box width={"100%"}>
                 {isLoggedIn ? renderSignOutSet() : renderSignUpInSet()}
                 <SignInComponents
                     isLoggedIn={isLoggedIn}
