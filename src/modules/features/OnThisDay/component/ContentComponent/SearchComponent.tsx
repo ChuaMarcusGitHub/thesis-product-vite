@@ -26,11 +26,14 @@ import {
 import {
     menuButtonStyle,
     buttonStyle,
-    searchContainerBox,
+    filterContainerBox,
     stackContainer,
     checkboxGroupStyle,
-    buttonContainer,
-    dateContainer,
+    menuListStyle,
+    dateStackContainer,
+    buttonStackContainer,
+    searchContainerWrapper,
+    dateContainerBox,
 } from "./SearchComponentStyleProps";
 import {
     IDateObject,
@@ -83,7 +86,7 @@ const SearchComponent: React.FC = () => {
 
     useEffect(() => {
         debounceDispatchUpdateActiveTabs();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeTabs]);
 
     // Memos
@@ -163,10 +166,10 @@ const SearchComponent: React.FC = () => {
     // Render Methods
     const renderMonth = () => (
         <Menu>
-            <MenuButton {...menuButtonStyle} as={Button}>
+            <MenuButton {...menuButtonStyle} as={Button} flexGrow={2}>
                 {months[selectedMonth]}
             </MenuButton>
-            <MenuList maxH={"300px"} overflowY={"scroll"}>
+            <MenuList {...menuListStyle}>
                 {months.map((month, monthIndex) => (
                     <MenuItem
                         key={`key-month-${monthIndex}`}
@@ -181,10 +184,10 @@ const SearchComponent: React.FC = () => {
 
     const renderDate = () => (
         <Menu>
-            <MenuButton as={Button} {...menuButtonStyle}>
+            <MenuButton as={Button} {...menuButtonStyle} flexGrow={2}>
                 {selectedDate.toString().padStart(2, "0")}
             </MenuButton>
-            <MenuList maxH={"300px"} overflow={"scroll"}>
+            <MenuList {...menuListStyle}>
                 {generateDateOptions.map((day) => (
                     <MenuItem
                         key={`key-option-day-${day}`}
@@ -197,12 +200,24 @@ const SearchComponent: React.FC = () => {
         </Menu>
     );
 
+    const renderTriggerButtons = () => (
+        <>
+            <Button {...buttonStyle} onClick={handleFetchEvents} flexGrow={0.4}>
+                Go!!
+            </Button>
+            <Button {...buttonStyle} onClick={randomizeDate} flexGrow={0.2}>
+                Randomize!!
+            </Button>
+        </>
+    );
+
     const renderActiveTabs = () => (
-        <HStack {...stackContainer} gap={"30px"}>
+        <HStack {...stackContainer}>
             <CheckboxGroup {...checkboxGroupStyle} defaultValue={defaultActive}>
                 {activeTabs?.map((tab) => {
                     return (
                         <Checkbox
+                            flexGrow={0.1}
                             key={`checkbox-${tab.type}`}
                             isChecked={tab.isChecked}
                             onChange={() => handleActiveTabs(tab.type)}
@@ -216,22 +231,17 @@ const SearchComponent: React.FC = () => {
     );
     const renderComponent = () => {
         return (
-            <Box>
-                <Box {...searchContainerBox} justifyContent={"space-around"}>
-                    <HStack {...stackContainer} {...dateContainer}>
+            <Box {...searchContainerWrapper}>
+                <Box {...dateContainerBox}>
+                    <HStack {...dateStackContainer}>
                         {renderMonth()}
                         {renderDate()}
                     </HStack>
-                    <HStack {...stackContainer} {...buttonContainer}>
-                        <Button {...buttonStyle} onClick={handleFetchEvents}>
-                            Go!!
-                        </Button>
-                        <Button {...buttonStyle} onClick={randomizeDate}>
-                            Randomize!!
-                        </Button>
+                    <HStack {...buttonStackContainer}>
+                        {renderTriggerButtons()}
                     </HStack>
                 </Box>
-                <Box {...searchContainerBox}>{renderActiveTabs()}</Box>
+                <Box {...filterContainerBox}>{renderActiveTabs()}</Box>
             </Box>
         );
     };

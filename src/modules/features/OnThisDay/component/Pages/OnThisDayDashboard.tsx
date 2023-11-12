@@ -1,4 +1,11 @@
-import { Box, Button, Grid, GridItem, useDisclosure } from "@chakra-ui/react";
+import {
+    Box,
+    Button,
+    Grid,
+    GridItem,
+    Stack,
+    useDisclosure,
+} from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import classNames from "classnames/bind";
 import {
@@ -9,6 +16,8 @@ import {
     sideBarItem,
     userStatsGridItem,
     colourModeGridItem,
+    pageContainer,
+    searchComponentItem,
 } from "./OnThisDayDashboardComponentProps";
 import styles from "./OnThisDayDashboard.module.scss";
 import ContentContainer from "../ContentComponent/ContentContainer";
@@ -23,6 +32,10 @@ import { IUserStats } from "@src/modules/features/Login/types/LoginActionPayload
 import { getUserStats } from "@src/modules/features/Login/selector/LoginSelector";
 import UserStatsContainer from "../ContentComponent/UserStatsContainer";
 import ColourModeSwitch from "@src/modules/features/Common/ColorMode/component/ColourModeSwitch";
+import ThesisNotice from "@src/modules/features/Common/Notice/ThesisNotice";
+import { updateNoticeRequired } from "@src/modules/features/Config/actions/ConfigActions";
+import { getNoticeRequired } from "@src/modules/features/Config/selector/ConfigSelector";
+// import { LOCAL_STORAGE_KEYS } from "@src/modules/features/Common/types/LocalStorageTypes";
 
 const cx = classNames.bind({ ...styles });
 
@@ -30,23 +43,38 @@ const OnThisDayDashboard: React.FC = () => {
     /* ---------- Constants --------- */
     const dispatch = useDispatch();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const {
+        isOpen: noticeIsOpen,
+        onOpen: noticeOnOpen,
+        onClose: noticeOnClose,
+    } = useDisclosure();
 
     /* ---------- Selectors --------- */
     const isLoggedIn: boolean = useSelector(getIsLoggedIn);
     const userData: IUserStats | null = useSelector(getUserStats);
+    const noticeRequired: boolean = useSelector(getNoticeRequired);
 
     /* ---------- Effect Triggers --------- */
     useEffect(() => {
         dispatch(initializeOnThisDay());
+        // localStorage.removeItem(LOCAL_STORAGE_KEYS.noticeRequired)
     }, []);
+
+    useEffect(() => {
+        if (noticeRequired) noticeOnOpen();
+    }, [noticeRequired]);
+
+    const handleNoticeClose = () => {
+        dispatch(updateNoticeRequired(false));
+        noticeOnClose();
+    };
 
     /* ---------- Render Methods--------- */
     const renderBanner = () => {
         return (
             <Box {...bannerContainer}>
-                <Grid {...bannerGrid} gap={3}>
-                    {/* <GridItem colStart={5} colEnd={6} rowStart={1} rowEnd={2} bg={"black"}/> */}
-                    <GridItem {...searchGridItem} border={"1px solid blue"}>
+                <Grid {...bannerGrid} gap={1}>
+                    <GridItem {...searchGridItem} {...searchComponentItem}>
                         {renderSearchComponent()}
                     </GridItem>
                     <GridItem {...sessionGridItem} border={"1px solid blue"}>
@@ -55,14 +83,17 @@ const OnThisDayDashboard: React.FC = () => {
                             userData={userData}
                         />
                     </GridItem>
-                    <GridItem {...colourModeGridItem} >
+                    <GridItem {...colourModeGridItem}>
                         <ColourModeSwitch />
                     </GridItem>
                     <GridItem {...sideBarItem} border={"1px solid blue"}>
                         <Button onClick={() => onOpen()}> Side Menu</Button>
-                    </GridItem >
+                    </GridItem>
                     {isLoggedIn && (
-                        <GridItem {...userStatsGridItem} border={"1px solid blue"}>
+                        <GridItem
+                            {...userStatsGridItem}
+                            border={"1px solid blue"}
+                        >
                             <UserStatsContainer userData={userData} />
                         </GridItem>
                     )}
@@ -84,10 +115,17 @@ const OnThisDayDashboard: React.FC = () => {
     };
     const renderComponent = () => {
         return (
-            <Box>
-                {renderBanner()}
-                {renderContent()}
+            <Box {...pageContainer}>
+                <Stack gap={3}>
+                    {renderBanner()}
+                    {renderContent()}
+                </Stack>
+
                 <ContentDetailModal />
+                <ThesisNotice
+                    isOpen={noticeIsOpen}
+                    onClose={handleNoticeClose}
+                />
                 <Sidebar isOpen={isOpen} onClose={onClose} />
             </Box>
         );

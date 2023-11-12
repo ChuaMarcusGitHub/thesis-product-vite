@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { PayloadAction } from "@reduxjs/toolkit";
+import { initializeNoticeCheck } from "@src/modules/features/Config/actions/ConfigActions";
 import {
     clearUserStats,
     getUserStats,
@@ -36,6 +37,10 @@ import {
 
 function* initializeSession() {
     try {
+
+        // Check for Notice Required
+        yield put(initializeNoticeCheck());
+        
         const sessionData: { session: Session } = yield call(getUserSession);
 
         console.log("----Session Response success - Response Object----");

@@ -8,7 +8,14 @@ import onThisDaySummarySaga from "@modules/features/OnThisDay/saga/OnThisDaySumm
 import authSaga from "./authprovider/saga/AuthSaga";
 import loginSaga from "../features/Login/saga/LoginSaga";
 import analyticsSaga from "../features/Common/Analytics/sagas/AnalyticsSaga";
+import configSaga from "../features/Config/saga/ConfigSaga";
 
 export default function* rootSaga() {
-    yield all([onThisDaySummarySaga, authSaga, loginSaga, analyticsSaga]);
+    yield all([
+        onThisDaySummarySaga,
+        authSaga,
+        loginSaga,
+        analyticsSaga,
+        configSaga,
+    ]);
 }

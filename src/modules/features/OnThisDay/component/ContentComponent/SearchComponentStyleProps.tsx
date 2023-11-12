@@ -1,17 +1,41 @@
-export const searchContainerBox = {
+export const searchContainerWrapper = {
+    width: "100%",
+    height: "100%",
+    alignItems: "center",
+    padding: "5",
+};
+export const filterContainerBox = {
     maxW: "100%",
     maxH: "100%",
     display: "flex",
     justifyContent: "center",
     verticalAlign: "center",
     padding: "5px 0",
+    marginTop: "2",
+};
+export const dateContainerBox = {
+    display: "flex",
+    justifyContent: "center",
 };
 
 export const stackContainer = {
-    gap: "10px",
     width: "80%",
     alignSelf: "center",
     justifyContent: "center",
+    gap: "30px",
+};
+
+export const dateStackContainer = {
+    marginRight: "10px",
+    gap: "3",
+    width: "50%",
+    justifyContent: "flex-end",
+};
+
+export const buttonStackContainer = {
+    width: "50%",
+    justifyContent: "flex-start",
+    gap: "5",
 };
 
 export const dateContainer = {
@@ -26,12 +50,14 @@ export const buttonContainer = {
 };
 
 export const menuButtonStyle = {
-    minW: 200,
     padding: "5 0",
+};
+export const menuListStyle = {
+    maxH: "300px",
+    overflow: "scroll",
 };
 
 export const buttonStyle = {
-    minW: 100,
     padding: "5 0",
 };
 
