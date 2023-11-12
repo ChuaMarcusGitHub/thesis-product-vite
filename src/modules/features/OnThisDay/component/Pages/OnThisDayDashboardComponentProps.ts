@@ -1,26 +1,32 @@
+export const pageContainer = {
+    width: "100vw",
+    minH: "50vh",
+};
 export const bannerContainer = {
-    width: "100%",
-    height: "20vh",
+    width: "100vw",
+    border: "1px solid green",
 };
 export const bannerGrid = {
-    templateColumns: "repeat(5, 20vw)",
-    templateRows: "repeat(5, 4vh)",
+    templateColumns: "repeat(4, 20vw)",
+    templateRows: "repeat(5, 6vh)",
 };
 export const searchGridItem = {
     colStart: 2,
     colEnd: 5,
     rowStart: 2,
-    rowEnd: 6,
+    rowEnd: 5,
+};
+export const searchComponentItem = {
+    border: "1px solid grey",
+    borderRadius: "5px",
 };
 export const sessionGridItem = {
-    colStart: 5,
-    colEnd: 6,
+    colStart: 4,
+    colEnd: 5,
 };
 export const colourModeGridItem = {
     colStart: 5,
     colEnd: 6,
-    rowStart: 2,
-    rowEnd: 3,
 };
 export const colourModeContainer = {
     paddingLeft: "5px",
@@ -38,9 +44,9 @@ export const sideBarItem = {
     paddingTop: 2,
 };
 export const userStatsGridItem = {
-    colStart: 5,
-    colEnd: 6,
-    rowStart: 3,
+    colStart: 2,
+    colEnd: 5,
+    rowStart: 5,
     rowEnd: 6,
     padding: "10px",
 };
