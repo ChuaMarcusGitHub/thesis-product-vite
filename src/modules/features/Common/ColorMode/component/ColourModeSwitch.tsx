@@ -1,3 +1,4 @@
+import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import {
     Box,
     Button,
@@ -18,7 +19,8 @@ const ColourModeSwitch: React.FC = () => {
                 <FormLabel htmlFor="colour-mode" mb="0">
                     Colour Mode:
                 </FormLabel>
-                <Button onClick={toggleColorMode}>
+                <Button onClick={toggleColorMode} gap={2}>
+                    {isDark ? <MoonIcon /> : <SunIcon />}
                     {isDark ? "Dark" : "Light"} Mode
                 </Button>
             </FormControl>

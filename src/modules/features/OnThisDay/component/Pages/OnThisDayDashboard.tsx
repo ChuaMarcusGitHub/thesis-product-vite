@@ -70,6 +70,22 @@ const OnThisDayDashboard: React.FC = () => {
     };
 
     /* ---------- Render Methods--------- */
+    const renderReturnToTop = () => (
+        <span
+            style={{
+                height: "100px",
+                width: "50px",
+                position: "fixed",
+                background: "black",
+                color: "white",
+                display: "flex",
+                left: "90%",
+                zIndex: 1000,
+            }}
+        >
+         <button >Hello</button>   
+        </span>
+    );
     const renderBanner = () => {
         return (
             <Box {...bannerContainer}>
@@ -107,11 +123,7 @@ const OnThisDayDashboard: React.FC = () => {
     };
 
     const renderContent = () => {
-        return (
-            <div className={cx("content-container")}>
-                <ContentContainer />
-            </div>
-        );
+        return <ContentContainer />;
     };
     const renderComponent = () => {
         return (
@@ -120,7 +132,6 @@ const OnThisDayDashboard: React.FC = () => {
                     {renderBanner()}
                     {renderContent()}
                 </Stack>
-
                 <ContentDetailModal />
                 <ThesisNotice
                     isOpen={noticeIsOpen}

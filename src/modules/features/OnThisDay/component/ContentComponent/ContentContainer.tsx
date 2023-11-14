@@ -9,8 +9,16 @@ import {
     Text,
     Fade,
     Spinner,
+    IconButton,
 } from "@chakra-ui/react";
-import React, { useMemo } from "react";
+import React, {
+    BaseSyntheticEvent,
+    useEffect,
+    useMemo,
+    useReducer,
+    useRef,
+    useState,
+} from "react";
 import {
     boxContainer,
     skeletonTab,
@@ -29,6 +37,9 @@ import {
 
 // import data from "@rsc/sampleResponse/referenceFeedState.json";
 import { getPopulatedArticles } from "./UtilFiles/ContentComponentUtil";
+import { SCROLL_LIMIT } from "../../type/OnThisDayCommonTypes";
+import { ChevronUpIcon } from "@chakra-ui/icons";
+import ScrollToTopButton from "@src/modules/features/Common/ScrollToTop/component/ScrollToTopButton";
 // import { IOtdFeedObject } from "@features/OnThisDay/type/OnThisDayCommonTypes";
 // const sampleData = JSON.parse(JSON.stringify(data));
 
@@ -38,6 +49,8 @@ const ContentContainer: React.FC = () => {
     const isLoading = useSelector(getIsLoading);
     const eventArticles = useSelector(getArticleSummaries);
     const activeTabs = useSelector(getActiveTabs);
+    const [showTopButton, setShowTopButton] = useState(false);
+    const firstAccordianScroll = useRef<HTMLDivElement>(null);
 
     // Use Effects / Memos
     const containerTabs = useMemo(
@@ -50,7 +63,20 @@ const ContentContainer: React.FC = () => {
         [isLoading, containerTabs]
     );
 
+    // Component methods
+    const handleScroll = (e: BaseSyntheticEvent) => {
+        const { scrollTop, scrollHeight, offsetHeight } = e.target;
+        const scrollProgess = (scrollTop / (scrollHeight - offsetHeight)) * 100;
+        setShowTopButton(scrollProgess > SCROLL_LIMIT);
+    };
+
+    const handleReturnToTop = () => {
+        firstAccordianScroll.current?.scrollIntoView();
+        setShowTopButton(false);
+    };
+
     // Render Methods
+
     const renderTabs = () =>
         containerTabs?.map((tabName, index) => (
             <Fade in={!isLoading} key={`${tabName}-${index}`}>
@@ -82,11 +108,20 @@ const ContentContainer: React.FC = () => {
         );
     };
     const renderTabContainers = () =>
-        containerTabs.map((eventType) => {
+        containerTabs.map((eventType, index) => {
             return (
                 <TabPanel key={`${eventType}-tab-panel`}>
-                    <Box {...contentBoxContainer}>
-                        <YearAccordian typeEvents={eventArticles[eventType]} />
+                    <Box
+                        {...contentBoxContainer}
+                        onScroll={(e) => handleScroll(e)}
+                    >
+                        <YearAccordian
+                            typeEvents={eventArticles[eventType]}
+                            componentRef={
+                                index === 0 ? firstAccordianScroll : null
+                            }
+                            key={`accordian-${index}`}
+                        />
                     </Box>
                 </TabPanel>
             );
@@ -105,13 +140,16 @@ const ContentContainer: React.FC = () => {
                             </Tab>
                         )}
                     </TabList>
-
                     <TabPanels>
                         {isLoaded
                             ? renderTabContainers()
                             : renderContentSkeleton()}
                     </TabPanels>
                 </Tabs>
+                <ScrollToTopButton
+                    triggerVisible={showTopButton}
+                    handleClick={handleReturnToTop}
+                />
             </Box>
         );
     };

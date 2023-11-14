@@ -79,11 +79,13 @@ export const convertMsToStringTime = (ms: number) => {
     minutesTaken = Math.floor(minutesTaken % 60);
     secondsTaken = Math.floor(secondsTaken % 60);
 
-    
-    stringTime = `Hr: ${hoursTaken} min: ${String(minutesTaken).padStart(2,'0')} sec: ${String(secondsTaken).padStart(2, '0')}`
+    stringTime = `Hr: ${hoursTaken} min: ${String(minutesTaken).padStart(
+        2,
+        "0"
+    )} sec: ${String(secondsTaken).padStart(2, "0")}`;
 
     return stringTime;
-}
+};
 export const getMonths = (monthsObject: {
     [month: string]: number;
 }): string[] => {
@@ -160,4 +162,15 @@ export const transformToAnalyticsModalPayload = (
         closeAt: tabCloseTime.toISOString(),
         timeSpentMS: timeDifferenceMS,
     };
+};
+
+export const checkIfLastCheckbox = (activeTabs: ITabCheckbox[]): boolean => {
+    let trueCount = 0;
+
+    // Perform a peek operation
+    activeTabs.forEach((tab) => {
+        if (tab.isChecked) ++trueCount;
+    });
+
+    return trueCount < 1;
 };

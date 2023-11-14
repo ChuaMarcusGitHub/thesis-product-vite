@@ -17,6 +17,7 @@ import {
     ON_THIS_DAY_TOPICS,
 } from "@features/onThisDay/type/OnThisDayCommonTypes";
 import {
+    checkIfLastCheckbox,
     generateDate,
     getDaysInMonth,
     getDefaultActiveTabs,
@@ -38,13 +39,17 @@ import {
 import {
     IDateObject,
     ITabCheckbox,
+    OTDComponentErrorObject,
+    OTD_COMPONENT_ERRORS,
 } from "@features/onThisDay/type/OnThisDayComponentTypes";
 import { useDispatch } from "react-redux";
 import {
     fetchEventsFromDay,
     updateActiveTabs,
 } from "@features/onThisDay/actions/OnThisDaySummaryActions";
+import { createStandaloneToast } from "@chakra-ui/react";
 
+const { toast } = createStandaloneToast();
 const SearchComponent: React.FC = () => {
     //Constants
     const dispatch = useDispatch();
@@ -110,6 +115,14 @@ const SearchComponent: React.FC = () => {
 
         // Toggle the value
         clickedObj.isChecked = !clickedObj.isChecked;
+
+        // Check if this is the last checkbox
+        if (checkIfLastCheckbox(currentActive)) {
+            toast(OTDComponentErrorObject[OTD_COMPONENT_ERRORS.LAST_CHECKBOX]);
+            //reverse the action
+            clickedObj.isChecked = !clickedObj.isChecked;
+        }
+
         // "all": true -> set the rest = true
         if (
             clickedObj.type === ON_THIS_DAY_TOPICS.ALL &&

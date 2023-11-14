@@ -39,7 +39,7 @@ const SigninContainer: React.FC<ISignInComtainerProps> = ({
     const handleLogout = () => dispatch(logoutSession());
     // Render Methods
     const renderSignUpInSet = () => (
-        <Box display={"flex"} justifyContent={"flex-start"}>
+        <Box display={"flex"} justifyContent={"flex-start"} paddingLeft={"10px"}>
             <HStack gap={4}>
                 <Button onClick={() => handleSignInUp(SignInTabType.Login)}>
                     Log In
