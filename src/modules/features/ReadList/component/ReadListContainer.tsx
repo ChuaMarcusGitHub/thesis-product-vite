@@ -26,10 +26,7 @@ import {
     simpleGridContainer,
 } from "./ReadListContainerStyle";
 
-export interface IReadListContainerProps {
-    placeholder: string;
-}
-export const ReadListContainer: React.FC<IReadListContainerProps> = () => {
+export const ReadListContainer: React.FC = () => {
     // Dispatch
     const dispatch = useDispatch();
     const { onClose } = useDisclosure();

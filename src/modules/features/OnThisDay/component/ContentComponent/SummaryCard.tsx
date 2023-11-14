@@ -13,14 +13,8 @@ import {
     Stack,
     Box,
     Heading,
+    StackDivider,
 } from "@chakra-ui/react";
-// import cardStyles from "./SummaryCard.module.scss";
-// import classNames from "classnames/bind";
-
-// import {
-//     DEFAULT_FADE_DURATION,
-//     ICommonSkeletonProps,
-// } from "@src/modules/features/Skeletons/SkeletonTypes";
 import { imageContainerStyle } from "./SummaryCardPropStyles";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -29,7 +23,6 @@ import {
 } from "../../actions/OnThisDaySummaryActions";
 import { getReadlist } from "../../selector/OnThisDaySummarySelector";
 
-// const cx = classNames.bind({ ...cardStyles });
 interface IContentCardProps {
     handleClick?: () => void;
     eventDescript?: string;
@@ -47,20 +40,11 @@ const SummaryCard: React.FC<IContentCardProps> = ({
     const readingList = useSelector(getReadlist);
     // Constants
     const dispatch = useDispatch();
-    // const isLoaded = useMemo(() => {
-    //     return eventDescript || (pageData?.thumbnail.source && pageData?.title);
-    // }, [pageData?.thumbnail?.source, pageData?.title, eventDescript]);
-
     const isInReadList = useMemo(() => {
         if (readingList && pageData?.pageId)
             return readingList[pageData.pageId];
         else return false;
     }, [readingList, pageData?.pageId]);
-
-    // const skelProps: ICommonSkeletonProps = {
-    //     isLoaded: !!isLoaded,
-    //     fadeDuration: DEFAULT_FADE_DURATION,
-    // };
 
     // Logic Methods
     const handleAddToReadlist = () => {
@@ -82,13 +66,13 @@ const SummaryCard: React.FC<IContentCardProps> = ({
     const renderHeader = () => <Heading size="md">{pageData?.title}</Heading>;
 
     const renderBody = () => (
-        <Text py="2" noOfLines={[1, 3, 4]} textAlign={"left"}>
-            {eventDescript}
+        <Text py="1" noOfLines={[1, 3, 4]} textAlign={"left"}>
+            {eventDescript} 
         </Text>
     );
 
     const renderFooter = () => (
-        <CardFooter>
+        <CardFooter padding={"5px"}>
             {pageData &&
                 (isInReadList ? (
                     <Button onClick={handleRemoveFromReadlist}>
@@ -116,12 +100,12 @@ const SummaryCard: React.FC<IContentCardProps> = ({
             <Card
                 direction={{ base: "column", sm: "row" }}
                 overflow="hidden"
-                variant="outline"
                 height={"250px"}
+                width={"100%"}
             >
                 {pageData?.thumbnail && renderImage()}
-                <Stack>
-                    <CardBody onClick={handleClick}>
+                <Stack divider={<StackDivider />}>
+                    <CardBody onClick={handleClick} padding={"10px"}>
                         {renderHeader()}
                         {renderBody()}
                     </CardBody>

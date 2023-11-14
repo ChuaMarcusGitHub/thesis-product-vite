@@ -20,11 +20,13 @@ export const titleGrid = {
     display: "flex",
     padding: "5px",
     alignItems: "flex-end",
-    borderBottom:"2px solid #D3D3D3"
+    borderBottom: "2px solid #D3D3D3",
 };
 export const titleBox = {};
 
 export const readListContainerWrapper = {
     width: "100%",
     minH: "30vh",
+    maxH: "76vh",
+    overflow: "scroll",
 };

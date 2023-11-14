@@ -34,9 +34,13 @@ import { IAnalyticsDataArticlePayload } from "../../type/OnThisDayWebserviceType
 
 export interface IYearAccordianProps {
     typeEvents: IOtdFeedObject;
+    componentRef?: React.RefObject<HTMLDivElement> | null;
 }
 
-const YearAccordian: React.FC<IYearAccordianProps> = ({ typeEvents }) => {
+const YearAccordian: React.FC<IYearAccordianProps> = ({
+    typeEvents,
+    componentRef = undefined,
+}) => {
     // Constants
     const dispatch = useDispatch();
     const { onClose } = useDisclosure();
@@ -127,6 +131,8 @@ const YearAccordian: React.FC<IYearAccordianProps> = ({ typeEvents }) => {
     const renderComponent = () => {
         return (
             <Accordion
+                ref={componentRef ?? null}
+                maxH={"65vh"}
                 allowMultiple={true}
                 defaultIndex={returnArrayOfIndexes()}
             >

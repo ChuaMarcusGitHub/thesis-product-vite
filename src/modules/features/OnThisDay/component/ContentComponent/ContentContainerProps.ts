@@ -1,6 +1,6 @@
 export const boxContainer = {
     width: "100%",
-    height: "100%",
+    border: "1px solid blue",
 };
 export const skeletonTab = {
     height: "20px",
@@ -19,7 +19,7 @@ export const skeletonBoxContainer = {
 };
 export const contentBoxContainer = {
     maxH: "80vh",
-    overflow: "scroll"
+    overflow: "scroll",
 };
 
 export const loadingSpinner = {

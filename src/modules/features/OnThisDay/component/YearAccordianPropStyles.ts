@@ -6,5 +6,4 @@ export const accordianPanelGrid = {
 export const summaryCardGridItem = {
     w: "100%",
     h: "100%",
-    minH: "240px",
 }

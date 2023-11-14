@@ -1,6 +1,8 @@
 export const pageContainer = {
-    width: "100vw",
+    width: "99w",
     minH: "50vh",
+    borderRadius: "10px",
+    padding: "5px",
 };
 export const bannerContainer = {
     width: "100vw",
@@ -8,13 +10,13 @@ export const bannerContainer = {
 };
 export const bannerGrid = {
     templateColumns: "repeat(4, 20vw)",
-    templateRows: "repeat(5, 6vh)",
+    templateRows: "repeat(4, 6vh)",
 };
 export const searchGridItem = {
     colStart: 2,
     colEnd: 5,
     rowStart: 2,
-    rowEnd: 5,
+    rowEnd: 4,
 };
 export const searchComponentItem = {
     border: "1px solid grey",
@@ -39,7 +41,7 @@ export const sideBarItem = {
     colStart: 1,
     colEnd: 2,
     rowStart: 3,
-    rowEnd: 5,
+    rowEnd: 4,
     paddingLeft: 5,
     paddingTop: 2,
 };
@@ -47,6 +49,6 @@ export const userStatsGridItem = {
     colStart: 2,
     colEnd: 5,
     rowStart: 5,
-    rowEnd: 6,
+    rowEnd: 4,
     padding: "10px",
 };
