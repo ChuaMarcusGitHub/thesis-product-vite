@@ -1,6 +1,5 @@
 export const boxContainer = {
     width: "100%",
-    border: "1px solid blue",
 };
 export const skeletonTab = {
     height: "20px",

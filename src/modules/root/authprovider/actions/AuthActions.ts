@@ -1,6 +1,6 @@
 import { Session } from "@supabase/supabase-js";
 import { action } from "typesafe-actions";
-import { IAuthLoginEmail } from "../types/AuthSessionTypes";
+import { IAuthErrorPayload, IAuthLoginEmail } from "../types/AuthSessionTypes";
 
 export enum AuthActions {
     INIT_SESSION = "AuthActions/INIT",
@@ -9,6 +9,8 @@ export enum AuthActions {
     SIGN_UP_SESSION = "AuthActions/SIGN_UP_SESSION",
     SET_SESSION_DATA = "AuthActions/SET_SESSION_DATA",
     CLEAR_SESSION_DATA = "AuthActions/CLEAR_SESSION_DATA",
+    SET_AUTH_ERROR = "AuthActions/SET_AUTH_ERROR",
+    CLEAR_AUTH_ERROR = "AuthActions/CLEAR_AUTH_ERROR",
 }
 
 export const initSession = () => action(AuthActions.INIT_SESSION);
@@ -20,3 +22,6 @@ export const signUpSession = (payload: IAuthLoginEmail) =>
 export const setSessionData = (payload: Session) =>
     action(AuthActions.SET_SESSION_DATA, payload);
 export const clearSessionData = () => action(AuthActions.CLEAR_SESSION_DATA);
+export const setAuthError = (payload: IAuthErrorPayload) =>
+    action(AuthActions.SET_AUTH_ERROR, payload);
+export const clearAuthError = () => action(AuthActions.CLEAR_AUTH_ERROR);

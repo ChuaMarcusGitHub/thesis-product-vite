@@ -3,8 +3,10 @@ import {
     Button,
     Grid,
     GridItem,
+    Text,
     Stack,
     useDisclosure,
+    HStack,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import classNames from "classnames/bind";
@@ -35,6 +37,7 @@ import ColourModeSwitch from "@src/modules/features/Common/ColorMode/component/C
 import ThesisNotice from "@src/modules/features/Common/Notice/ThesisNotice";
 import { updateNoticeRequired } from "@src/modules/features/Config/actions/ConfigActions";
 import { getNoticeRequired } from "@src/modules/features/Config/selector/ConfigSelector";
+import { HamburgerIcon } from "@chakra-ui/icons";
 // import { LOCAL_STORAGE_KEYS } from "@src/modules/features/Common/types/LocalStorageTypes";
 
 const cx = classNames.bind({ ...styles });
@@ -70,22 +73,6 @@ const OnThisDayDashboard: React.FC = () => {
     };
 
     /* ---------- Render Methods--------- */
-    const renderReturnToTop = () => (
-        <span
-            style={{
-                height: "100px",
-                width: "50px",
-                position: "fixed",
-                background: "black",
-                color: "white",
-                display: "flex",
-                left: "90%",
-                zIndex: 1000,
-            }}
-        >
-         <button >Hello</button>   
-        </span>
-    );
     const renderBanner = () => {
         return (
             <Box {...bannerContainer}>
@@ -93,7 +80,7 @@ const OnThisDayDashboard: React.FC = () => {
                     <GridItem {...searchGridItem} {...searchComponentItem}>
                         {renderSearchComponent()}
                     </GridItem>
-                    <GridItem {...sessionGridItem} border={"1px solid blue"}>
+                    <GridItem {...sessionGridItem}>
                         <SigninContainer
                             isLoggedIn={isLoggedIn}
                             userData={userData}
@@ -102,14 +89,16 @@ const OnThisDayDashboard: React.FC = () => {
                     <GridItem {...colourModeGridItem}>
                         <ColourModeSwitch />
                     </GridItem>
-                    <GridItem {...sideBarItem} border={"1px solid blue"}>
-                        <Button onClick={() => onOpen()}> Side Menu</Button>
+                    <GridItem {...sideBarItem}>
+                        <Button onClick={() => onOpen()}>
+                            <HStack gap={2}>
+                                <HamburgerIcon />
+                                <Text>Side Menu</Text>
+                            </HStack>
+                        </Button>
                     </GridItem>
                     {isLoggedIn && (
-                        <GridItem
-                            {...userStatsGridItem}
-                            border={"1px solid blue"}
-                        >
+                        <GridItem {...userStatsGridItem}>
                             <UserStatsContainer userData={userData} />
                         </GridItem>
                     )}

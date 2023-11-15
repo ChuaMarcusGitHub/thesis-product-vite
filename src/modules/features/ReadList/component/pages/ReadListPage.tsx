@@ -8,6 +8,7 @@ import {
     useDisclosure,
     StackDivider,
 } from "@chakra-ui/react";
+import ColourModeSwitch from "@src/modules/features/Common/ColorMode/component/ColourModeSwitch";
 import ScrollToTopButton from "@src/modules/features/Common/ScrollToTop/component/ScrollToTopButton";
 import SigninContainer from "@src/modules/features/Login/components/SignInContainer";
 import { getUserStats } from "@src/modules/features/Login/selector/LoginSelector";
@@ -15,6 +16,7 @@ import { IUserStats } from "@src/modules/features/Login/types/LoginActionPayload
 import ContentDetailModal from "@src/modules/features/OnThisDay/component/ContentComponent/ContentDetailModal";
 import UserStatsContainer from "@src/modules/features/OnThisDay/component/ContentComponent/UserStatsContainer";
 import {
+    colourModeGridItem,
     sessionGridItem,
     sideBarItem,
     userStatsGridItem,
@@ -68,7 +70,9 @@ const ReadListPage: React.FC = () => {
                         userData={userData}
                     />
                 </GridItem>
-                <GridItem></GridItem>
+                <GridItem {...colourModeGridItem}>
+                    <ColourModeSwitch />
+                </GridItem>
                 <GridItem {...sideBarItem}>
                     <Button onClick={() => onOpen()}> Side Menu</Button>
                 </GridItem>

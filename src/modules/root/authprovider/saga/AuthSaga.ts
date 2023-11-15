@@ -24,9 +24,16 @@ import {
 import {
     AuthActions,
     clearSessionData,
+    setAuthError,
     setSessionData,
 } from "../actions/AuthActions";
-import { IAuthLoginEmail, IAuthSessionData } from "../types/AuthSessionTypes";
+import {
+    AUTH_ERROR_KEY,
+    AUTH_ERROR_OBJ,
+    IAuthLoginEmail,
+    IAuthSessionData,
+    ISessionResponse,
+} from "../types/AuthSessionTypes";
 import {
     getUserSession,
     loginEmail,
@@ -37,10 +44,9 @@ import {
 
 function* initializeSession() {
     try {
-
         // Check for Notice Required
         yield put(initializeNoticeCheck());
-        
+
         const sessionData: { session: Session } = yield call(getUserSession);
 
         console.log("----Session Response success - Response Object----");
@@ -67,22 +73,31 @@ function* initializeSession() {
 
 function* loginSession(action: PayloadAction<IAuthLoginEmail>) {
     try {
-        const sessionData: Session = yield call(loginEmail, action.payload);
-        if (sessionData) {
+        const { password, email } = action.payload;
+        if (!password || !email) {
+            const errorMsg = AUTH_ERROR_OBJ[AUTH_ERROR_KEY.MISSING_CREDS];
+            yield put(setAuthError({ isError: true, errorMsg: errorMsg }));
+            throw errorMsg;
+        }
+        const { session: sessionData = null, error = null }: ISessionResponse =
+            yield call(loginEmail, action.payload);
+        if (sessionData && !error) {
             yield all([
                 putResolve(setSessionData(sessionData)),
                 put(getUserStats(sessionData.user.id)),
                 put(fetchReadList(sessionData.user.id)),
             ]);
-
             return true;
         }
+        // No session Data, only error
+        const loginError = AUTH_ERROR_OBJ[AUTH_ERROR_KEY.INVALID_CREDS];
+        yield put(setAuthError({ isError: true, errorMsg: loginError }));
         return false;
     } catch (e: any) {
         console.error(
-            "Error Encountered at Saga method: AuthAction - initalizeSession"
+            "Error Encountered at Saga method: AuthAction - initalizeSession: ",
+            e
         );
-        console.error(e);
     }
 }
 

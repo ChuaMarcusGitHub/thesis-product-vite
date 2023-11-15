@@ -7,6 +7,7 @@ import {
     MenuList,
     MenuButton,
     CheckboxGroup,
+    Text,
     Checkbox,
 } from "@chakra-ui/react";
 import React, { useEffect, useMemo, useState } from "react";
@@ -48,6 +49,7 @@ import {
     updateActiveTabs,
 } from "@features/onThisDay/actions/OnThisDaySummaryActions";
 import { createStandaloneToast } from "@chakra-ui/react";
+import { Search2Icon } from "@chakra-ui/icons";
 
 const { toast } = createStandaloneToast();
 const SearchComponent: React.FC = () => {
@@ -216,7 +218,10 @@ const SearchComponent: React.FC = () => {
     const renderTriggerButtons = () => (
         <>
             <Button {...buttonStyle} onClick={handleFetchEvents} flexGrow={0.4}>
-                Go!!
+                <HStack gap={2}>
+                    <Text> Go!!</Text>
+                    <Search2Icon />
+                </HStack>
             </Button>
             <Button {...buttonStyle} onClick={randomizeDate} flexGrow={0.2}>
                 Randomize!!
