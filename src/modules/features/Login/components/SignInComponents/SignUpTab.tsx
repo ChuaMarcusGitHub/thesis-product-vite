@@ -10,9 +10,9 @@ import {
 } from "@chakra-ui/react";
 import { useDebounceHook } from "@src/hooks/useDebounceHook";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { userSignup } from "../../actions/LoginActions";
-import { getSignupErrors } from "../../selector/LoginSelector";
+
 import {
     IErrorTypeChecklist,
     LoginErrorTypes,
@@ -36,7 +36,11 @@ export interface ISignUpTabProps {
     errorSelectors: LoginErrorTypes[] | null;
 }
 
-const SignUpTab: React.FC<ISignUpTabProps> = ({ onClose, isActve, errorSelectors = [] }) => {
+const SignUpTab: React.FC<ISignUpTabProps> = ({
+    onClose,
+    isActve,
+    errorSelectors = [],
+}) => {
     const dispatch = useDispatch();
 
     // States

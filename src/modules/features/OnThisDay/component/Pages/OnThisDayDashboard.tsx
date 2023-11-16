@@ -9,7 +9,6 @@ import {
     HStack,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
-import classNames from "classnames/bind";
 import {
     bannerContainer,
     bannerGrid,
@@ -21,7 +20,6 @@ import {
     pageContainer,
     searchComponentItem,
 } from "./OnThisDayDashboardComponentProps";
-import styles from "./OnThisDayDashboard.module.scss";
 import ContentContainer from "../ContentComponent/ContentContainer";
 import { useDispatch, useSelector } from "react-redux";
 import { initializeOnThisDay } from "@features/OnThisDay/actions/OnThisDaySummaryActions";
@@ -38,9 +36,6 @@ import ThesisNotice from "@src/modules/features/Common/Notice/ThesisNotice";
 import { updateNoticeRequired } from "@src/modules/features/Config/actions/ConfigActions";
 import { getNoticeRequired } from "@src/modules/features/Config/selector/ConfigSelector";
 import { HamburgerIcon } from "@chakra-ui/icons";
-// import { LOCAL_STORAGE_KEYS } from "@src/modules/features/Common/types/LocalStorageTypes";
-
-const cx = classNames.bind({ ...styles });
 
 const OnThisDayDashboard: React.FC = () => {
     /* ---------- Constants --------- */

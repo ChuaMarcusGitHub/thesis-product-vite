@@ -9,16 +9,8 @@ import {
     Text,
     Fade,
     Spinner,
-    IconButton,
 } from "@chakra-ui/react";
-import React, {
-    BaseSyntheticEvent,
-    useEffect,
-    useMemo,
-    useReducer,
-    useRef,
-    useState,
-} from "react";
+import React, { BaseSyntheticEvent, useMemo, useRef, useState } from "react";
 import {
     boxContainer,
     skeletonTab,
@@ -129,7 +121,7 @@ const ContentContainer: React.FC = () => {
     const renderComponent = () => {
         return (
             <Box {...boxContainer}>
-                <Tabs isFitted isLazy variant={"enclosed-colored"} >
+                <Tabs isFitted isLazy variant={"enclosed-colored"}>
                     <TabList>
                         {isLoaded ? (
                             renderTabs()
