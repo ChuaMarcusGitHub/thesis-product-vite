@@ -6,7 +6,6 @@ export const pageContainer = {
 };
 export const bannerContainer = {
     width: "100vw",
-    border: "1px solid green",
 };
 export const bannerGrid = {
     templateColumns: "repeat(4, 20vw)",
@@ -20,6 +19,9 @@ export const searchGridItem = {
 };
 export const searchComponentItem = {
     border: "1px solid grey",
+    _dark: {
+        border: "1px solid white",
+    },
     borderRadius: "5px",
 };
 export const sessionGridItem = {

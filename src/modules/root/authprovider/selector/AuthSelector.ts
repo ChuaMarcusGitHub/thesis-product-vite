@@ -11,6 +11,7 @@ export const getSessionUser = createSelector(
     authStore,
     (data) => data.sessionData?.user
 );
+export const getAuthError = createSelector(authStore, (data) => data.authError);
 export const getIsLoggedIn = createSelector(authStore, (data) =>
-    data.sessionData? true : false
+    data.sessionData ? true : false
 );

@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { IUserStats } from "../types/LoginActionPayloadTypes";
 import { SignInTabType } from "../types/LoginComponentTypes";
 import SignInComponents from "./SignInComponents/SignInModal";
+import { signInContainerBox } from "./SignInContainerStyles";
 
 interface ISignInComtainerProps {
     isLoggedIn: boolean;
@@ -39,7 +40,7 @@ const SigninContainer: React.FC<ISignInComtainerProps> = ({
     const handleLogout = () => dispatch(logoutSession());
     // Render Methods
     const renderSignUpInSet = () => (
-        <Box display={"flex"} justifyContent={"flex-start"} paddingLeft={"10px"}>
+        <Box {...signInContainerBox}>
             <HStack gap={4}>
                 <Button onClick={() => handleSignInUp(SignInTabType.Login)}>
                     Log In
@@ -52,7 +53,7 @@ const SigninContainer: React.FC<ISignInComtainerProps> = ({
     );
 
     const renderSignOutSet = () => (
-        <Box display={"flex"} justifyContent={"space-evenly"}>
+        <Box {...signInContainerBox} >
             <HStack gap={4}>
                 <Box>{`Welcome, ${userData?.username || "unnamed"}!! `}</Box>
                 <Button onClick={() => handleLogout()}>Log out</Button>
@@ -62,7 +63,7 @@ const SigninContainer: React.FC<ISignInComtainerProps> = ({
 
     const renderComponent = () => {
         return (
-            <Box width={"100%"}>
+            <Box width={"100%"} padding={"4px"} height={"100%"}>
                 {isLoggedIn ? renderSignOutSet() : renderSignUpInSet()}
                 <SignInComponents
                     isLoggedIn={isLoggedIn}

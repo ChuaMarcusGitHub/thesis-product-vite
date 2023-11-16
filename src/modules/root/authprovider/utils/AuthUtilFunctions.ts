@@ -1,14 +1,23 @@
 import supabaseClient from "@client/supabaseClient";
 import { Session } from "@supabase/supabase-js";
-import { IAuthLoginEmail, IAuthSessionObject } from "../types/AuthSessionTypes";
+import {
+    IAuthLoginEmail,
+    IAuthSessionObject,
+    ISessionResponse,
+} from "../types/AuthSessionTypes";
 import { v1 as uuidv4 } from "uuid";
 import { LOCAL_STORAGE_KEYS } from "@src/modules/features/Common/types/LocalStorageTypes";
 
-export const loginEmail = async (credentials: IAuthLoginEmail) => {
+export const loginEmail = async (
+    credentials: IAuthLoginEmail
+): Promise<ISessionResponse> => {
     const { data, error }: IAuthSessionObject =
         await supabaseClient.auth.signInWithPassword(credentials);
-    if (error) throw error;
-    return data;
+
+    return {
+        session: data.session,
+        error: error,
+    };
 };
 
 export const logout = async () => {

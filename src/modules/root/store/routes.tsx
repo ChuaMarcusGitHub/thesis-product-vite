@@ -1,6 +1,7 @@
 import OnThisDayDashboard from "@modules/features/OnThisDay/component/Pages/OnThisDayDashboard";
 import App from "@src/App";
 import ErrorPage from "@src/modules/features/Common/ErrorElements/component/ErrorElementPage";
+import LeaderboardPage from "@src/modules/features/Leaderboard/components/LeaderboardPage";
 import ReadListPage from "@src/modules/features/ReadList/component/pages/ReadListPage";
 import { createBrowserRouter, RouteObject } from "react-router-dom";
 
@@ -12,12 +13,14 @@ export enum RoutesList {
     SANDBOX = "/sandbox",
     ON_THIS_DAY = "/onThisDay",
     READ_LIST = "/readlist",
+    LEADER_BOARD = "/leaderboard",
 }
 
 const routerMap: RouteObject[] = [
     {
         path: RoutesList.ROOT,
-        element: <OnThisDayDashboard />,
+        element: <LeaderboardPage />,
+        // element: <OnThisDayDashboard />,
         // element: <ReadListPage />,
         // element: <App />,
         errorElement: <ErrorPage />,
@@ -27,11 +30,11 @@ const routerMap: RouteObject[] = [
         element: <ReadListPage />,
         errorElement: <ErrorPage />,
     },
-    // {
-    //     path: RoutesList.SANDBOX,
-    //     element: <App />,
-    //     errorElement: <ErrorPage />,
-    // },
+    {
+        path: RoutesList.LEADER_BOARD,
+        element: <LeaderboardPage />,
+        errorElement: <ErrorPage />,
+    },
 ];
 
 const router = createBrowserRouter([...routerMap]);

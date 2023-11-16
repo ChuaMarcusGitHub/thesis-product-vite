@@ -9,16 +9,8 @@ import {
     Text,
     Fade,
     Spinner,
-    IconButton,
 } from "@chakra-ui/react";
-import React, {
-    BaseSyntheticEvent,
-    useEffect,
-    useMemo,
-    useReducer,
-    useRef,
-    useState,
-} from "react";
+import React, { BaseSyntheticEvent, useMemo, useRef, useState } from "react";
 import {
     boxContainer,
     skeletonTab,
@@ -38,7 +30,6 @@ import {
 // import data from "@rsc/sampleResponse/referenceFeedState.json";
 import { getPopulatedArticles } from "./UtilFiles/ContentComponentUtil";
 import { SCROLL_LIMIT } from "../../type/OnThisDayCommonTypes";
-import { ChevronUpIcon } from "@chakra-ui/icons";
 import ScrollToTopButton from "@src/modules/features/Common/ScrollToTop/component/ScrollToTopButton";
 // import { IOtdFeedObject } from "@features/OnThisDay/type/OnThisDayCommonTypes";
 // const sampleData = JSON.parse(JSON.stringify(data));
@@ -130,7 +121,7 @@ const ContentContainer: React.FC = () => {
     const renderComponent = () => {
         return (
             <Box {...boxContainer}>
-                <Tabs isLazy>
+                <Tabs isFitted isLazy variant={"enclosed-colored"}>
                     <TabList>
                         {isLoaded ? (
                             renderTabs()

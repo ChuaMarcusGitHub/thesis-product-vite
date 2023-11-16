@@ -1,4 +1,4 @@
-import { Text, Stack, StackDivider, Box, HStack } from "@chakra-ui/react";
+import { Text, Stack, StackDivider, HStack } from "@chakra-ui/react";
 import { IUserStats } from "@src/modules/features/Login/types/LoginActionPayloadTypes";
 import { convertMsToStringTime } from "./UtilFiles/ContentComponentUtil";
 

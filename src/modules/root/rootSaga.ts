@@ -9,6 +9,7 @@ import authSaga from "./authprovider/saga/AuthSaga";
 import loginSaga from "../features/Login/saga/LoginSaga";
 import analyticsSaga from "../features/Common/Analytics/sagas/AnalyticsSaga";
 import configSaga from "../features/Config/saga/ConfigSaga";
+import leaderboardSaga from "../features/Leaderboard/saga/LeaderboardSaga";
 
 export default function* rootSaga() {
     yield all([
@@ -17,5 +18,6 @@ export default function* rootSaga() {
         loginSaga,
         analyticsSaga,
         configSaga,
+        leaderboardSaga,
     ]);
 }

@@ -15,7 +15,7 @@ const ColourModeSwitch: React.FC = () => {
 
     const renderComponent = () => (
         <Box {...colourModeContainer}>
-            <FormControl display="flex" alignItems="center">
+            <FormControl display="flex" alignItems="center" justifyContent={"space-evenly"}>
                 <FormLabel htmlFor="colour-mode" mb="0">
                     Colour Mode:
                 </FormLabel>

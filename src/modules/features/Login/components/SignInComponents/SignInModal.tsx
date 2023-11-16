@@ -12,9 +12,15 @@ import {
 import LoginTab from "./LoginTab";
 import {
     activeTabIndex,
+    LoginErrorTypes,
     SignInTabType,
 } from "@features/Login/types/LoginComponentTypes";
 import SignUpTab from "./SignUpTab";
+import { getAuthError } from "@src/modules/root/authprovider/selector/AuthSelector";
+import { useDispatch, useSelector } from "react-redux";
+import { IAuthErrorPayload } from "@src/modules/root/authprovider/types/AuthSessionTypes";
+import { clearAuthError } from "@src/modules/root/authprovider/actions/AuthActions";
+import { getSignupErrors } from "../../selector/LoginSelector";
 
 export interface ILoginModalProps {
     isOpen: boolean;
@@ -27,8 +33,13 @@ const SignInComponents: React.FC<ILoginModalProps> = ({
     onClose = () => console.error("LoginModal onClose Method undefined!"),
     activeTab = SignInTabType.Login,
 }) => {
+    const dispatch = useDispatch();
     //state
     const [tabIndex, setTabIndex] = useState(0);
+
+    // Selector
+    const loginAuthError: IAuthErrorPayload | null = useSelector(getAuthError);
+    const errorSelectors: LoginErrorTypes[] = useSelector(getSignupErrors);
 
     // Effects
     useEffect(() => {
@@ -39,8 +50,13 @@ const SignInComponents: React.FC<ILoginModalProps> = ({
     const handleIndexChange = (index: number) => {
         setTabIndex(activeTabIndex[index]);
     };
+
+    const handleClose = () => {
+        if (loginAuthError?.isError) dispatch(clearAuthError());
+        onClose();
+    };
     const renderComponent = () => (
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={handleClose}>
             <ModalOverlay />
             <ModalContent>
                 <Tabs
@@ -57,13 +73,15 @@ const SignInComponents: React.FC<ILoginModalProps> = ({
                     <TabPanels role={"tabpanel"}>
                         <TabPanel>
                             <LoginTab
-                                onClose={onClose}
+                                authError={loginAuthError}
+                                onClose={handleClose}
                                 isActive={tabIndex === 0}
                             />
                         </TabPanel>
                         <TabPanel>
                             <SignUpTab
-                                onClose={onClose}
+                                errorSelectors={errorSelectors}
+                                onClose={handleClose}
                                 isActve={tabIndex === 1}
                             />
                         </TabPanel>

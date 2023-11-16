@@ -10,9 +10,9 @@ import {
 } from "@chakra-ui/react";
 import { useDebounceHook } from "@src/hooks/useDebounceHook";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { userSignup } from "../../actions/LoginActions";
-import { getSignupErrors } from "../../selector/LoginSelector";
+
 import {
     IErrorTypeChecklist,
     LoginErrorTypes,
@@ -33,9 +33,14 @@ import { errorMessageProp, inputBoxProps } from "./TabStyleProps";
 export interface ISignUpTabProps {
     onClose: () => void;
     isActve: boolean;
+    errorSelectors: LoginErrorTypes[] | null;
 }
 
-const SignUpTab: React.FC<ISignUpTabProps> = ({ onClose, isActve }) => {
+const SignUpTab: React.FC<ISignUpTabProps> = ({
+    onClose,
+    isActve,
+    errorSelectors = [],
+}) => {
     const dispatch = useDispatch();
 
     // States
@@ -48,7 +53,7 @@ const SignUpTab: React.FC<ISignUpTabProps> = ({ onClose, isActve }) => {
         useState<IErrorTypeChecklist | null>(null);
 
     // Selectors
-    const errorSelectors: LoginErrorTypes[] = useSelector(getSignupErrors);
+    // const errorSelectors: LoginErrorTypes[] = useSelector(getSignupErrors);
 
     // Ref
     const emailRef = useRef<HTMLInputElement>(null);
@@ -63,13 +68,12 @@ const SignUpTab: React.FC<ISignUpTabProps> = ({ onClose, isActve }) => {
     // UseEffects
     useEffect(() => {
         const _errorChecklist = { ...errorChecklist };
-        if (errorSelectors.includes(LoginErrorTypes.USERNAME_TAKEN))
+        if (errorSelectors?.includes(LoginErrorTypes.USERNAME_TAKEN))
             _errorChecklist[LoginErrorTypes.USERNAME_TAKEN] = true;
-        if (errorSelectors.includes(LoginErrorTypes.EMAIL_IN_USE))
+        if (errorSelectors?.includes(LoginErrorTypes.EMAIL_IN_USE))
             _errorChecklist[LoginErrorTypes.EMAIL_IN_USE] = true;
         if (_errorChecklist !== errorChecklist)
             setErrorChecklist(_errorChecklist);
-
     }, [errorSelectors]);
 
     // ---"Mount/unmount" Effect

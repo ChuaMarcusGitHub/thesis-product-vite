@@ -1,42 +1,39 @@
 import {
+    useDisclosure,
     Box,
-    Button,
-    Stack,
     Grid,
     GridItem,
     Heading,
-    useDisclosure,
+    Button,
+    Stack,
     StackDivider,
 } from "@chakra-ui/react";
-import ColourModeSwitch from "@src/modules/features/Common/ColorMode/component/ColourModeSwitch";
-import ScrollToTopButton from "@src/modules/features/Common/ScrollToTop/component/ScrollToTopButton";
-import SigninContainer from "@src/modules/features/Login/components/SignInContainer";
-import { getUserStats } from "@src/modules/features/Login/selector/LoginSelector";
-import { IUserStats } from "@src/modules/features/Login/types/LoginActionPayloadTypes";
-import ContentDetailModal from "@src/modules/features/OnThisDay/component/ContentComponent/ContentDetailModal";
-import UserStatsContainer from "@src/modules/features/OnThisDay/component/ContentComponent/UserStatsContainer";
-import {
-    colourModeGridItem,
-    sessionGridItem,
-    sideBarItem,
-    userStatsGridItem,
-} from "@src/modules/features/OnThisDay/component/Pages/OnThisDayDashboardComponentProps";
-import { SCROLL_LIMIT } from "@src/modules/features/onThisDay/type/OnThisDayCommonTypes";
-import Sidebar from "@src/modules/features/Sidebar/components/Sidebar";
 import { getIsLoggedIn } from "@src/modules/root/authprovider/selector/AuthSelector";
-import { BaseSyntheticEvent, useRef, useState } from "react";
+import React, { BaseSyntheticEvent, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import ReadListContainer from "../ReadListContainer";
-
+import ColourModeSwitch from "@features/Common/ColorMode/component/ColourModeSwitch";
+import ScrollToTopButton from "@features/Common/ScrollToTop/component/ScrollToTopButton";
+import SigninContainer from "@features/Login/components/SignInContainer";
+import { IUserStats } from "@features/Login/types/LoginActionPayloadTypes";
+import ContentDetailModal from "@features/OnThisDay/component/ContentComponent/ContentDetailModal";
 import {
     bannerContainer,
-    readListPageContainer,
     bannerGrid,
-    readListContainerWrapper,
+    sessionGridItem,
+    colourModeGridItem,
+    sideBarItem,
+} from "@features/OnThisDay/component/Pages/OnThisDayDashboardComponentProps";
+import { SCROLL_LIMIT } from "@features/onThisDay/type/OnThisDayCommonTypes";
+import Sidebar from "@features/Sidebar/components/Sidebar";
+import { getUserStats } from "../../Login/selector/LoginSelector";
+import LeaderboardContainer from "./LeaderboardContainer";
+import {
+    leaderboardContainerWrapper,
     titleGrid,
-} from "./ReadListpageProps";
+    leaderboardPageContainer,
+} from "./LeaderboardPageStyleProps";
 
-const ReadListPage: React.FC = () => {
+const LeaderboardPage: React.FC = () => {
     /* ---------- Constants --------- */
     const [showTopButton, setShowTopButton] = useState(false);
     const topItemElement = useRef<HTMLSpanElement>(null);
@@ -62,7 +59,7 @@ const ReadListPage: React.FC = () => {
         <Box {...bannerContainer}>
             <Grid {...bannerGrid}>
                 <GridItem {...titleGrid}>
-                    <Heading>Reading List</Heading>
+                    <Heading>Leaderboards</Heading>
                 </GridItem>
                 <GridItem {...sessionGridItem}>
                     <SigninContainer
@@ -76,25 +73,27 @@ const ReadListPage: React.FC = () => {
                 <GridItem {...sideBarItem}>
                     <Button onClick={() => onOpen()}> Side Menu</Button>
                 </GridItem>
-                {isLoggedIn && (
-                    <GridItem {...userStatsGridItem}>
-                        <UserStatsContainer userData={userData} />
-                    </GridItem>
-                )}
             </Grid>
         </Box>
     );
-    const renderReadlistContainer = () => (
-        <Box {...readListContainerWrapper} onScroll={handleContainerScroll}>
+    const renderLeaderboardContainer = () => (
+        <Box
+            {...leaderboardContainerWrapper}
+            onScroll={handleContainerScroll}
+            border={"1px solid black"}
+            display={"flex"}
+            justifyContent={"center"}
+            padding={"20px"}
+        >
             <span ref={topItemElement} />
-            <ReadListContainer />
+            <LeaderboardContainer />
         </Box>
     );
     const renderComponent = () => (
-        <Box {...readListPageContainer}>
+        <Box {...leaderboardPageContainer}>
             <Stack gap={1} divider={<StackDivider />}>
                 {renderBannerContainer()}
-                {renderReadlistContainer()}
+                {renderLeaderboardContainer()}
             </Stack>
             <ContentDetailModal />
             <Sidebar isOpen={isOpen} onClose={onClose} />
@@ -107,4 +106,4 @@ const ReadListPage: React.FC = () => {
     return renderComponent();
 };
 
-export default ReadListPage;
+export default LeaderboardPage;

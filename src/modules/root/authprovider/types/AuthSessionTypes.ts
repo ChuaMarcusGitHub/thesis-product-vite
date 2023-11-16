@@ -1,6 +1,14 @@
 import { AuthError, Session, User } from "@supabase/supabase-js";
 
 // Self typed because supabase has no typing for this
+export enum AUTH_ERROR_KEY {
+    INVALID_CREDS = "invalidCreds",
+    MISSING_CREDS = "missingCreds",
+}
+export const AUTH_ERROR_OBJ = {
+    invalidCreds: "Invalid Username or Password!",
+    missingCreds: "Missing Username or Password!",
+};
 export interface ISessionObject {
     provider_token?: string | null;
     provider_refresh_token?: string | null;
@@ -18,6 +26,7 @@ export interface IAuthLoginEmail {
 export interface IAuthReducerState {
     sessionUser?: User | null;
     sessionData?: Session | null;
+    authError: IAuthErrorPayload | null;
 }
 export interface IAuthSessionData {
     user: User | null;
@@ -32,7 +41,10 @@ export interface IAuthSessionObject {
 export interface ISessionResponse {
     session?: Session | null;
     error?: AuthError | null;
-    status: boolean; // true for successful get, false for any failure
+}
+export interface IAuthErrorPayload {
+    isError?: boolean;
+    errorMsg?: string;
 }
 export interface ICRUDResponse {
     success: boolean;
