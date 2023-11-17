@@ -67,7 +67,7 @@ const SummaryCard: React.FC<IContentCardProps> = ({
 
     const renderBody = () => (
         <Text py="1" noOfLines={[1, 3, 4]} textAlign={"left"}>
-            {eventDescript} 
+            {eventDescript}
         </Text>
     );
 
@@ -102,10 +102,11 @@ const SummaryCard: React.FC<IContentCardProps> = ({
                 overflow="hidden"
                 height={"250px"}
                 width={"100%"}
+                padding={"10px"}
             >
                 {pageData?.thumbnail && renderImage()}
                 <Stack divider={<StackDivider />}>
-                    <CardBody onClick={handleClick} padding={"10px"}>
+                    <CardBody onClick={handleClick}>
                         {renderHeader()}
                         {renderBody()}
                     </CardBody>

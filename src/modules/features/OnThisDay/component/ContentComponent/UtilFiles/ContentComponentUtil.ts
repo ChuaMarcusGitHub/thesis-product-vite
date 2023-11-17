@@ -79,10 +79,10 @@ export const convertMsToStringTime = (ms: number) => {
     minutesTaken = Math.floor(minutesTaken % 60);
     secondsTaken = Math.floor(secondsTaken % 60);
 
-    stringTime = `Hr: ${hoursTaken} min: ${String(minutesTaken).padStart(
+    stringTime = `${hoursTaken} hrs, ${String(minutesTaken).padStart(
         2,
         "0"
-    )} sec: ${String(secondsTaken).padStart(2, "0")}`;
+    )} mins, ${String(secondsTaken).padStart(2, "0")} secs.`;
 
     return stringTime;
 };
