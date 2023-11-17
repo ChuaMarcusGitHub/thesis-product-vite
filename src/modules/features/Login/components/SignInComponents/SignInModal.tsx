@@ -66,7 +66,7 @@ const SignInComponents: React.FC<ILoginModalProps> = ({
                     role={"tab"}
                 >
                     <TabList role={"tablist"}>
-                        <Tab>Log into Account</Tab>
+                        <Tab>Log In</Tab>
                         <Tab>Sign Up</Tab>
                     </TabList>
 

@@ -15,7 +15,7 @@ export const filterContainerBox = {
 };
 export const dateContainerBox = {
     display: "flex",
-    justifyContent: "center",
+    justifyContent: "space-around",
 };
 
 export const stackContainer = {
@@ -28,8 +28,8 @@ export const stackContainer = {
 export const dateStackContainer = {
     marginRight: "10px",
     gap: "3",
-    width: "50%",
-    justifyContent: "flex-end",
+    width: "80%",
+    justifyContent: "space-even",
 };
 
 export const buttonStackContainer = {
@@ -59,8 +59,11 @@ export const menuListStyle = {
 
 export const buttonStyle = {
     padding: "5 0",
+    
 };
 
 export const checkboxGroupStyle = {
+    // display: "flex",
+
     colorScheme: "green",
 };
