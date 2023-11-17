@@ -1,5 +1,5 @@
 import OnThisDayDashboard from "@modules/features/OnThisDay/component/Pages/OnThisDayDashboard";
-import App from "@src/App";
+// import App from "@src/App";
 import ErrorPage from "@src/modules/features/Common/ErrorElements/component/ErrorElementPage";
 import LeaderboardPage from "@src/modules/features/Leaderboard/components/LeaderboardPage";
 import ReadListPage from "@src/modules/features/ReadList/component/pages/ReadListPage";
@@ -19,8 +19,8 @@ export enum RoutesList {
 const routerMap: RouteObject[] = [
     {
         path: RoutesList.ROOT,
-        element: <LeaderboardPage />,
-        // element: <OnThisDayDashboard />,
+        element: <OnThisDayDashboard />,
+        // element: <LeaderboardPage />,
         // element: <ReadListPage />,
         // element: <App />,
         errorElement: <ErrorPage />,

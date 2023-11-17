@@ -33,7 +33,6 @@ import {
     checkboxGroupStyle,
     menuListStyle,
     dateStackContainer,
-    buttonStackContainer,
     searchContainerWrapper,
     dateContainerBox,
 } from "./SearchComponentStyleProps";
@@ -199,7 +198,7 @@ const SearchComponent: React.FC = () => {
 
     const renderDate = () => (
         <Menu>
-            <MenuButton as={Button} {...menuButtonStyle} flexGrow={2}>
+            <MenuButton as={Button} {...menuButtonStyle} flexGrow={1.5}>
                 {selectedDate.toString().padStart(2, "0")}
             </MenuButton>
             <MenuList {...menuListStyle}>
@@ -217,13 +216,13 @@ const SearchComponent: React.FC = () => {
 
     const renderTriggerButtons = () => (
         <>
-            <Button {...buttonStyle} onClick={handleFetchEvents} flexGrow={0.4}>
+            <Button {...buttonStyle} onClick={handleFetchEvents} flexGrow={1}>
                 <HStack gap={2}>
                     <Text> Go!!</Text>
                     <Search2Icon />
                 </HStack>
             </Button>
-            <Button {...buttonStyle} onClick={randomizeDate} flexGrow={0.2}>
+            <Button {...buttonStyle} onClick={randomizeDate} flexGrow={0.4}>
                 Randomize!!
             </Button>
         </>
@@ -240,7 +239,7 @@ const SearchComponent: React.FC = () => {
                             isChecked={tab.isChecked}
                             onChange={() => handleActiveTabs(tab.type)}
                         >
-                            {tab.type}
+                            <Text fontSize={"1.2rem"}>{tab.type}</Text>
                         </Checkbox>
                     );
                 })}
@@ -254,8 +253,6 @@ const SearchComponent: React.FC = () => {
                     <HStack {...dateStackContainer}>
                         {renderMonth()}
                         {renderDate()}
-                    </HStack>
-                    <HStack {...buttonStackContainer}>
                         {renderTriggerButtons()}
                     </HStack>
                 </Box>

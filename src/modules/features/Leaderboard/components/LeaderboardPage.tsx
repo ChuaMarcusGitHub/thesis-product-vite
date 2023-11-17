@@ -80,7 +80,6 @@ const LeaderboardPage: React.FC = () => {
         <Box
             {...leaderboardContainerWrapper}
             onScroll={handleContainerScroll}
-            border={"1px solid black"}
             display={"flex"}
             justifyContent={"center"}
             padding={"20px"}
