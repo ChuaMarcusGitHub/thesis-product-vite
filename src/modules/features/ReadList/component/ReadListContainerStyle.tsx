@@ -4,6 +4,6 @@ export const readListContainer = {
     padding: 10,
 };
 export const simpleGridContainer = {
-    templateColumns: "repeat(3, 1fr)",
+    templateColumns: ["repeat(1, 1fr)","repeat(1, 1fr)","repeat(3, 1fr)"],
     gap: 6,
 };

@@ -1,6 +1,6 @@
 export const imageContainerStyle = {
-    display: "flex",
-    minW: "200px",
+    display: ["none", "none", "flex"],
+    minW: ["50px","50px", "75px", "200px"],
     height: "100%",
     justifyContent: "center",
 };

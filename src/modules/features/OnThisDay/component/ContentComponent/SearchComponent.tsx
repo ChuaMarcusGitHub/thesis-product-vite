@@ -9,6 +9,7 @@ import {
     CheckboxGroup,
     Text,
     Checkbox,
+    Stack,
 } from "@chakra-ui/react";
 import React, { useEffect, useMemo, useState } from "react";
 import {
@@ -35,6 +36,7 @@ import {
     dateStackContainer,
     searchContainerWrapper,
     dateContainerBox,
+    mobileDateContainerBox,
 } from "./SearchComponentStyleProps";
 import {
     IDateObject,
@@ -49,12 +51,14 @@ import {
 } from "@features/onThisDay/actions/OnThisDaySummaryActions";
 import { createStandaloneToast } from "@chakra-ui/react";
 import { Search2Icon } from "@chakra-ui/icons";
+import { getIsMobileDevice } from "@src/modules/features/Common/Utils/UtilsMethods";
 
 const { toast } = createStandaloneToast();
 const SearchComponent: React.FC = () => {
     //Constants
     const dispatch = useDispatch();
     let timerId: NodeJS.Timeout;
+    const isMobileDevice = getIsMobileDevice();
 
     // States
     const [defaultActive] = useState(getDefaultActiveTabs());
@@ -180,7 +184,11 @@ const SearchComponent: React.FC = () => {
     // Render Methods
     const renderMonth = () => (
         <Menu>
-            <MenuButton {...menuButtonStyle} as={Button} flexGrow={2}>
+            <MenuButton
+                {...menuButtonStyle}
+                as={Button}
+                flexGrow={[0.5, 0.5, 2]}
+            >
                 {months[selectedMonth]}
             </MenuButton>
             <MenuList {...menuListStyle}>
@@ -198,7 +206,11 @@ const SearchComponent: React.FC = () => {
 
     const renderDate = () => (
         <Menu>
-            <MenuButton as={Button} {...menuButtonStyle} flexGrow={1.5}>
+            <MenuButton
+                as={Button}
+                {...menuButtonStyle}
+                flexGrow={[0.5, 0.5, 1.5]}
+            >
                 {selectedDate.toString().padStart(2, "0")}
             </MenuButton>
             <MenuList {...menuListStyle}>
@@ -229,7 +241,7 @@ const SearchComponent: React.FC = () => {
     );
 
     const renderActiveTabs = () => (
-        <HStack {...stackContainer}>
+        <HStack {...stackContainer} flexWrap={"wrap"}>
             <CheckboxGroup {...checkboxGroupStyle} defaultValue={defaultActive}>
                 {activeTabs?.map((tab) => {
                     return (
@@ -246,21 +258,41 @@ const SearchComponent: React.FC = () => {
             </CheckboxGroup>
         </HStack>
     );
+    const renderWebTriggers = () => (
+        <HStack {...dateStackContainer}>
+            {renderMonth()}
+            {renderDate()}
+            {renderTriggerButtons()}
+        </HStack>
+    );
+
+    const renderMobileTriggers = () => (
+        <>
+            <Box {...mobileDateContainerBox} border={"1px solid pink"}>
+                <Stack width={"100%"}>
+                    <HStack width={"100%"} gap={4}>
+                        {renderMonth()}
+                        {renderDate()}
+                    </HStack>
+                    <HStack>{renderTriggerButtons()}</HStack>
+                </Stack>
+            </Box>
+            <Box {...filterContainerBox}>{renderActiveTabs()}</Box>
+        </>
+    );
     const renderComponent = () => {
         return (
             <Box {...searchContainerWrapper}>
-                <Box {...dateContainerBox}>
-                    <HStack {...dateStackContainer}>
-                        {renderMonth()}
-                        {renderDate()}
-                        {renderTriggerButtons()}
-                    </HStack>
-                </Box>
+                <Box {...dateContainerBox}>{renderWebTriggers()}</Box>
                 <Box {...filterContainerBox}>{renderActiveTabs()}</Box>
             </Box>
         );
     };
-    return renderComponent();
+
+    const renderMobileComponent = () => (
+        <Box {...searchContainerWrapper}>{renderMobileTriggers()}</Box>
+    );
+    return isMobileDevice ? renderMobileComponent() : renderComponent();
 };
 
 export default SearchComponent;

@@ -17,9 +17,14 @@ export const dateContainerBox = {
     display: "flex",
     justifyContent: "space-around",
 };
+export const mobileDateContainerBox = {
+    display: "flex",
+    justifyContent: "space-between",
+    width: "100%",
+};
 
 export const stackContainer = {
-    width: "80%",
+    width: "100%",
     alignSelf: "center",
     justifyContent: "center",
     gap: "30px",
@@ -32,6 +37,13 @@ export const dateStackContainer = {
     justifyContent: "space-even",
 };
 
+export const mobileDateStackContainer = {
+    border: "1px solid red",
+    marginRight: "10px",
+    gap: "3",
+    width: "100%",
+    justifyContent: "space-even",
+};
 export const buttonStackContainer = {
     width: "50%",
     justifyContent: "flex-start",
@@ -59,7 +71,6 @@ export const menuListStyle = {
 
 export const buttonStyle = {
     padding: "5 0",
-    
 };
 
 export const checkboxGroupStyle = {

@@ -19,7 +19,6 @@ import {
     colourModeGridItem,
     sessionGridItem,
     sideBarItem,
-    userStatsGridItem,
 } from "@src/modules/features/OnThisDay/component/Pages/OnThisDayDashboardComponentProps";
 import { SCROLL_LIMIT } from "@src/modules/features/onThisDay/type/OnThisDayCommonTypes";
 import Sidebar from "@src/modules/features/Sidebar/components/Sidebar";
@@ -34,6 +33,7 @@ import {
     bannerGrid,
     readListContainerWrapper,
     titleGrid,
+    userStatsGridItem,
 } from "./ReadListpageProps";
 
 const ReadListPage: React.FC = () => {

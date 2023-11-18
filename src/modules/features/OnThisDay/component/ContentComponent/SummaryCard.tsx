@@ -66,7 +66,7 @@ const SummaryCard: React.FC<IContentCardProps> = ({
     const renderHeader = () => <Heading size="md">{pageData?.title}</Heading>;
 
     const renderBody = () => (
-        <Text py="1" noOfLines={[1, 3, 4]} textAlign={"left"}>
+        <Text py="1" noOfLines={3} textAlign={"left"}>
             {eventDescript}
         </Text>
     );

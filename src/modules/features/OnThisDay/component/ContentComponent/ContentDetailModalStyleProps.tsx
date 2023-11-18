@@ -5,7 +5,7 @@ export const modalContent = {
     id: "content-modal",
 };
 export const buttonStack = {
-    spacing: "24px",
+    spacing: ["24px"],
 };
 export const progressBar = {
     hasStripe: true,

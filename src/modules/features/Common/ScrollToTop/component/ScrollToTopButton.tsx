@@ -1,6 +1,10 @@
 import { ChevronUpIcon } from "@chakra-ui/icons";
 import { Fade, IconButton } from "@chakra-ui/react";
+import styles from "./ScrollToTopButton.module.scss";
+import classNames from "classnames/bind";
+import { getIsMobileDevice } from "../../Utils/UtilsMethods";
 
+const cx = classNames.bind({ ...styles });
 export interface IScrollToTopButton {
     triggerVisible: boolean;
     handleClick: () => unknown;
@@ -9,17 +13,10 @@ const ScrollToTopButton: React.FC<IScrollToTopButton> = ({
     triggerVisible = false,
     handleClick = () => console.warn(`Scroll to Top HandleClick not defined!`),
 }) => {
-    
+    const isMobileDevice = getIsMobileDevice();
+
     const renderComponent = () => (
-        <span
-            style={{
-                height: "100px",
-                width: "50px",
-                position: "fixed",
-                bottom: "20px",
-                left: "92%",
-            }}
-        >
+        <span className={cx(isMobileDevice ? "mobile-span" : "web-span")}>
             <Fade in={triggerVisible}>
                 <IconButton
                     onClick={handleClick}

@@ -14,6 +14,7 @@ import {
     Icon,
     Fade,
     SkeletonText,
+    Stack,
 } from "@chakra-ui/react";
 import React, { useState, useRef, useMemo, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -48,6 +49,7 @@ import classNames from "classnames/bind";
 import { MdArticle } from "react-icons/md";
 import { transformToAnalyticsModalPayload } from "./UtilFiles/ContentComponentUtil";
 import { analyticsInsertModalData } from "@src/modules/features/Common/Analytics/actions/AnalyticsActions";
+import { getIsMobileDevice } from "@src/modules/features/Common/Utils/UtilsMethods";
 
 const cx = classNames.bind({ ...styles });
 export interface IContentDetailModalProps {
@@ -72,6 +74,7 @@ const ContentDetailModal: React.FC = () => {
     const bodyRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const timerIdRef = useRef<NodeJS.Timeout | null>(null);
+    const isMobileDevice = getIsMobileDevice();
 
     // States
     const [isDetailedArticle, setIsDetailedArticle] = useState(false);
@@ -103,8 +106,8 @@ const ContentDetailModal: React.FC = () => {
 
     // Use Effects
     useEffect(() => {
+        console.log(`Window InnerWidth: ${window.outerWidth}`);
         //unmount effect (scenario when user clicks and navigates away from website)
-
         return () => {
             handleClose();
             if (timerIdRef.current) clearTimeout(timerIdRef.current);
@@ -210,21 +213,34 @@ const ContentDetailModal: React.FC = () => {
         />
     );
 
+    const renderButtonStack = () => (
+        <>
+            <Button onClick={handleReadingModeSwitch}>
+                <HStack gap={3}>
+                    <Text>
+                        {`Change to: ${
+                            isDetailedArticle ? "Summarized" : "Detailed"
+                        }`}
+                    </Text>
+                    <Icon as={MdArticle} />
+                </HStack>
+            </Button>
+            <Button onClick={handleClose}>Close Article! (Esc)</Button>
+        </>
+    );
+
+    const renderWebFooter = (children: React.ReactNode) => (
+        <HStack {...buttonStack}>{children}</HStack>
+    );
+    const renderMobileFooter = (children: React.ReactNode) => (
+        <Stack {...buttonStack}>{children} </Stack>
+    );
+
     const renderModalFooter = () => (
-        <ModalFooter>
-            <HStack {...buttonStack}>
-                <Button onClick={handleReadingModeSwitch}>
-                    <HStack gap={3}>
-                        <Text>
-                            {`Change to: ${
-                                isDetailedArticle ? "Summarized" : "Detailed"
-                            }`}
-                        </Text>
-                        <Icon as={MdArticle} />
-                    </HStack>
-                </Button>
-                <Button onClick={handleClose}>Close Article! (Esc)</Button>
-            </HStack>
+        <ModalFooter flexDirection={isMobileDevice ? "column" : "row"}>
+            {isMobileDevice
+                ? renderMobileFooter(renderButtonStack())
+                : renderWebFooter(renderButtonStack())}
         </ModalFooter>
     );
 

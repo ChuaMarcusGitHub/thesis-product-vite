@@ -122,7 +122,7 @@ const ContentContainer: React.FC = () => {
         return (
             <Box {...boxContainer}>
                 <Tabs isFitted isLazy variant={"enclosed-colored"}>
-                    <TabList>
+                    <TabList overflow={"scroll"}>
                         {isLoaded ? (
                             renderTabs()
                         ) : (

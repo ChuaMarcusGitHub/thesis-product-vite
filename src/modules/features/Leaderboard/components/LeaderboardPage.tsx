@@ -17,8 +17,6 @@ import SigninContainer from "@features/Login/components/SignInContainer";
 import { IUserStats } from "@features/Login/types/LoginActionPayloadTypes";
 import ContentDetailModal from "@features/OnThisDay/component/ContentComponent/ContentDetailModal";
 import {
-    bannerContainer,
-    bannerGrid,
     sessionGridItem,
     colourModeGridItem,
     sideBarItem,
@@ -31,6 +29,8 @@ import {
     leaderboardContainerWrapper,
     titleGrid,
     leaderboardPageContainer,
+    bannerContainer,
+    bannerGrid,
 } from "./LeaderboardPageStyleProps";
 
 const LeaderboardPage: React.FC = () => {
@@ -82,7 +82,7 @@ const LeaderboardPage: React.FC = () => {
             onScroll={handleContainerScroll}
             display={"flex"}
             justifyContent={"center"}
-            padding={"20px"}
+            padding={["10px", "10px","20px"]}
         >
             <span ref={topItemElement} />
             <LeaderboardContainer />
