@@ -8,14 +8,23 @@ import {
 } from "@chakra-ui/react";
 import { colourModeContainer } from "@src/modules/features/OnThisDay/component/Pages/OnThisDayDashboardComponentProps";
 
-const ColourModeSwitch: React.FC = () => {
+interface IColourModeSwitchProps {
+    isMobile: boolean;
+}
+const ColourModeSwitch: React.FC<IColourModeSwitchProps> = ({
+    isMobile = false,
+}) => {
     // Colour Mode
     const { colorMode, toggleColorMode } = useColorMode();
     const isDark = colorMode === "dark";
 
     const renderComponent = () => (
         <Box {...colourModeContainer}>
-            <FormControl display="flex" alignItems="center" justifyContent={"space-evenly"}>
+            <FormControl
+                display="flex"
+                alignItems={"center"}
+                justifyContent={isMobile ? "flex-end" : "center"}
+            >
                 <FormLabel htmlFor="colour-mode" mb="0">
                     Colour Mode:
                 </FormLabel>

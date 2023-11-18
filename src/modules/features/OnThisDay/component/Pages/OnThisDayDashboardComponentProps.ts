@@ -26,15 +26,16 @@ export const searchComponentItem = {
 };
 export const sessionGridItem = {
     colStart: [1, 1, 4],
-    colEnd: [3, 3, 5],
+    colEnd: [4, 4, 5],
 };
 export const colourModeGridItem = {
     colStart: [1, 1, 5],
-    colEnd: [3, 3, 6],
+    colEnd: [4, 4, 6],
     rowStart: [2, 2, 1],
 };
 export const colourModeContainer = {
     paddingLeft: "5px",
+    paddingRight: "2px",
     display: "flex",
     width: "100$",
     height: "100%",
@@ -47,6 +48,13 @@ export const sideBarItem = {
     rowEnd: 4,
     paddingLeft: 5,
     paddingTop: 2,
+};
+export const mobileSideBarItem = {
+    ...sideBarItem,
+    colEnd: 4,
+    display: "flex",
+    paddingRight: 2,
+    justifyContent: "flex-end",
 };
 export const userStatsGridItem = {
     colStart: [1, 1, 2],

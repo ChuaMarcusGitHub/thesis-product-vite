@@ -268,7 +268,7 @@ const SearchComponent: React.FC = () => {
 
     const renderMobileTriggers = () => (
         <>
-            <Box {...mobileDateContainerBox} border={"1px solid pink"}>
+            <Box {...mobileDateContainerBox}>
                 <Stack width={"100%"}>
                     <HStack width={"100%"} gap={4}>
                         {renderMonth()}

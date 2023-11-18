@@ -4,7 +4,6 @@ import {
     Grid,
     GridItem,
     Heading,
-    Button,
     Stack,
     StackDivider,
 } from "@chakra-ui/react";
@@ -19,11 +18,10 @@ import ContentDetailModal from "@features/OnThisDay/component/ContentComponent/C
 import {
     sessionGridItem,
     colourModeGridItem,
-    sideBarItem,
 } from "@features/OnThisDay/component/Pages/OnThisDayDashboardComponentProps";
 import { SCROLL_LIMIT } from "@features/onThisDay/type/OnThisDayCommonTypes";
 import Sidebar from "@features/Sidebar/components/Sidebar";
-import { getUserStats } from "../../Login/selector/LoginSelector";
+import { getUserStats } from "@features/Login/selector/LoginSelector";
 import LeaderboardContainer from "./LeaderboardContainer";
 import {
     leaderboardContainerWrapper,
@@ -32,12 +30,15 @@ import {
     bannerContainer,
     bannerGrid,
 } from "./LeaderboardPageStyleProps";
+import { getIsMobileDevice } from "@features/Common/Utils/UtilsMethods";
+import { renderSideBarComponent } from "@features/Sidebar/components/WrappedSidebar";
 
 const LeaderboardPage: React.FC = () => {
     /* ---------- Constants --------- */
     const [showTopButton, setShowTopButton] = useState(false);
     const topItemElement = useRef<HTMLSpanElement>(null);
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const isMobileDevice = getIsMobileDevice();
     /* ---------- Selectors --------- */
     const isLoggedIn: boolean = useSelector(getIsLoggedIn);
     const userData: IUserStats | null = useSelector(getUserStats);
@@ -68,11 +69,9 @@ const LeaderboardPage: React.FC = () => {
                     />
                 </GridItem>
                 <GridItem {...colourModeGridItem}>
-                    <ColourModeSwitch />
+                    <ColourModeSwitch isMobile={isMobileDevice} />
                 </GridItem>
-                <GridItem {...sideBarItem}>
-                    <Button onClick={() => onOpen()}> Side Menu</Button>
-                </GridItem>
+                {renderSideBarComponent(onOpen)}
             </Grid>
         </Box>
     );
@@ -82,7 +81,7 @@ const LeaderboardPage: React.FC = () => {
             onScroll={handleContainerScroll}
             display={"flex"}
             justifyContent={"center"}
-            padding={["10px", "10px","20px"]}
+            padding={["10px", "10px", "20px"]}
         >
             <span ref={topItemElement} />
             <LeaderboardContainer />

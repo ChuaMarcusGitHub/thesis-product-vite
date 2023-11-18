@@ -22,8 +22,8 @@ const LoginTab: React.FC<ILoginTabProps> = ({ onClose, authError = null }) => {
     const dispatch = useDispatch();
 
     // State
-    const [email, setEmail] = useState("test1@gmail.com");
-    const [password, setPassword] = useState("password");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
     // Ref
     const initialRef = useRef(null);

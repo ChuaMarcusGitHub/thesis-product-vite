@@ -1,6 +1,5 @@
 import {
     Box,
-    Button,
     Stack,
     Grid,
     GridItem,
@@ -10,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import ColourModeSwitch from "@src/modules/features/Common/ColorMode/component/ColourModeSwitch";
 import ScrollToTopButton from "@src/modules/features/Common/ScrollToTop/component/ScrollToTopButton";
+import { getIsMobileDevice } from "@src/modules/features/Common/Utils/UtilsMethods";
 import SigninContainer from "@src/modules/features/Login/components/SignInContainer";
 import { getUserStats } from "@src/modules/features/Login/selector/LoginSelector";
 import { IUserStats } from "@src/modules/features/Login/types/LoginActionPayloadTypes";
@@ -18,10 +18,10 @@ import UserStatsContainer from "@src/modules/features/OnThisDay/component/Conten
 import {
     colourModeGridItem,
     sessionGridItem,
-    sideBarItem,
 } from "@src/modules/features/OnThisDay/component/Pages/OnThisDayDashboardComponentProps";
 import { SCROLL_LIMIT } from "@src/modules/features/onThisDay/type/OnThisDayCommonTypes";
 import Sidebar from "@src/modules/features/Sidebar/components/Sidebar";
+import { renderSideBarComponent } from "@src/modules/features/Sidebar/components/WrappedSidebar";
 import { getIsLoggedIn } from "@src/modules/root/authprovider/selector/AuthSelector";
 import { BaseSyntheticEvent, useRef, useState } from "react";
 import { useSelector } from "react-redux";
@@ -41,6 +41,7 @@ const ReadListPage: React.FC = () => {
     const [showTopButton, setShowTopButton] = useState(false);
     const topItemElement = useRef<HTMLSpanElement>(null);
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const isMobileDevice = getIsMobileDevice();
     /* ---------- Selectors --------- */
     const isLoggedIn: boolean = useSelector(getIsLoggedIn);
     const userData: IUserStats | null = useSelector(getUserStats);
@@ -71,11 +72,9 @@ const ReadListPage: React.FC = () => {
                     />
                 </GridItem>
                 <GridItem {...colourModeGridItem}>
-                    <ColourModeSwitch />
+                    <ColourModeSwitch isMobile={isMobileDevice} />
                 </GridItem>
-                <GridItem {...sideBarItem}>
-                    <Button onClick={() => onOpen()}> Side Menu</Button>
-                </GridItem>
+                {renderSideBarComponent(onOpen)}
                 {isLoggedIn && (
                     <GridItem {...userStatsGridItem}>
                         <UserStatsContainer userData={userData} />

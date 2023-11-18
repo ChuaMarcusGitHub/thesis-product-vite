@@ -1,20 +1,10 @@
-import {
-    Box,
-    Button,
-    Grid,
-    GridItem,
-    Text,
-    Stack,
-    useDisclosure,
-    HStack,
-} from "@chakra-ui/react";
+import { Box, Grid, GridItem, Stack, useDisclosure } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import {
     bannerContainer,
     bannerGrid,
     searchGridItem,
     sessionGridItem,
-    sideBarItem,
     userStatsGridItem,
     colourModeGridItem,
     pageContainer,
@@ -35,7 +25,9 @@ import ColourModeSwitch from "@src/modules/features/Common/ColorMode/component/C
 import ThesisNotice from "@src/modules/features/Common/Notice/ThesisNotice";
 import { updateNoticeRequired } from "@src/modules/features/Config/actions/ConfigActions";
 import { getNoticeRequired } from "@src/modules/features/Config/selector/ConfigSelector";
-import { HamburgerIcon } from "@chakra-ui/icons";
+
+import { getIsMobileDevice } from "@src/modules/features/Common/Utils/UtilsMethods";
+import { renderSideBarComponent } from "@src/modules/features/Sidebar/components/WrappedSidebar";
 
 const OnThisDayDashboard: React.FC = () => {
     /* ---------- Constants --------- */
@@ -46,6 +38,7 @@ const OnThisDayDashboard: React.FC = () => {
         onOpen: noticeOnOpen,
         onClose: noticeOnClose,
     } = useDisclosure();
+    const isMobileDevice = getIsMobileDevice();
 
     /* ---------- Selectors --------- */
     const isLoggedIn: boolean = useSelector(getIsLoggedIn);
@@ -68,6 +61,7 @@ const OnThisDayDashboard: React.FC = () => {
     };
 
     /* ---------- Render Methods--------- */
+
     const renderBanner = () => {
         return (
             <Box {...bannerContainer}>
@@ -82,16 +76,9 @@ const OnThisDayDashboard: React.FC = () => {
                         />
                     </GridItem>
                     <GridItem {...colourModeGridItem}>
-                        <ColourModeSwitch />
+                        <ColourModeSwitch isMobile={isMobileDevice} />
                     </GridItem>
-                    <GridItem {...sideBarItem}>
-                        <Button onClick={() => onOpen()}>
-                            <HStack gap={2}>
-                                <HamburgerIcon />
-                                <Text>Side Menu</Text>
-                            </HStack>
-                        </Button>
-                    </GridItem>
+                    {renderSideBarComponent(onOpen)}
                     {isLoggedIn && (
                         <GridItem {...userStatsGridItem}>
                             <UserStatsContainer userData={userData} />

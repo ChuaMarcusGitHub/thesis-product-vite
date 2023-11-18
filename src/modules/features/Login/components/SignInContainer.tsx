@@ -1,11 +1,15 @@
 import { Box, Button, HStack, useDisclosure } from "@chakra-ui/react";
-import { logoutSession } from "@src/modules/root/authprovider/actions/AuthActions";
+import {
+    initSession,
+    logoutSession,
+} from "@src/modules/root/authprovider/actions/AuthActions";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { getIsMobileDevice } from "../../Common/Utils/UtilsMethods";
 import { IUserStats } from "../types/LoginActionPayloadTypes";
 import { SignInTabType } from "../types/LoginComponentTypes";
 import SignInComponents from "./SignInComponents/SignInModal";
-import { signInContainerBox } from "./SignInContainerStyles";
+import { mobileSignInContainerBox, signInContainerBox } from "./SignInContainerStyles";
 
 interface ISignInComtainerProps {
     isLoggedIn: boolean;
@@ -18,13 +22,14 @@ const SigninContainer: React.FC<ISignInComtainerProps> = ({
     // Constants
     const dispatch = useDispatch();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const isMobileDevice = getIsMobileDevice();
     // State
     const [tabValue, setTabValue] = useState<SignInTabType>(
         SignInTabType.Login
     );
 
     useEffect(() => {
-        // dispatch(initSession());
+        dispatch(initSession());
     }, []);
 
     useEffect(() => {
@@ -39,21 +44,25 @@ const SigninContainer: React.FC<ISignInComtainerProps> = ({
 
     const handleLogout = () => dispatch(logoutSession());
     // Render Methods
-    const renderSignUpInSet = () => (
-        <Box {...signInContainerBox}>
-            <HStack gap={4}>
-                <Button onClick={() => handleSignInUp(SignInTabType.Login)}>
-                    Log In
-                </Button>
-                <Button onClick={() => handleSignInUp(SignInTabType.SignUp)}>
-                    Sign Up
-                </Button>
-            </HStack>
-        </Box>
+    const renderSignInUpButtons = () => (
+        <HStack gap={4}>
+            <Button onClick={() => handleSignInUp(SignInTabType.Login)}>
+                Log In
+            </Button>
+            <Button onClick={() => handleSignInUp(SignInTabType.SignUp)}>
+                Sign Up
+            </Button>
+        </HStack>
+    );
+    const renderMobileSignUpInSet = (children: React.ReactNode) => (
+        <Box {...mobileSignInContainerBox}>{children}</Box>
+    );
+    const renderSignUpInSet = (children: React.ReactNode) => (
+        <Box {...signInContainerBox}>{children}</Box>
     );
 
     const renderSignOutSet = () => (
-        <Box {...signInContainerBox} >
+        <Box {...signInContainerBox}>
             <HStack gap={4}>
                 <Box>{`Welcome, ${userData?.username || "unnamed"}!! `}</Box>
                 <Button onClick={() => handleLogout()}>Log out</Button>
@@ -64,7 +73,13 @@ const SigninContainer: React.FC<ISignInComtainerProps> = ({
     const renderComponent = () => {
         return (
             <Box width={"100%"} padding={"4px"} height={"100%"}>
-                {isLoggedIn ? renderSignOutSet() : renderSignUpInSet()}
+                {isLoggedIn
+                    ? // For Logout
+                      renderSignOutSet()
+                    : // For Login
+                    isMobileDevice
+                    ? renderMobileSignUpInSet(renderSignInUpButtons())
+                    : renderSignUpInSet(renderSignInUpButtons())}
                 <SignInComponents
                     isLoggedIn={isLoggedIn}
                     isOpen={isOpen}
