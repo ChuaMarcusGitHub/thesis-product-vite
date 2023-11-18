@@ -103,7 +103,9 @@ export const transformOtdFeedResponse = (
     };
 };
 
-export const compileAllArticles = (allArticles: ISetFeedArticlePayload[]): ISetFeedArticlePayload => {
+export const compileAllArticles = (
+    allArticles: ISetFeedArticlePayload[]
+): ISetFeedArticlePayload => {
     const allArticleReturnObj: ISetFeedArticlePayload = {
         events: {},
         type: "all",
@@ -211,8 +213,25 @@ export const buildFullArticleQuery = (article = "Null"): string => {
     builtUrl = isDev
         ? WebServiceURLsDev.WIKIPEDIA_WEB
         : WebServiceURLs.WIKIPEDIA_WEB;
+    // Cleanup the article
 
-    builtUrl = builtUrl.replace("{article}", article);
+    const regex: RegExp = /\s/g;
+    const cleanedArticle: string = article.replace(regex, "_");
+
+    console.log(`cleaned title: ${cleanedArticle}`);
+
+    builtUrl = builtUrl.replace("{article}", cleanedArticle);
+    console.log(`Built url - Brief Article: ${builtUrl}`);
+    return builtUrl;
+};
+
+export const buildFullArticleQueryByPageId = (pageId = -1): string => {
+    let builtUrl = "";
+    builtUrl = isDev
+        ? WebServiceURLsDev.WIKIPEDIA_PAGE_ID
+        : WebServiceURLs.WIKIPEDIA_PAGE_ID;
+
+    builtUrl = builtUrl.replace("{pageId}", `${pageId}`);
     console.log(`Built url - Brief Article: ${builtUrl}`);
     return builtUrl;
 };

@@ -48,6 +48,8 @@ function App() {
     // const testUrl = "jwyyocimufwwpegtzgpt.supabase.co/functions/v1/hello-world";
 
     const query = "Berlin";
+    const query2 = "Otto_IV,_Holy_Roman_Emperor";
+    // const pageIdQuery = 163029;
 
     const dispatch = useDispatch();
     const sessionData: Session | null | undefined = useSelector(getSessionData);
@@ -114,7 +116,9 @@ function App() {
         // contentOpen();
     };
     const handleDetailedOpenContent = (query: string) => {
-        dispatch(loadDetailedArticle({ title: query, shouldClear: true }));
+        dispatch(
+            loadDetailedArticle({ title: query, pageId: -1, shouldClear: true })
+        );
         // contentOpen();
     };
     const handleFeedOpenContent = () => {
@@ -151,30 +155,6 @@ function App() {
     };
     // ----- Sandbox ---------
 
-    // const testSummaryCard = () => (
-    //     <SummaryCard
-    //         pageData={propsData}
-    //         eventDescript={propsDesc}
-    //         handleClick={() => {
-    //             console.log("Card was clicked");
-    //         }}
-    //     />
-    // );
-
-    // const lightModeTest = () => (
-    //     <Button onClick={toggleColorMode}>
-    //         Toggle {colorMode === "light" ? "Dark" : "Light"}
-    //     </Button>
-    // );
-
-    // const modalTest = () => (
-    //     <ContentDetailModal
-    //         onClose={contentClose}
-    //         isOpen={isContentOpen}
-    //         title={"Test iFrame"}
-    //     />
-    // );
-
     const renderApplication = () => {
         return (
             <div>
@@ -202,7 +182,9 @@ function App() {
                 </div>
 
                 <div>
-                    <button onClick={() => handleDetailedOpenContent(query)}>
+                    <button
+                        onClick={() => handleDetailedOpenContent(query2)}
+                    >
                         Open Detailed Content
                     </button>
                 </div>

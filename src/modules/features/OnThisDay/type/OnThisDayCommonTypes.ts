@@ -145,6 +145,7 @@ export interface IArticleDetailedPayload {
 }
 export interface ILoadArticleDetailPayload {
     title: string;
+    pageId?: number;
     shouldClear?: boolean;
 }
 export interface IUpdateActiveTabPayload {

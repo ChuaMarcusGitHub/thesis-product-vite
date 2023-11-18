@@ -151,6 +151,7 @@ const ContentDetailModal: React.FC = () => {
                 dispatch(
                     loadDetailedArticle({
                         title: pageData!.title,
+                        pageId: pageData!.pageId,
                         shouldClear: false,
                     })
                 );

@@ -53,6 +53,7 @@ import {
 import {
     buildBriefArticleQuery,
     buildFullArticleQuery,
+    buildFullArticleQueryByPageId,
     buildOnThisDayQuery,
     compileAllArticles,
     retrievePageId,
@@ -245,6 +246,45 @@ function* fetchDayArticles(action: PayloadAction<IFetchEventsPayload>) {
         yield put(setLoadState(false));
     }
 }
+function* loadDetailedArticleByPageId(
+    action: PayloadAction<ILoadArticleDetailPayload>
+) {
+    try {
+        const { pageId = -1, shouldClear = false } = action.payload;
+        if (shouldClear) yield putResolve(clearDetailedArticle());
+
+        const apiUrl: string = buildFullArticleQueryByPageId(pageId);
+        let response: string;
+
+        if (isDev) {
+            response = yield call(fetchWebpage, apiUrl);
+            // response = yield call(fetchWebpage, apiUrl);
+        } else {
+            response = yield call(
+                fetchWebpage,
+                apiUrl,
+                undefined,
+                undefined,
+                undefined,
+                ""
+            );
+        }
+        if (response) {
+            const pageId = retrievePageId(response);
+            yield putResolve(
+                setDetailedArticle({
+                    pageId: pageId,
+                    detailedArticle: response,
+                })
+            );
+        } else throw Error(`unable to load article ${action.payload}`);
+    } catch (e) {
+        console.error("Error in loadSelectedArticle");
+        console.error(e);
+        toast(OTD_ERROR_OBJECTS[OTD_ERROR_KEY.LOAD_ARTICLE]);
+    }
+}
+
 function* loadDetailedArticle(
     action: PayloadAction<ILoadArticleDetailPayload>
 ) {
@@ -499,6 +539,10 @@ function* watchOnThisDaySummarySaga() {
     yield takeLeading(
         OnThisDaySummaryAction.FETCH_USER_READLIST,
         loadUserReadlist
+    );
+    yield takeLeading(
+        OnThisDaySummaryAction.LOAD_DETAILED_ARTICLE_PAGE_ID,
+        loadDetailedArticleByPageId
     );
 }
 

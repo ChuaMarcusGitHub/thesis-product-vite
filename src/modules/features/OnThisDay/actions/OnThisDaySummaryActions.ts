@@ -22,6 +22,7 @@ export enum OnThisDaySummaryAction {
     SET_BRIEF_ARTICLE = "OnThisDaySummaryAction/SET_BRIEF_ARTICLE",
     CLEAR_BRIEF_ARTICLE = "OnThisDaySummaryAction/CLEAR_BRIEF_ARTICLE",
     LOAD_DETAILED_ARTICLE = "OnThisDaySummaryAction/LOAD_DETAILED_ARTICLE",
+    LOAD_DETAILED_ARTICLE_PAGE_ID = "OnThisDaySummaryAction/LOAD_DETAILED_ARTICLE",
     SET_DETAILED_ARTICLE = "OnThisDaySummaryAction/SET_DETAILED_ARTICLE",
     CLEAR_DETAILED_ARTICLE = "OnThisDaySummaryAction/CLEAR_DETAILED_ARTICLE",
     UPDATE_ACTIVE_TABS = "OnThisDaySummaryAction/UPDATE_ACTIVE_TABS",
@@ -60,6 +61,8 @@ export const setBriefArticle = (payload: IArticleBriefObject) =>
     action(OnThisDaySummaryAction.SET_BRIEF_ARTICLE, payload);
 export const clearBriefArticle = () =>
     action(OnThisDaySummaryAction.CLEAR_BRIEF_ARTICLE);
+export const loadDetailArticleByPageId = (payload: ILoadArticleDetailPayload) =>
+    action(OnThisDaySummaryAction.LOAD_DETAILED_ARTICLE_PAGE_ID, payload);
 export const loadDetailedArticle = (payload: ILoadArticleDetailPayload) =>
     action(OnThisDaySummaryAction.LOAD_DETAILED_ARTICLE, payload);
 export const setDetailedArticle = (payload: IArticleDetailedPayload) =>
