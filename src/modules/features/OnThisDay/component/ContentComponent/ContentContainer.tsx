@@ -14,9 +14,7 @@ import React, {
     BaseSyntheticEvent,
     createRef,
     RefObject,
-    useEffect,
     useMemo,
-    useRef,
     useState,
 } from "react";
 import {
@@ -35,12 +33,9 @@ import {
     getIsLoading,
 } from "@features/OnThisDay/selector/OnThisDaySummarySelector";
 
-// import data from "@rsc/sampleResponse/referenceFeedState.json";
 import { getPopulatedArticles } from "./UtilFiles/ContentComponentUtil";
 import { SCROLL_LIMIT } from "../../type/OnThisDayCommonTypes";
 import ScrollToTopButton from "@src/modules/features/Common/ScrollToTop/component/ScrollToTopButton";
-
-// const sampleData = JSON.parse(JSON.stringify(data));
 
 const ContentContainer: React.FC = () => {
     // Constants
@@ -50,7 +45,6 @@ const ContentContainer: React.FC = () => {
     const activeTabs = useSelector(getActiveTabs);
     const [selectedTabIdx, setSelectedTabIdx] = useState(0);
     const [showTopButton, setShowTopButton] = useState(false);
-    const firstAccordianScroll = useRef<HTMLDivElement>(null);
 
     // Use Effects / Memos
     const containerTabs = useMemo(
@@ -72,6 +66,11 @@ const ContentContainer: React.FC = () => {
         const { scrollTop, scrollHeight, offsetHeight } = e.target;
         const scrollProgess = (scrollTop / (scrollHeight - offsetHeight)) * 100;
         setShowTopButton(scrollProgess > SCROLL_LIMIT);
+    };
+
+    const handleTabSwitch = (newIndex: number) => {
+        setShowTopButton(false);
+        setSelectedTabIdx(newIndex);
     };
 
     const handleReturnToTop = () => {
@@ -137,7 +136,7 @@ const ContentContainer: React.FC = () => {
                     isFitted
                     isLazy
                     variant={"enclosed-colored"}
-                    onChange={(index) => setSelectedTabIdx(index)}
+                    onChange={(index) => handleTabSwitch(index)}
                 >
                     <TabList overflow={"scroll"}>
                         {isLoaded ? (

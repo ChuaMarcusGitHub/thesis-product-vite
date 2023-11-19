@@ -9,13 +9,13 @@ export const bannerContainer = {
 };
 export const bannerGrid = {
     templateColumns: ["repeat(3, 32vw)", "repeat(3, 32vw)", "repeat(4, 20vw)"],
-    templateRows: ["repeat(9, 6vh)", "repeat(9, 6vh)", "repeat(4, 6vh)"],
+    templateRows: ["repeat(9, 6vh)", "repeat(9, 6vh)", "repeat(5, 6vh)"],
 };
 export const searchGridItem = {
     colStart: [1, 1, 2],
     colEnd: [4, 4, 5],
     rowStart: [4, 4, 2],
-    rowEnd: [8, 8, 4],
+    rowEnd: [8, 8, 5],
 };
 export const searchComponentItem = {
     border: "1px solid grey",
@@ -60,6 +60,6 @@ export const userStatsGridItem = {
     colStart: [1, 1, 2],
     colEnd: [4, 4, 5],
     rowStart: [8, 8, 5],
-    rowEnd: [10, 10, 4],
+    rowEnd: [10, 10, 6],
     padding: "10px",
 };

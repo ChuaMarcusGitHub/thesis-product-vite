@@ -1,7 +1,6 @@
 export const searchContainerWrapper = {
     width: "100%",
     height: "100%",
-    alignItems: "center",
     padding: "5",
 };
 export const filterContainerBox = {
@@ -38,7 +37,6 @@ export const dateStackContainer = {
 };
 
 export const mobileDateStackContainer = {
-    border: "1px solid red",
     marginRight: "10px",
     gap: "3",
     width: "100%",
@@ -74,7 +72,5 @@ export const buttonStyle = {
 };
 
 export const checkboxGroupStyle = {
-    // display: "flex",
-
     colorScheme: "green",
 };

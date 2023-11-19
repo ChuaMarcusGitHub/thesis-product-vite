@@ -9,13 +9,13 @@ export const bannerContainer = {
 };
 export const bannerGrid = {
     templateColumns: ["repeat(3, 32vw)", "repeat(3, 32vw)", "repeat(4, 20vw)"],
-    templateRows: ["repeat(5, 6vh)", "repeat(5, 6vh)", "repeat(4, 6vh)"],
+    templateRows: ["repeat(5, 6vh)", "repeat(5, 6vh)", "repeat(5, 6vh)"],
 };
 export const titleGrid = {
     colStart: [1, 1, 2],
     colEnd: [4, 4, 5],
     rowStart: [4, 4, 2],
-    rowEnd: [5, 5, 4],
+    rowEnd: [5, 5, 5],
     // bg: #ffffff,
     display: "flex",
     padding: "5px",
@@ -26,7 +26,7 @@ export const userStatsGridItem = {
     colStart: [1, 1, 2],
     colEnd: [4, 4, 5],
     rowStart: [5, 5, 5],
-    rowEnd: [6, 6, 4],
+    rowEnd: [6, 6, 6],
     padding: "10px",
 };
 

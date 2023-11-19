@@ -2,7 +2,7 @@ import { IReducerLoadingState } from "@src/modules/root/webservice/WebserviceTyp
 import { IContentDetailModalProps } from "../component/ContentComponent/ContentDetailModal";
 import { IDateObject } from "./OnThisDayComponentTypes";
 
-export const SCROLL_LIMIT = 6; // Limit before scroll button shows itself
+export const SCROLL_LIMIT = 2; // Limit before scroll button shows itself
 export enum API_SUPPORTED_LANGUAGES {
     ENGLISH = "en",
     GERMAN = "de",

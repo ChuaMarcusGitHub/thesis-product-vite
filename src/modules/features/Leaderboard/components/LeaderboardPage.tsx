@@ -29,9 +29,11 @@ import {
     leaderboardPageContainer,
     bannerContainer,
     bannerGrid,
+    userStatsGridItem,
 } from "./LeaderboardPageStyleProps";
 import { getIsMobileDevice } from "@features/Common/Utils/UtilsMethods";
 import { renderSideBarComponent } from "@features/Sidebar/components/WrappedSidebar";
+import UserStatsContainer from "@features/OnThisDay/component/ContentComponent/UserStatsContainer";
 
 const LeaderboardPage: React.FC = () => {
     /* ---------- Constants --------- */
@@ -72,6 +74,11 @@ const LeaderboardPage: React.FC = () => {
                     <ColourModeSwitch isMobile={isMobileDevice} />
                 </GridItem>
                 {renderSideBarComponent(onOpen)}
+                {isLoggedIn && (
+                    <GridItem {...userStatsGridItem}>
+                        <UserStatsContainer userData={userData} />
+                    </GridItem>
+                )}
             </Grid>
         </Box>
     );

@@ -9,13 +9,13 @@ export const bannerContainer = {
 };
 export const bannerGrid = {
     templateColumns: ["repeat(3, 32vw)", "repeat(3, 32vw)", "repeat(4, 20vw)"],
-    templateRows: ["repeat(5, 6vh)", "repeat(5, 6vh)", "repeat(4, 6vh)"],
+    templateRows: ["repeat(5, 6vh)", "repeat(5, 6vh)", "repeat(5, 6vh)"],
 };
 export const titleGrid = {
     colStart: [1, 1, 2],
     colEnd: [4, 4, 5],
     rowStart: [5, 5, 2],
-    rowEnd: [6, 6, 4],
+    rowEnd: [6, 6, 5],
     display: "flex",
     padding: "5px",
     alignItems: "flex-end",
@@ -34,11 +34,21 @@ export const leaderboardContainerWrapper = {
 export const leaderboardTableContainr = {
     width: ["80%", "60%"],
     border: "1px solid #495770",
+    _dark: {
+        border: "1px solid white",
+    },
     borderRadius: "20px",
-    padding: "10px",
+    padding: "5px",
 };
 
 export const tableDataStyle = {
     fontSize: "1.5rem",
     textAlign: "center",
+};
+export const userStatsGridItem = {
+    colStart: [1, 1, 2],
+    colEnd: [4, 4, 5],
+    rowStart: [5, 5, 5],
+    rowEnd: [6, 6, 6],
+    padding: "10px",
 };
