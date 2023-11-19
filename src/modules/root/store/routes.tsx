@@ -20,9 +20,6 @@ const routerMap: RouteObject[] = [
     {
         path: RoutesList.ROOT,
         element: <OnThisDayDashboard />,
-        // element: <LeaderboardPage />,
-        // element: <ReadListPage />,
-        // element: <App />,
         errorElement: <ErrorPage />,
     },
     {
