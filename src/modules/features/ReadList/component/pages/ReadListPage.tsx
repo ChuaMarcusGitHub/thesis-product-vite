@@ -19,7 +19,7 @@ import {
     colourModeGridItem,
     sessionGridItem,
 } from "@src/modules/features/OnThisDay/component/Pages/OnThisDayDashboardComponentProps";
-import { SCROLL_LIMIT } from "@src/modules/features/onThisDay/type/OnThisDayCommonTypes";
+import { SCROLL_LIMIT } from "@src/modules/features/OnThisDay/type/OnThisDayCommonTypes";
 import Sidebar from "@src/modules/features/Sidebar/components/Sidebar";
 import { renderSideBarComponent } from "@src/modules/features/Sidebar/components/WrappedSidebar";
 import { getIsLoggedIn } from "@src/modules/root/authprovider/selector/AuthSelector";

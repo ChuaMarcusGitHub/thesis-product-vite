@@ -17,7 +17,7 @@ import {
     IUpdateActiveTabPayload,
     Months,
     ON_THIS_DAY_TOPICS,
-} from "@features/onThisDay/type/OnThisDayCommonTypes";
+} from "@features/OnThisDay/type/OnThisDayCommonTypes";
 import {
     checkIfLastCheckbox,
     generateDate,
@@ -43,12 +43,12 @@ import {
     ITabCheckbox,
     OTDComponentErrorObject,
     OTD_COMPONENT_ERRORS,
-} from "@features/onThisDay/type/OnThisDayComponentTypes";
+} from "@features/OnThisDay/type/OnThisDayComponentTypes";
 import { useDispatch } from "react-redux";
 import {
     fetchEventsFromDay,
     updateActiveTabs,
-} from "@features/onThisDay/actions/OnThisDaySummaryActions";
+} from "@features/OnThisDay/actions/OnThisDaySummaryActions";
 import { createStandaloneToast } from "@chakra-ui/react";
 import { Search2Icon } from "@chakra-ui/icons";
 import { getIsMobileDevice } from "@src/modules/features/Common/Utils/UtilsMethods";

@@ -18,7 +18,7 @@ import {
     IOtdCardPageData,
     IReadingCardData,
     IReadlistObject,
-} from "@features/onThisDay/type/OnThisDayCommonTypes";
+} from "@features/OnThisDay/type/OnThisDayCommonTypes";
 import { IAnalyticsDataArticlePayload } from "@features/OnThisDay/type/OnThisDayWebserviceTypes";
 import { transformReadListObjectToList } from "./ReadListComponentUtil";
 import {
