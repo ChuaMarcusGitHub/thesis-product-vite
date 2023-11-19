@@ -131,8 +131,8 @@ const YearAccordian: React.FC<IYearAccordianProps> = ({
     const renderComponent = () => {
         return (
             <Accordion
-                ref={componentRef ?? null}
                 maxH={"65vh"}
+                ref={componentRef}
                 allowMultiple={true}
                 defaultIndex={returnArrayOfIndexes()}
             >

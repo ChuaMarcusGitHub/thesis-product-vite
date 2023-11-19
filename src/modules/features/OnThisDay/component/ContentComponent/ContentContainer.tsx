@@ -10,7 +10,15 @@ import {
     Fade,
     Spinner,
 } from "@chakra-ui/react";
-import React, { BaseSyntheticEvent, useMemo, useRef, useState } from "react";
+import React, {
+    BaseSyntheticEvent,
+    createRef,
+    RefObject,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
 import {
     boxContainer,
     skeletonTab,
@@ -31,7 +39,7 @@ import {
 import { getPopulatedArticles } from "./UtilFiles/ContentComponentUtil";
 import { SCROLL_LIMIT } from "../../type/OnThisDayCommonTypes";
 import ScrollToTopButton from "@src/modules/features/Common/ScrollToTop/component/ScrollToTopButton";
-// import { IOtdFeedObject } from "@features/OnThisDay/type/OnThisDayCommonTypes";
+
 // const sampleData = JSON.parse(JSON.stringify(data));
 
 const ContentContainer: React.FC = () => {
@@ -40,6 +48,7 @@ const ContentContainer: React.FC = () => {
     const isLoading = useSelector(getIsLoading);
     const eventArticles = useSelector(getArticleSummaries);
     const activeTabs = useSelector(getActiveTabs);
+    const [selectedTabIdx, setSelectedTabIdx] = useState(0);
     const [showTopButton, setShowTopButton] = useState(false);
     const firstAccordianScroll = useRef<HTMLDivElement>(null);
 
@@ -47,6 +56,10 @@ const ContentContainer: React.FC = () => {
     const containerTabs = useMemo(
         () => getPopulatedArticles(eventArticles, activeTabs),
         [eventArticles]
+    );
+    // Array of ref elements based on the container tabs active in screen
+    const topAccordianElements: RefObject<HTMLDivElement>[] = containerTabs.map(
+        () => createRef()
     );
 
     const isLoaded = useMemo(
@@ -62,7 +75,8 @@ const ContentContainer: React.FC = () => {
     };
 
     const handleReturnToTop = () => {
-        firstAccordianScroll.current?.scrollIntoView();
+        // firstAccordianScroll.current?.scrollIntoView();
+        topAccordianElements[selectedTabIdx].current?.scrollIntoView();
         setShowTopButton(false);
     };
 
@@ -108,9 +122,7 @@ const ContentContainer: React.FC = () => {
                     >
                         <YearAccordian
                             typeEvents={eventArticles[eventType]}
-                            componentRef={
-                                index === 0 ? firstAccordianScroll : null
-                            }
+                            componentRef={topAccordianElements[index]}
                             key={`accordian-${index}`}
                         />
                     </Box>
@@ -121,7 +133,12 @@ const ContentContainer: React.FC = () => {
     const renderComponent = () => {
         return (
             <Box {...boxContainer}>
-                <Tabs isFitted isLazy variant={"enclosed-colored"}>
+                <Tabs
+                    isFitted
+                    isLazy
+                    variant={"enclosed-colored"}
+                    onChange={(index) => setSelectedTabIdx(index)}
+                >
                     <TabList overflow={"scroll"}>
                         {isLoaded ? (
                             renderTabs()
