@@ -19,7 +19,7 @@ import {
     sessionGridItem,
     colourModeGridItem,
 } from "@features/OnThisDay/component/Pages/OnThisDayDashboardComponentProps";
-import { SCROLL_LIMIT } from "@features/onThisDay/type/OnThisDayCommonTypes";
+import { SCROLL_LIMIT } from "@features/OnThisDay/type/OnThisDayCommonTypes";
 import Sidebar from "@features/Sidebar/components/Sidebar";
 import { getUserStats } from "@features/Login/selector/LoginSelector";
 import LeaderboardContainer from "./LeaderboardContainer";

@@ -1,7 +1,7 @@
 import {
     IReadingCardData,
     IReadlistObject,
-} from "@features/onThisDay/type/OnThisDayCommonTypes";
+} from "@features/OnThisDay/type/OnThisDayCommonTypes";
 
 export const transformReadListObjectToList = (
     readList: IReadlistObject

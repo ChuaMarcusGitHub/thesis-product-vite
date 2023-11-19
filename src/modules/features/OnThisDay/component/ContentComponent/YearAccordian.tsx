@@ -16,7 +16,7 @@ import {
     IOtdCardData,
     IOtdCardPageData,
     IOtdFeedObject,
-} from "@features/onThisDay/type/OnThisDayCommonTypes";
+} from "@features/OnThisDay/type/OnThisDayCommonTypes";
 import {
     getAccordianYearsFromProps,
     returnArrayOfIndexes,
@@ -30,7 +30,7 @@ import {
     clearModalProps,
     triggerAnalyticsWithArticle,
 } from "@features/OnThisDay/actions/OnThisDaySummaryActions";
-import { IAnalyticsDataArticlePayload } from "../../type/OnThisDayWebserviceTypes";
+import { IAnalyticsDataArticlePayload } from "@features/OnThisDay/type/OnThisDayWebserviceTypes";
 
 export interface IYearAccordianProps {
     typeEvents: IOtdFeedObject;

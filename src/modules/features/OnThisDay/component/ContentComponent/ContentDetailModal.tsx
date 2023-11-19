@@ -31,13 +31,13 @@ import {
     IArticleBriefObject,
     IArticleDetailedPayload,
     IOtdCardPageData,
-} from "@features/onThisDay/type/OnThisDayCommonTypes";
+} from "@features/OnThisDay/type/OnThisDayCommonTypes";
 import "html-react-parser";
 import {
     // clearDetailedArticle,
     loadBriefArticle,
     loadDetailedArticle,
-} from "@features/onThisDay/actions/OnThisDaySummaryActions";
+} from "@features/OnThisDay/actions/OnThisDaySummaryActions";
 import {
     buttonStack,
     modalContent,
