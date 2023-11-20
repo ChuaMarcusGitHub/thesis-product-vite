@@ -185,6 +185,7 @@ const testLoginSagaObj = {
     updateUserStats: updateUserStatsDbImpl,
     userSignup: userSignupImpl,
     setupUserEntry: setupUserEntry,
+    handleSignupResponseArray: handleSignupResponseArray,
 };
 
 export { testLoginSagaObj };
