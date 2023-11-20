@@ -178,6 +178,17 @@ function* watchLoginSaga() {
     yield takeLatest(LoginActions.USER_SIGNUP, userSignupImpl);
     yield takeLatest(LoginActions.SETUP_USER_ENTRY, setupUserEntry);
 }
+
+const testLoginSagaObj = {
+    watchLoginSaga: watchLoginSaga,
+    getUserStats: getUserStatsImpl,
+    updateUserStats: updateUserStatsDbImpl,
+    userSignup: userSignupImpl,
+    setupUserEntry: setupUserEntry,
+    handleSignupResponseArray: handleSignupResponseArray,
+};
+
+export { testLoginSagaObj };
 /* Experiment with creating a dynamic reducer soon */
 const loginSaga = fork(watchLoginSaga);
 export default loginSaga;

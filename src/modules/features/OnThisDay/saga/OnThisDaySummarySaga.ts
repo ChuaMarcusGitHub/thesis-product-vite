@@ -73,9 +73,9 @@ import { createStandaloneToast } from "@chakra-ui/react";
 
 const { toast } = createStandaloneToast();
 
-const WIKI_ACCESS_TOKEN = import.meta.env.VITE_WIKI_ACCESS_TOKEN;
-const WIKI_APP_AGENT = import.meta.env.VITE_WIKI_APP_AGENT;
-const isDev = import.meta.env.DEV;
+const WIKI_ACCESS_TOKEN = process.env.VITE_WIKI_ACCESS_TOKEN;
+const WIKI_APP_AGENT = process.env.VITE_WIKI_APP_AGENT;
+const isDev = process.env.DEV;
 
 function* initializeOnThisDay() {
     try {
@@ -545,6 +545,21 @@ function* watchOnThisDaySummarySaga() {
         loadDetailedArticleByPageId
     );
 }
+const otdSummarySagaTestObj = {
+    initializeOnThisDay: initializeOnThisDay,
+    fetchOnThisDayData: fetchOnThisDayData,
+    loadUserReadlist: loadUserReadlist,
+    fetchDayArticles: fetchDayArticles,
+    loadBriefArticle: loadBriefArticle,
+    loadDetailedArticleByPageId: loadDetailedArticleByPageId,
+    loadDetailedArticle: loadDetailedArticle,
+    triggerAnalyticsBeforeArticleLoad: triggerAnalyticsBeforeArticleLoadImp,
+    clearModalProps: clearModalPropsImpl,
+    addToReadList: addToReadListImp,
+    removeFromReadList: removeFromReadListImpl,
+    watchSummarySaga: watchOnThisDaySummarySaga,
+};
+export { otdSummarySagaTestObj };
 
 const onThisDaySummarySaga = fork(watchOnThisDaySummarySaga);
 export default onThisDaySummarySaga;

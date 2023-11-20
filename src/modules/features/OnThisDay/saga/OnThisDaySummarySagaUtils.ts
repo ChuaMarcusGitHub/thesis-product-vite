@@ -17,29 +17,12 @@ import {
 
 // Constants for validation
 export const INVALID_SEARCH_PAGE = "-1";
-export const isDev = import.meta.env.DEV;
+export const isDev = process.env.DEV;
 /**
  *
  * @param response Type is any because the original response has way too many params that aren't used.
  *  @returns IArticleDetail type object for easier manipulation of data in Frontend
  */
-// export const transformDetailedArticleObject = (
-//     response: IArticleDetailObject
-// ): IArticleDetail => {
-//     const displayTitle = response.displaytitle || "";
-//     const title = response.title || "";
-//     const textHTML = response.text?.["*"] || "N/A";
-//     const pageId = response.pageid || -1;
-//     const headHTML = response.headhtml?.["*"] || "";
-
-//     return {
-//         displayTitle,
-//         title,
-//         headHTML,
-//         textHTML,
-//         pageId,
-//     };
-// };
 
 export const transformBriefArticleObject = (
     queryObject: IBriefArticleQueryObj
