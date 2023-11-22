@@ -1,3 +1,4 @@
+
 export const pageContainer = {
     width: "99vw",
     minH: "50vh",
@@ -18,10 +19,6 @@ export const searchGridItem = {
     rowEnd: [8, 8, 5],
 };
 export const searchComponentItem = {
-    border: "1px solid grey",
-    _dark: {
-        border: "1px solid white",
-    },
     borderRadius: "5px",
 };
 export const sessionGridItem = {

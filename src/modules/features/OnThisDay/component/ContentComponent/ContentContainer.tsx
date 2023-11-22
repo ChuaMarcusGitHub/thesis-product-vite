@@ -138,7 +138,7 @@ const ContentContainer: React.FC = () => {
                     variant={"enclosed-colored"}
                     onChange={(index) => handleTabSwitch(index)}
                 >
-                    <TabList overflow={"scroll"}>
+                    <TabList overflowX={"scroll"} overflowY={"hidden"}>
                         {isLoaded ? (
                             renderTabs()
                         ) : (

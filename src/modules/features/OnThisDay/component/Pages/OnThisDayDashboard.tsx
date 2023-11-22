@@ -1,5 +1,15 @@
-import { Box, Grid, GridItem, Stack, useDisclosure } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import {
+    Accordion,
+    AccordionButton,
+    AccordionItem,
+    AccordionPanel,
+    Box,
+    Grid,
+    GridItem,
+    Stack,
+    useDisclosure,
+} from "@chakra-ui/react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     bannerContainer,
     bannerGrid,
@@ -39,6 +49,8 @@ const OnThisDayDashboard: React.FC = () => {
         onClose: noticeOnClose,
     } = useDisclosure();
     const isMobileDevice = getIsMobileDevice();
+    const [scrollLock, setScrollLock] = useState(false);
+    const bodyRef = useRef<HTMLDivElement>(null);
 
     /* ---------- Selectors --------- */
     const isLoggedIn: boolean = useSelector(getIsLoggedIn);
@@ -60,7 +72,28 @@ const OnThisDayDashboard: React.FC = () => {
         noticeOnClose();
     };
 
+    const handleChange = () => {
+        setScrollLock(!scrollLock);
+    };
+
     /* ---------- Render Methods--------- */
+
+    const renderMobileBanner = () => {
+        return (
+            <Accordion allowMultiple onChange={() => handleChange()}>
+                <AccordionItem>
+                    <AccordionButton>
+                        <Box as="span" flex="1" textAlign="left">
+                            Click for Search Options!
+                        </Box>
+                    </AccordionButton>
+                    <AccordionPanel padding={"10px"}>
+                        {renderBanner()}
+                    </AccordionPanel>
+                </AccordionItem>
+            </Accordion>
+        );
+    };
 
     const renderBanner = () => {
         return (
@@ -100,7 +133,7 @@ const OnThisDayDashboard: React.FC = () => {
         return (
             <Box {...pageContainer}>
                 <Stack gap={3}>
-                    {renderBanner()}
+                    {isMobileDevice ? renderMobileBanner() : renderBanner()}
                     {renderContent()}
                 </Stack>
                 <ContentDetailModal />
