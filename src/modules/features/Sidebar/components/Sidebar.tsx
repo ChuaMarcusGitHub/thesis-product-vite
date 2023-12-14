@@ -13,6 +13,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { INavigationItem } from "../types/SidebarTypes";
 import { getSidebarNavitems } from "../utils/SidebarComponentUtils";
+import CreditsFooter from "./CreditsFooter";
 
 export interface ISidebarProps {
     isOpen: boolean;
@@ -45,6 +46,7 @@ const Sidebar: React.FC<ISidebarProps> = ({
                         {renderNavigationItems()}
                     </Stack>
                 </DrawerBody>
+                <CreditsFooter />
             </DrawerContent>
         </Drawer>
     );
