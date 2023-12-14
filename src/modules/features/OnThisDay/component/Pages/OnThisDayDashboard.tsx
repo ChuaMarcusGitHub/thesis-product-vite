@@ -9,7 +9,7 @@ import {
     Stack,
     useDisclosure,
 } from "@chakra-ui/react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     bannerContainer,
     bannerGrid,
@@ -50,7 +50,6 @@ const OnThisDayDashboard: React.FC = () => {
     } = useDisclosure();
     const isMobileDevice = getIsMobileDevice();
     const [scrollLock, setScrollLock] = useState(false);
-    const bodyRef = useRef<HTMLDivElement>(null);
 
     /* ---------- Selectors --------- */
     const isLoggedIn: boolean = useSelector(getIsLoggedIn);

@@ -107,6 +107,7 @@ const ContentDetailModal: React.FC = () => {
     // Use Effects
     useEffect(() => {
         console.log(`Window InnerWidth: ${window.outerWidth}`);
+        setLastKnownType(articleType);
         //unmount effect (scenario when user clicks and navigates away from website)
         return () => {
             handleClose();
@@ -116,7 +117,11 @@ const ContentDetailModal: React.FC = () => {
 
     useEffect(() => {
         let isTabDataActive = false;
-        if (articleType === ARTICLE_TYPE.BRIEF)
+        // if (articleType === ARTICLE_TYPE.BRIEF)
+        if (
+            lastKnownType === ARTICLE_TYPE.INACTIVE ||
+            lastKnownType === ARTICLE_TYPE.BRIEF
+        )
             isTabDataActive = !!briefArticle;
         else isTabDataActive = !!detailedArticle;
 
@@ -125,10 +130,16 @@ const ContentDetailModal: React.FC = () => {
             timerIdRef.current = setTimeout(() => {
                 if (isModalOpen) setTabOpenTime(new Date());
             }, 500);
-            setLastKnownType(articleType);
+            if(lastKnownType === ARTICLE_TYPE.INACTIVE) setLastKnownType(articleType);
         }
         if (progressPercent > 0) setProgressPercent(0);
     }, [isModalOpen, isLoaded]);
+
+    useEffect(() => {
+        setLastKnownType(
+            isDetailedArticle ? ARTICLE_TYPE.DETAILED : ARTICLE_TYPE.BRIEF
+        );
+    }, [isDetailedArticle]);
 
     // Component Methods
     const trackScroll = () => {
@@ -178,9 +189,6 @@ const ContentDetailModal: React.FC = () => {
                 newIsDetailedFlag ? ARTICLE_TYPE.DETAILED : ARTICLE_TYPE.BRIEF
             }`
         );
-        setLastKnownType(
-            newIsDetailedFlag ? ARTICLE_TYPE.DETAILED : ARTICLE_TYPE.BRIEF
-        );
     };
 
     const handleClose = () => {
@@ -191,6 +199,7 @@ const ContentDetailModal: React.FC = () => {
                 tabOpenTime,
                 lastKnownType
             );
+            console.log(modalAnalytics);
             dispatch(analyticsInsertModalData(modalAnalytics));
             // Reset Analytics
             setTabOpenTime(null);

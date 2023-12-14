@@ -212,18 +212,7 @@ function* fetchDayArticles(action: PayloadAction<IFetchEventsPayload>) {
             month: stringifiedMonth,
             day: stringifiedDate,
         });
-        // }
-        // else {
-        //     yield all(
-        //         eventTypes.map((event) =>
-        //             call(fetchOnThisDayData, {
-        //                 type: event,
-        //                 month: stringifiedMonth,
-        //                 day: stringifiedDate,
-        //             })
-        //         )
-        //     );
-        // }
+       
         // Parse the data
         if (!response) {
             // negative response - find case test
