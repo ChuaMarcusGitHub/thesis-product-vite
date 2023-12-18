@@ -18,7 +18,7 @@ import {
 import { InfoIcon } from "@chakra-ui/icons";
 import { getNoticeList } from "./ThesisNoticeUtils";
 
-interface IThesisNoticeProps {
+export interface IThesisNoticeProps {
     isOpen: boolean;
     onClose: () => void;
 }
@@ -38,7 +38,7 @@ const ThesisNotice: React.FC<IThesisNoticeProps> = ({
             <ModalOverlay />
             <ModalContent>
                 <ModalHeader>
-                    <Heading textAlign={"center"}>NOTICE</Heading>
+                    <Heading textAlign={"center"} data-testid={"modal-header"}>NOTICE</Heading>
                 </ModalHeader>
                 <ModalBody>
                     <Stack gap={3}>
