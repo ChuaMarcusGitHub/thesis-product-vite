@@ -1,27 +1,21 @@
-# React + TypeScript + Vite
+[Thesis Product](https://thesis-product-vite.netlify.app/)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Project Description
 
-Currently, two official plugins are available:
+This project is related to my master's thesis: understanding the
+fundamental building blocks of a front-end and how it can be designed
+to maintain engagement from a user visiting a text-heavy website.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The project was developed over 2 months, with the actual development of the
+application—including Database setup, Front-end design, and Deployment—taking
+6 weeks of concurrent development work while performing academic research.
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+- [ReactJS](https://react.dev/)
+- [React Redux](https://react-redux.js.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Npm](https://www.npmjs.com/)
+- [Vite](https://vitejs.dev/)
+- [Netlify](https://www.netlify.com/)
+- [Redux Saga](https://redux-saga.js.org/)
